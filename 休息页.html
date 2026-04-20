@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试过渡页 - 准备下一门科目</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f7fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* 过渡页核心容器 */
+        .transition-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 图标样式 */
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background-color: #e8f4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .icon-box i {
+            font-size: 40px;
+            color: #165dff;
+        }
+
+        /* 标题与文案 */
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .sub-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* 倒计时样式 */
+        .countdown-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .countdown-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        .countdown-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #165dff;
+        }
+        .next-subject {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* 立即进入考试按钮 */
+        .btn-enter-exam {
+            background-color: #165dff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        .btn-enter-exam:hover {
+            background-color: #0e42d2;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-enter-exam:active {
+            transform: translateY(0);
+        }
+
+        /* 提示文案 */
+        .tips-text {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 576px) {
+            .transition-container {
+                padding: 40px 20px;
+            }
+            .main-title {
+                font-size: 20px;
+            }
+            .countdown-number {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="transition-container">
+        <!-- 顶部图标 -->
+        <div class="icon-box">
+            <i class="fa fa-clock-o"></i>
+        </div>
+
+        <!-- 核心文案 -->
+        <h2 class="main-title">当前科目考试已结束</h2>
+        <p class="sub-title">请稍作休息，系统将为您自动跳转至下一门科目考试</p>
+
+        <!-- 倒计时区域 -->
+        <div class="countdown-box">
+            <p class="countdown-title">距离下一门考试开始还有</p>
+            <div class="countdown-number" id="countdown">120</div>
+            <p class="next-subject">下一门科目：<span id="nextSubjectName">数学</span></p>
+        </div>
+
+        <!-- 立即进入考试按钮 -->
+        <button id="enterExamBtn" class="btn btn-enter-exam">
+            <i class="fa fa-play-circle me-1"></i> 立即进入考试
+        </button>
+
+        <!-- 提示信息 -->
+        <p class="tips-text">
+            <i class="fa fa-info-circle text-primary"></i> 
+            请勿刷新或关闭页面，系统将自动跳转；若未自动跳转，请联系监考老师
+        </p>
+    </div>
+
+    <!-- 引入Bootstrap和jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ===================== 配置项（可根据实际需求修改） =====================
+            const COUNTDOWN_SECONDS = 120; // 倒计时时长（秒），默认2分钟=120秒，可改为60秒（1分钟）
+            const NEXT_SUBJECT_NAME = "数学"; // 下一门科目名称
+            const NEXT_EXAM_URL = "next_exam.html"; // 下一门考试页面链接
+            // =====================================================================
+
+            // 初始化下一门科目名称
+            $('#nextSubjectName').text(NEXT_SUBJECT_NAME);
+
+            // 点击“立即进入考试”按钮
+            $('#enterExamBtn').on('click', function() {
+                window.location.href = NEXT_EXAM_URL;
+            });
+
+            // 初始化倒计时
+            let remainingSeconds = COUNTDOWN_SECONDS;
+            updateCountdownDisplay();
+
+            // 倒计时定时器（每秒更新）
+            const countdownTimer = setInterval(function() {
+                remainingSeconds--;
+                updateCountdownDisplay();
+
+                // 倒计时结束，跳转下一门考试
+                if (remainingSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    window.location.href = NEXT_EXAM_URL;
+                }
+            }, 1000);
+
+            // 更新倒计时显示（格式：分:秒）
+            function updateCountdownDisplay() {
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                // 补零处理（如1分5秒显示为01:05）
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                const formattedSeconds = seconds.toString().padStart(2, '0');
+                $('#countdown').text(`${formattedMinutes}:${formattedSeconds}`);
+            }
+
+            // 防止用户刷新/关闭页面的提示（可选）
+            window.addEventListener('beforeunload', function(e) {
+                e.preventDefault();
+                e.returnValue = '您即将离开考试过渡页，可能导致无法正常进入下一门考试，确定要刷新/关闭吗？';
+                return e.returnValue;
+            });
+        });
+    </script>
+</body>
+</html>

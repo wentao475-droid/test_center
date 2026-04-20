@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试成绩分析 - 9709_w24_qp_53</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px 0;
+            color: #333;
+        }
+
+        .container-custom {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 顶部导航与返回 */
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            background-color: #165dff;
+            color: white;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .btn-back:hover {
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* 成绩统计卡片 */
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .exam-id {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 25px;
+        }
+        .stat-item .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            display: block;
+        }
+        .stat-item .label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* 题号网格 */
+        .grid-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #999;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-unanswered { background-color: #eee; border: 1px solid #ddd; }
+        .dot-wrong { background-color: #ff4d4f; }
+        .dot-correct { background-color: #52c41a; }
+
+        .question-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .grid-num {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .num-unanswered { background-color: #fff; border: 1px solid #eee; color: #666; }
+        .num-correct { background-color: #e6f7ff; color: #52c41a; border: 1px solid #b7eb8f; background-color: #f6ffed; }
+        .num-wrong { background-color: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+        .grid-num:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 题目详情卡片 */
+        .analysis-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-top: 30px;
+        }
+        .analysis-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .question-content {
+            padding: 30px 40px;
+        }
+        .question-number {
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .question-text {
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .option-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        .option-item {
+            padding: 8px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .option-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .tags-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tag-item {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .tag-blue { background-color: #e6f7ff; color: #1890ff; }
+        .tag-pink { background-color: #fff1f0; color: #ff4d4f; }
+        .tag-green { background-color: #f6ffed; color: #52c41a; }
+
+        /* 答案解析区域样式 */
+        .answer-analysis-wrapper {
+            padding: 20px 40px;
+            background-color: #fafafa;
+            border-top: 1px solid #f0f0f0;
+        }
+        .analysis-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .analysis-section-title i {
+            color: #165dff;
+        }
+        .analysis-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .correct-answer-box {
+            display: inline-block;
+            padding: 2px 10px;
+            background-color: #e6f7ff;
+            color: #1890ff;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* 选项状态样式 */
+        .option-item {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .option-item.correct {
+            background-color: #f6ffed;
+            border-color: #b7eb8f;
+        }
+        .option-item.wrong {
+            background-color: #fff1f0;
+            border-color: #ffa39e;
+        }
+
+        .analysis-footer {
+            padding: 20px 40px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-toggle-answer {
+            background: white;
+            border: 1px solid #165dff;
+            color: #165dff;
+            padding: 6px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-toggle-answer:hover {
+            background-color: #f0f5ff;
+        }
+        .link-record {
+            color: #165dff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 数学公式字体优化（模拟效果） */
+        .math {
+            font-style: italic;
+            font-family: "Times New Roman", serif;
+        }
+
+        @media (max-width: 576px) {
+            .stats-row { gap: 20px; }
+            .question-content { padding: 20px; }
+            .analysis-footer { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <!-- 顶部导航 -->
+        <div class="header-nav">
+            <a href="javascript:history.back()" class="btn-back">
+                返回
+            </a>
+            <div style="flex: 1; text-align: center;">
+                <p class="mb-0 text-muted small">阅卷和解析结果均由AI提供，结果仅供参考</p>
+            </div>
+            <div style="width: 60px;"></div> <!-- 占位平衡 -->
+        </div>
+
+        <!-- 成绩统计 -->
+        <div class="stats-card">
+            <div class="exam-id">9709_w24_qp_53</div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="value">98%</span>
+                    <span class="label">正确率</span>
+                </div>
+                <div class="stat-item">
+                    <span class="value">1h15m</span>
+                    <span class="label">用时</span>
+                </div>
+                <div class="stat-item">
+                    <span class="value">36/50</span>
+                    <span class="label">试卷分数</span>
+                </div>
+            </div>
+
+            <!-- 图例 -->
+            <div class="grid-legend">
+                <div class="legend-item"><span class="dot dot-unanswered"></span> 未作答</div>
+                <div class="legend-item"><span class="dot dot-wrong"></span> 答错题</div>
+                <div class="legend-item"><span class="dot dot-correct"></span> 答对题</div>
+            </div>
+
+            <!-- 题号网格 -->
+            <div class="question-grid">
+                <div class="grid-num num-correct">1</div>
+                <div class="grid-num num-correct">2</div>
+                <div class="grid-num num-wrong">3</div>
+                <div class="grid-num num-wrong">4</div>
+                <div class="grid-num num-correct">5</div>
+                <div class="grid-num num-correct">6</div>
+                <div class="grid-num num-wrong">7</div>
+                <div class="grid-num num-correct">8</div>
+                <div class="grid-num num-wrong">9</div>
+                <div class="grid-num num-wrong">10</div>
+                <div class="grid-num num-correct">11</div>
+                <div class="grid-num num-unanswered">12</div>
+                <div class="grid-num num-unanswered">13</div>
+            </div>
+        </div>
+
+        <!-- 题目解析 -->
+        <div class="analysis-card">
+            <div class="analysis-header">2026-TMUA前测</div>
+            <div class="question-content">
+                <div class="question-text">
+                    <span class="question-number">1.</span>
+                    The line <span class="math">L</span> with equation <span class="math">y = mx + c</span>, where <span class="math">m > 0</span> and <span class="math">c ≥ 0</span>, passes through the point (2,4).
+                    <br><br>
+                    A line is drawn through the point (2,4) perpendicular to <span class="math">L</span>.
+                    <br><br>
+                    The triangle enclosed between the two lines and the <span class="math">y</span>-axis has area 5 square units.
+                    <br><br>
+                    What is the <span class="math">larger</span> of the two possible values of <span class="math">m</span>?
+                </div>
+
+                <ul class="option-list">
+                    <li class="option-item"><span class="option-label">A</span> -0.5</li>
+                    <li class="option-item wrong">
+                        <span class="option-label">B</span> 0.5 
+                        <span class="ms-2 text-danger small"><i class="fa fa-close"></i> 您的选择</span>
+                    </li>
+                    <li class="option-item"><span class="option-label">C</span> 1.25</li>
+                    <li class="option-item correct">
+                        <span class="option-label">D</span> 2
+                        <span class="ms-2 text-success small"><i class="fa fa-check"></i> 正确答案</span>
+                    </li>
+                    <li class="option-item"><span class="option-label">E</span> 5</li>
+                </ul>
+
+                <div class="tags-row">
+                    <span class="tag-item tag-blue">2026-TMUA前测</span>
+                    <span class="tag-item tag-blue">2026</span>
+                    <span class="tag-item tag-pink">高阶考试</span>
+                    <span class="tag-item tag-green">其他</span>
+                </div>
+            </div>
+
+            <!-- 答案解析内容区域 -->
+            <div class="answer-analysis-wrapper" id="answerAnalysis">
+                <div class="correct-answer-box">正确答案：D</div>
+                <div class="analysis-section">
+                    <div class="analysis-section-title">
+                        <i class="fa fa-lightbulb-o"></i> 题目解析
+                    </div>
+                    <div class="analysis-text">
+                        1. <strong>理解题意</strong>：直线 <span class="math">L</span> 的方程为 <span class="math">y = mx + c</span>，经过点 (2,4)。由于 <span class="math">m > 0</span> 且 <span class="math">c ≥ 0</span>，直线斜率为正。<br>
+                        2. <strong>垂线方程</strong>：通过 (2,4) 且垂直于 <span class="math">L</span> 的直线斜率为 <span class="math">-1/m</span>。方程为 <span class="math">y - 4 = -1/m(x - 2)</span>。<br>
+                        3. <strong>求交点</strong>：这两条直线与 <span class="math">y</span> 轴的交点分别为 <span class="math">c</span> 和 <span class="math">4 + 2/m</span>。<br>
+                        4. <strong>计算面积</strong>：三角形底边在 <span class="math">y</span> 轴上，长度为 <span class="math">|c - (4 + 2/m)|</span>，高为点 (2,4) 的横坐标 2。面积 <span class="math">A = 1/2 * 底 * 高 = |c - 4 - 2/m| * 2 / 2 = 5</span>。<br>
+                        5. <strong>联立求解</strong>：代入点 (2,4) 到 <span class="math">L</span>，得到 <span class="math">4 = 2m + c</span>，即 <span class="math">c = 4 - 2m</span>。代入面积公式：<span class="math">|(4 - 2m) - 4 - 2/m| = 5</span>，整理得 <span class="math">|2m + 2/m| = 5</span>。<br>
+                        6. <strong>得出结果</strong>：解方程 <span class="math">2m² - 5m + 2 = 0</span>，得到 <span class="math">m = 2</span> 或 <span class="math">m = 0.5</span>。题目要求较大的值，故 <span class="math">m = 2</span>。
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-footer">
+                <button class="btn-toggle-answer" id="toggleAnswer">
+                    收起答案 <i class="fa fa-angle-up ms-1"></i>
+                </button>
+                <a href="#" class="link-record">录制解析</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 答案显示/收起切换
+            let isAnswerVisible = true;
+            $('#toggleAnswer').on('click', function() {
+                isAnswerVisible = !isAnswerVisible;
+                if (isAnswerVisible) {
+                    $(this).html('收起答案 <i class="fa fa-angle-up ms-1"></i>');
+                    $('#answerAnalysis').slideDown(200);
+                } else {
+                    $(this).html('展开答案 <i class="fa fa-angle-down ms-1"></i>');
+                    $('#answerAnalysis').slideUp(200);
+                }
+            });
+
+            // 题号点击切换（模拟逻辑）
+            $('.grid-num').on('click', function() {
+                const num = $(this).text();
+                // 可以在这里更新题目内容
+                console.log('点击了第' + num + '题');
+            });
+        });
+    </script>
+</body>
+</html>

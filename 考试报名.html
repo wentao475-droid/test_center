@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作台 - 考试报名管理</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 模拟工作台基础布局样式 */
+        :root {
+            --sidebar-width: 180px;
+            --header-height: 50px;
+            --primary-color: #165dff;
+            --bg-color: #f5f7fa;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 侧边栏模拟 */
+        .sidebar-mock {
+            width: var(--sidebar-width);
+            background-color: #001529;
+            color: rgba(255, 255, 255, 0.65);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .sidebar-logo {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo img {
+            max-width: 120px;
+        }
+        .sidebar-menu {
+            padding: 15px 0;
+            list-style: none;
+            margin: 0;
+            flex: 1;
+        }
+        .sidebar-menu li {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-menu li:hover {
+            color: #fff;
+            background-color: rgba(255,255,255,0.05);
+        }
+        .sidebar-menu li.active {
+            color: #fff;
+            background-color: var(--primary-color);
+        }
+
+        /* 主体内容区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部导航栏模拟 */
+        .header-mock {
+            height: var(--header-height);
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            flex-shrink: 0;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; font-size: 14px; }
+        .header-right { display: flex; align-items: center; gap: 20px; font-size: 13px; color: #666; }
+
+        /* 内容主体 */
+        .content-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .breadcrumb-mock {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .breadcrumb-mock span { cursor: pointer; }
+        .breadcrumb-mock span:hover { color: var(--primary-color); }
+
+        .info-card {
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        /* 报名按钮样式 */
+        .btn-register-group {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .btn-register-primary {
+            background-color: #52c41a; /* 绿色按钮 */
+            border-color: #52c41a;
+            color: white;
+            font-size: 13px;
+            padding: 6px 16px;
+        }
+        .btn-register-primary:hover {
+            background-color: #40a9ff;
+            border-color: #40a9ff;
+            color: white;
+        }
+
+        /* 弹窗自定义样式 */
+        .modal-header { border-bottom: none; padding: 20px 24px 10px; }
+        .modal-title { font-size: 16px; font-weight: 600; }
+        .modal-body { padding: 10px 24px 20px; }
+        .modal-footer { border-top: none; padding: 10px 24px 20px; }
+
+        .reg-info-text { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 15px; }
+        .phone-row { font-size: 14px; color: #666; margin-bottom: 8px; }
+        .unbind-link { color: var(--primary-color); text-decoration: none; font-size: 13px; cursor: pointer; }
+
+        /* 考试类型多选列表 */
+        .exam-selection-list {
+            margin-top: 20px;
+            border: 1px solid #f0f0f0;
+            border-radius: 4px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .exam-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .exam-item:last-child { border-bottom: none; }
+        .exam-item:hover { background-color: #fafafa; }
+        .exam-item .form-check-input { margin-top: 0; margin-right: 12px; cursor: pointer; width: 18px; height: 18px; }
+        .exam-name { flex: 1; font-size: 14px; color: #333; }
+        .exam-tag { font-size: 11px; padding: 2px 6px; border-radius: 2px; margin-left: 8px; }
+        .tag-hot { background-color: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
+        .tag-new { background-color: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+
+        /* 底部按钮样式 */
+        .btn-cancel { color: #666; border: 1px solid #d9d9d9; font-size: 14px; padding: 5px 18px; }
+        .btn-confirm { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; font-size: 14px; padding: 5px 18px; }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏模拟 -->
+    <div class="sidebar-mock">
+        <div class="sidebar-logo">
+            <img src="https://via.placeholder.com/120x30/001529/ffffff?text=VISION+ACADEMY" alt="LOGO">
+        </div>
+        <ul class="sidebar-menu">
+            <li><i class="fa fa-dashboard"></i> 课程管理</li>
+            <li><i class="fa fa-book"></i> 资源库</li>
+            <li class="active"><i class="fa fa-user"></i> 学员中心</li>
+            <li><i class="fa fa-tasks"></i> 作业管理</li>
+            <li><i class="fa fa-graduation-cap"></i> 模考分析</li>
+        </ul>
+    </div>
+
+    <!-- 主体区域 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="header-mock">
+            <div class="header-left">
+                <i class="fa fa-refresh"></i> 教学工作台
+            </div>
+            <div class="header-right">
+                <span><i class="fa fa-user-circle-o"></i> 郭竞文</span>
+                <span>退出</span>
+            </div>
+        </div>
+
+        <!-- 内容主体 -->
+        <div class="content-body">
+            <div class="breadcrumb-mock">
+                <span><i class="fa fa-angle-left"></i> 返回</span> | 详情
+            </div>
+
+            <!-- 学员基础信息简述卡片 -->
+            <div class="info-card">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <span class="text-muted small">学员姓名：</span>
+                        <span class="fw-bold">宫地学生2606(VA100078672)</span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-muted small">学员手机号：</span>
+                        <span class="fw-bold">199****4520</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报名操作区 -->
+            <div class="btn-register-group">
+                <button class="btn btn-register-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                    2026届模考报名
+                </button>
+            </div>
+
+            <!-- 模拟数据占位 -->
+            <div class="info-card text-center py-5">
+                <p class="text-muted mb-0">暂无考试报名记录，请点击上方按钮进行报名</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 考试报名多选弹窗 -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">2026届牛剑模考报名</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="reg-info-text">
+                        学员姓名（客户编号）的报名手机号，用于接受牛剑模考准考证号、考试链接短信
+                    </p>
+                    <div class="phone-row">客户手机号: 199****4520</div>
+                    <a class="unbind-link">解绑手机号</a>
+
+                    <!-- 考试多选列表 -->
+                    <div class="exam-selection-list" id="examList">
+                        <div class="exam-item">
+                            <input class="form-check-input" type="checkbox" value="TMUA" id="exam1">
+                            <label class="exam-name" for="exam1">2026届-TMUA 前测模考</label>
+                            <span class="exam-tag tag-hot">热门</span>
+                        </div>
+                        <div class="exam-item">
+                            <input class="form-check-input" type="checkbox" value="PAT" id="exam2">
+                            <label class="exam-name" for="exam2">2026届-PAT 专项模考</label>
+                        </div>
+                        <div class="exam-item">
+                            <input class="form-check-input" type="checkbox" value="MAT" id="exam3">
+                            <label class="exam-name" for="exam3">2026届-MAT 基础能力测试</label>
+                            <span class="exam-tag tag-new">最新</span>
+                        </div>
+                        <div class="exam-item">
+                            <input class="form-check-input" type="checkbox" value="ENGAA" id="exam4">
+                            <label class="exam-name" for="exam4">2026届-ENGAA 工程学模考</label>
+                        </div>
+                        <div class="exam-item">
+                            <input class="form-check-input" type="checkbox" value="NSAA" id="exam5">
+                            <label class="exam-name" for="exam5">2026届-NSAA 自然科学模考</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-confirm" id="submitRegBtn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS 和 jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 点击整行即可选中复选框
+            $('.exam-item').on('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const $checkbox = $(this).find('input[type="checkbox"]');
+                    $checkbox.prop('checked', !$checkbox.prop('checked'));
+                }
+            });
+
+            // 提交报名逻辑
+            $('#submitRegBtn').on('click', function() {
+                const selectedExams = [];
+                $('#examList input:checked').each(function() {
+                    selectedExams.push($(this).next('.exam-name').text());
+                });
+
+                if (selectedExams.length === 0) {
+                    alert('请至少选择一门考试进行报名');
+                    return;
+                }
+
+                alert('报名成功！您已选择：\n' + selectedExams.join('\n'));
+                
+                // 模拟提交后关闭弹窗
+                $('#registerModal').modal('hide');
+            });
+        });
+    </script>
+</body>
+</html>
