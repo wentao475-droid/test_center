@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思考前确认 - IELTS Familiarisation Test</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* 顶部导航与返回 */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #165dff;
+        }
+        .header-logo i {
+            font-size: 24px;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logout-btn:hover {
+            text-decoration: underline;
+        }
+
+        .container-custom {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+            padding-bottom: 50px;
+        }
+
+        .main-title {
+            color: #d32f2f; /* Red title as in screenshot */
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        /* 考试卡片 */
+        .exam-section-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: box-shadow 0.2s;
+            overflow: hidden;
+        }
+        
+        .exam-section-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-main {
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .status {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .status.completed {
+            color: #4caf50;
+        }
+        .status.incomplete {
+            color: #f44336;
+        }
+
+        .timing {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .card-icon {
+            font-size: 48px;
+        }
+        .card-icon.completed {
+            color: #4caf50;
+        }
+        .card-icon.incomplete {
+            color: #ccc;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+        
+        /* 展开箭头动画 */
+        .exam-section-card.expanded .card-icon.incomplete {
+            transform: rotate(180deg);
+        }
+
+        /* 展开详情区 */
+        .card-details {
+            display: none;
+            padding: 20px 30px;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .details-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-enter-exam {
+            background-color: #165dff;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 500;
+            align-self: flex-start;
+            transition: all 0.2s;
+        }
+        .btn-enter-exam:hover {
+            background-color: #0e4bc2;
+            color: white;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-logo">
+            <i class="fa fa-graduation-cap"></i>
+            VISION ACADEMY 测评系统
+        </div>
+        <div class="header-user">
+            <span>Hi, 测试老师01</span>
+            <a href="#" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a>
+        </div>
+    </header>
+
+    <div class="container-custom">
+        <h1 class="main-title">IELTS Familiarisation Test</h1>
+
+        <!-- Listening 模块 (未完成) -->
+        <div class="exam-section-card">
+            <div class="card-main toggle-details">
+                <div class="card-info">
+                    <div class="section-title">Listening</div>
+                    <div class="status incomplete">Not completed</div>
+                    <div class="timing">Timing: 30 minutes</div>
+                </div>
+                <div class="card-icon incomplete">
+                    <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="details-content">
+                    <div class="info-text">
+                        <i class="fa fa-info-circle text-primary me-2"></i>
+                        请确认您的考试环境安静，设备声音输出正常。点击下方按钮即可进入听力部分的考试。
+                    </div>
+                    <button class="btn-enter-exam" data-target="雅思听力考试.html">Start Listening</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reading 模块 (未完成) -->
+        <div class="exam-section-card">
+            <div class="card-main toggle-details">
+                <div class="card-info">
+                    <div class="section-title">Reading</div>
+                    <div class="status incomplete">Not completed</div>
+                    <div class="timing">Timing: 60 minutes</div>
+                </div>
+                <div class="card-icon incomplete">
+                    <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="details-content">
+                    <div class="info-text">
+                        <i class="fa fa-info-circle text-primary me-2"></i>
+                        请确认您的考试环境安静，网络稳定。点击下方按钮即可进入阅读部分的考试。
+                    </div>
+                    <button class="btn-enter-exam">Start Reading</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Writing 模块 (未完成) -->
+        <div class="exam-section-card">
+            <div class="card-main toggle-details">
+                <div class="card-info">
+                    <div class="section-title">Writing</div>
+                    <div class="status incomplete">Not completed</div>
+                    <div class="timing">Timing: 60 minutes</div>
+                </div>
+                <div class="card-icon incomplete">
+                    <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="details-content">
+                    <div class="info-text">
+                        <i class="fa fa-info-circle text-primary me-2"></i>
+                        写作部分包含两篇作文，请注意时间分配。点击下方按钮即可进入写作部分的考试。
+                    </div>
+                    <button class="btn-enter-exam">Start Writing</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Speaking 模块 (未完成) -->
+        <div class="exam-section-card">
+            <div class="card-main toggle-details">
+                <div class="card-info">
+                    <div class="section-title">Speaking</div>
+                    <div class="status incomplete">Not completed</div>
+                    <div class="timing">Timing: 11-14 minutes</div>
+                </div>
+                <div class="card-icon incomplete">
+                    <i class="fa fa-angle-down"></i>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="details-content">
+                    <div class="info-text">
+                        <i class="fa fa-info-circle text-primary me-2"></i>
+                        口语部分为真人或模拟对话，请确保麦克风和摄像头工作正常。点击下方按钮即可进入口语部分的考试。
+                    </div>
+                    <button class="btn-enter-exam" data-target="雅思口语考试_Part1.html">Start Speaking</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 引入jQuery和Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // 卡片展开收起交互
+            $('.toggle-details').on('click', function() {
+                var $card = $(this).closest('.exam-section-card');
+                var $details = $card.find('.card-details');
+                
+                // 切换展开状态类，用于控制箭头旋转
+                $card.toggleClass('expanded');
+                
+                // 切换详情区域显示
+                $details.slideToggle(300);
+            });
+            
+            // 阻止按钮点击事件冒泡并处理跳转
+            $('.btn-enter-exam').on('click', function(e) {
+                e.stopPropagation();
+                var target = $(this).data('target');
+                if (target) {
+                    window.location.href = target;
+                } else {
+                    var sectionName = $(this).text().replace('Start ', '');
+                    alert('即将进入 ' + sectionName + ' 考试...');
+                    // 实际项目中这里应跳转到对应考试页面
+                }
+            });
+        });
+    </script>
+</body>
+</html>

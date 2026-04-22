@@ -9,16 +9,61 @@
     <!-- 引入Font Awesome图标 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <style>
+        /* 顶部导航 */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #165dff;
+        }
+        .header-logo i {
+            font-size: 24px;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logout-btn:hover {
+            text-decoration: underline;
+        }
+
         /* 全局样式 */
         body {
             font-family: "Microsoft YaHei", sans-serif;
             background-color: #f5f7fa;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            padding-top: 60px; /* 为固定的header留出空间 */
         }
 
         /* 过渡页核心容器 */
@@ -131,6 +176,18 @@
     </style>
 </head>
 <body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-logo">
+            <i class="fa fa-graduation-cap"></i>
+            VISION ACADEMY 测评系统
+        </div>
+        <div class="header-user">
+            <span>Hi, 测试老师01</span>
+            <a href="#" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a>
+        </div>
+    </header>
+
     <div class="transition-container">
         <!-- 顶部图标 -->
         <div class="icon-box">
@@ -167,8 +224,8 @@
         $(document).ready(function() {
             // ===================== 配置项（可根据实际需求修改） =====================
             const COUNTDOWN_SECONDS = 120; // 倒计时时长（秒），默认2分钟=120秒，可改为60秒（1分钟）
-            const NEXT_SUBJECT_NAME = "数学"; // 下一门科目名称
-            const NEXT_EXAM_URL = "next_exam.html"; // 下一门考试页面链接
+            const NEXT_SUBJECT_NAME = "雅思阅读"; // 下一门科目名称
+            const NEXT_EXAM_URL = "雅思考前确认.html"; // 下一门考试页面链接
             // =====================================================================
 
             // 初始化下一门科目名称

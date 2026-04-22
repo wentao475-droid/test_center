@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思听力考试 - VISION ACADEMY</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部导航 */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #165dff;
+        }
+        .header-logo img {
+            height: 30px;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f0f5ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+
+        /* 主体布局 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 左右导航箭头 */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 60px;
+            background-color: #ccc;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 5;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .nav-arrow:hover {
+            opacity: 1;
+        }
+        .left-arrow {
+            left: 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .right-arrow {
+            right: 320px; /* 侧边栏宽度 */
+            border-radius: 4px 0 0 4px;
+        }
+
+        /* 左侧题目区 */
+        .question-section {
+            flex: 1.2;
+            padding: 40px 60px 40px 80px;
+            overflow-y: auto;
+            border-right: 1px solid #eee;
+        }
+        .part-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .instruction-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .sub-instruction {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        /* 模拟的试卷图片区域 */
+        .mock-paper {
+            border: 2px solid #666;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+        }
+        .paper-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .paper-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .paper-label {
+            width: 200px;
+        }
+        .paper-value {
+            flex: 1;
+        }
+        .paper-group-title {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .dotted-line {
+            display: inline-block;
+            border-bottom: 1px dotted #333;
+            width: 150px;
+            margin-left: 5px;
+        }
+        .blank-num {
+            font-weight: bold;
+        }
+
+        /* 中间答题区 */
+        .answer-section {
+            flex: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            padding-right: 80px; /* 留出右箭头空间 */
+        }
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .answer-num {
+            width: 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .answer-input {
+            flex: 1;
+            height: 40px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 0 15px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .answer-input:focus {
+            border-color: #165dff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+        }
+
+        /* 右侧侧边栏 */
+        .sidebar-section {
+            width: 320px;
+            background-color: #fff;
+            border-left: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex-shrink: 0;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.02);
+        }
+
+        /* 顶部状态栏 */
+        .status-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .net-speed {
+            color: #52c41a;
+        }
+        .time-left {
+            font-size: 18px;
+            color: #165dff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 监控画面区 */
+        .monitor-box {
+            background-color: #000;
+            height: 160px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .monitor-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            opacity: 0.5;
+        }
+        .monitor-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .monitor-tag .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+        .monitor-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #52c41a;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 侧边栏面板区 */
+        .sidebar-panel {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+        }
+        .panel-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            cursor: pointer;
+            color: #666;
+            font-weight: 500;
+        }
+        .panel-tab.active {
+            color: #165dff;
+            border-bottom: 2px solid #165dff;
+        }
+
+        /* 答题卡图例 */
+        .legend-area {
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+            background-color: #fff;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .legend-dot.answered {
+            background-color: #165dff;
+        }
+        .legend-dot.unanswered {
+            background-color: #ccc;
+        }
+
+        /* 题号网格 */
+        .grid-area {
+            padding: 0 15px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            overflow-y: auto;
+            flex: 1;
+            background-color: #fff;
+        }
+        .grid-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .grid-item.answered {
+            background-color: #165dff;
+            color: white;
+        }
+        /* 当前正在作答的题目高亮状态 */
+        .grid-item.current {
+            border: 2px solid #165dff;
+            background-color: #e6f7ff;
+            color: #165dff;
+            font-weight: bold;
+        }
+        .grid-item.answered.current {
+            border: 2px solid #0e4bc2;
+            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+        }
+
+        /* 底部操作区 */
+        .bottom-actions {
+            background-color: #fff;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+        .part-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .part-tab-item {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            padding-bottom: 5px;
+        }
+        .part-tab-item.active {
+            color: #165dff;
+            border-bottom: 2px solid #165dff;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #ff7d00;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-submit:hover {
+            background-color: #e67000;
+            color: white;
+        }
+        
+        /* 底部头像模拟 */
+        .bottom-avatar {
+            position: absolute;
+            bottom: 20px;
+            right: 340px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #eee;
+            background-image: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix');
+            background-size: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-logo">
+            <i class="fa fa-graduation-cap" style="font-size: 24px;"></i>
+            VISION ACADEMY 测评系统
+        </div>
+        <div class="header-user">
+            <span>Hi, 关天任1</span>
+            <a href="#" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="nav-arrow left-arrow"><i class="fa fa-angle-left"></i></div>
+        
+        <!-- 左侧题目区 -->
+        <div class="question-section">
+            <div class="part-title">Part 1</div>
+            <div class="instruction-text">Listen and answer question 1 – 10</div>
+            
+            <div class="sub-instruction">
+                Complete the notes below.<br>
+                Write ONE WORD AND/OR A NUMBER for each answer.
+            </div>
+            
+            <!-- 模拟的试卷区域 -->
+            <div class="mock-paper">
+                <div class="paper-title">Transport survey</div>
+                
+                <div class="paper-row">
+                    <div class="paper-label">Name:</div>
+                    <div class="paper-value">Sadie Jones</div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Year of birth:</div>
+                    <div class="paper-value">1991</div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Postcode:</div>
+                    <div class="paper-value"><span class="blank-num">1</span> <span class="dotted-line"></span></div>
+                </div>
+                
+                <div class="paper-group-title">Travelling by bus</div>
+                <div class="paper-row">
+                    <div class="paper-label">Date of bus journey:</div>
+                    <div class="paper-value"><span class="blank-num">2</span> <span class="dotted-line"></span></div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Reason for trip:</div>
+                    <div class="paper-value">shopping and visit to the <span class="blank-num">3</span> <span class="dotted-line"></span></div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Travelled by bus because cost of</div>
+                    <div class="paper-value"><span class="blank-num">4</span> <span class="dotted-line"></span> too high</div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Got on bus at</div>
+                    <div class="paper-value"><span class="blank-num">5</span> <span class="dotted-line"></span> Street</div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label">Complaints about bus service:</div>
+                    <div class="paper-value">
+                        - bus today was <span class="blank-num">6</span> <span class="dotted-line"></span><br>
+                        - frequency of buses in the <span class="blank-num">7</span> <span class="dotted-line" style="width:100px;"></span>
+                    </div>
+                </div>
+                
+                <div class="paper-group-title">Travelling by car</div>
+                <div class="paper-row">
+                    <div class="paper-label">Goes to the</div>
+                    <div class="paper-value"><span class="blank-num">8</span> <span class="dotted-line"></span> by car</div>
+                </div>
+                
+                <div class="paper-group-title">Travelling by bicycle</div>
+                <div class="paper-row">
+                    <div class="paper-label" style="width: auto; margin-right: 10px;">Dislikes travelling by bike in the city centre because of the</div>
+                    <div class="paper-value"><span class="blank-num">9</span> <span class="dotted-line"></span></div>
+                </div>
+                <div class="paper-row">
+                    <div class="paper-label" style="width: auto; margin-right: 10px;">Doesn't own a bike because of a lack of</div>
+                    <div class="paper-value"><span class="blank-num">10</span> <span class="dotted-line"></span></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 中间答题区 -->
+        <div class="answer-section">
+            <div class="answer-row">
+                <div class="answer-num">1</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="1">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">2</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="2">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">3</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="3">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">4</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="4">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">5</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="5">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">6</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="6">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">7</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="7">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">8</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="8">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">9</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="9">
+            </div>
+            <div class="answer-row">
+                <div class="answer-num">10</div>
+                <input type="text" class="answer-input" placeholder="请输入" data-qnum="10">
+            </div>
+        </div>
+        
+        <div class="nav-arrow right-arrow"><i class="fa fa-angle-right"></i></div>
+        
+        <!-- 右侧侧边栏 -->
+        <div class="sidebar-section">
+            <div class="status-bar">
+                <span class="net-speed">2.29MB/s</span>
+                <span class="time-left"><i class="fa fa-clock-o"></i> 剩余时间: 00:22:00</span>
+            </div>
+            
+            <div class="monitor-box">
+                <i class="fa fa-video-camera monitor-icon"></i>
+                <div class="monitor-tag"><span class="dot"></span> 监控中</div>
+                <div class="monitor-status"><i class="fa fa-microphone"></i> 正常</div>
+            </div>
+            
+            <div class="sidebar-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active">答题卡 (10)</div>
+                    <div class="panel-tab">工具箱(1)</div>
+                </div>
+                
+                <div class="legend-area">
+                    <div class="legend-item">
+                        <div class="legend-dot answered"></div> 已答
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot unanswered"></div> 未答
+                    </div>
+                </div>
+                
+                <div class="grid-area">
+                    <div class="grid-item" id="grid-1">1</div>
+                    <div class="grid-item" id="grid-2">2</div>
+                    <div class="grid-item" id="grid-3">3</div>
+                    <div class="grid-item" id="grid-4">4</div>
+                    <div class="grid-item" id="grid-5">5</div>
+                    <div class="grid-item" id="grid-6">6</div>
+                    <div class="grid-item" id="grid-7">7</div>
+                    <div class="grid-item" id="grid-8">8</div>
+                    <div class="grid-item" id="grid-9">9</div>
+                    <div class="grid-item" id="grid-10">10</div>
+                </div>
+                
+                <div class="bottom-actions">
+                    <div class="part-tabs">
+                        <div class="part-tab-item active">Part 1</div>
+                        <div class="part-tab-item">Part 2</div>
+                        <div class="part-tab-item">Part 3</div>
+                    </div>
+                    <button class="btn btn-submit">提交试卷</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部小头像 -->
+        <div class="bottom-avatar"></div>
+        
+    </div>
+
+    <!-- 引入jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 监听输入框内容变化，联动答题卡状态
+            $('.answer-input').on('input', function() {
+                var qnum = $(this).data('qnum');
+                var val = $(this).val().trim();
+                var $gridItem = $('#grid-' + qnum);
+                
+                if(val.length > 0) {
+                    $gridItem.addClass('answered');
+                } else {
+                    $gridItem.removeClass('answered');
+                }
+            });
+            
+            // 监听输入框焦点，联动右侧答题卡高亮与滚动跳转
+            $('.answer-input').on('focus', function() {
+                var qnum = $(this).data('qnum');
+                var $gridItem = $('#grid-' + qnum);
+                
+                // 移除其他题目的高亮状态
+                $('.grid-item').removeClass('current');
+                // 给当前题目添加高亮状态
+                $gridItem.addClass('current');
+                
+                // 让右侧答题卡区域滚动到当前题目的位置
+                var $container = $('.grid-area');
+                if($gridItem.length) {
+                    $container.animate({
+                        scrollTop: $gridItem.offset().top - $container.offset().top + $container.scrollTop() - 20
+                    }, 200);
+                }
+            });
+            
+            // 失去焦点时移除高亮（可选，保留高亮效果更好）
+            $('.answer-input').on('blur', function() {
+                $(this).removeClass('current');
+                var qnum = $(this).data('qnum');
+                $('#grid-' + qnum).removeClass('current');
+            });
+
+            // 点击答题卡题号定位到输入框
+            $('.grid-item').on('click', function() {
+                var num = $(this).text();
+                var $input = $('.answer-input[data-qnum="' + num + '"]');
+                if($input.length) {
+                    $input.focus();
+                }
+            });
+            
+            // 提交按钮事件
+            $('.btn-submit').on('click', function() {
+                // 点击提交后跳转到休息页
+                window.location.href = '休息页.html';
+            });
+        });
+    </script>
+</body>
+</html>
