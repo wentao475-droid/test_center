@@ -400,22 +400,6 @@
             background-color: #e67000;
             color: white;
         }
-        
-        /* 底部头像模拟 */
-        .bottom-avatar {
-            position: absolute;
-            bottom: 20px;
-            right: 340px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #eee;
-            background-image: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix');
-            background-size: cover;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
 
     </style>
 </head>
@@ -605,11 +589,34 @@
             </div>
         </div>
         
-        <!-- 底部小头像 -->
-        <div class="bottom-avatar"></div>
-        
     </div>
 
+    <!-- 提交确认弹窗 -->
+    <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-labelledby="submitConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitConfirmModalLabel">提交试卷提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle"></i> 您还有 <strong id="unansweredCount" style="color: #ff4d4f; font-size: 18px;">0</strong> 道题目未作答！
+                    </div>
+                    <p>雅思考试评分规则：<strong>答对得分，答错不扣分</strong>。</p>
+                    <p>强烈建议您检查并完成所有题目，即使不确定也可以猜测一个答案。</p>
+                    <p>您确定要现在提交试卷吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">返回继续答题</button>
+                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn" style="background-color: #ff7d00; border-color: #ff7d00;">确认提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- 引入jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
@@ -664,8 +671,65 @@
             
             // 提交按钮事件
             $('.btn-submit').on('click', function() {
-                // 点击提交后跳转到休息页
+                // 检查未答题目
+                var totalQuestions = $('.answer-input').length;
+                var answeredQuestions = $('.answer-input').filter(function() {
+                    return $(this).val().trim().length > 0;
+                }).length;
+                
+                var unansweredCount = totalQuestions - answeredQuestions;
+                
+                if (unansweredCount > 0) {
+                    // 有未答题目，显示弹窗
+                    $('#unansweredCount').text(unansweredCount);
+                    var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
+                    submitModal.show();
+                } else {
+                    // 全部答完，直接提交
+                    window.location.href = '休息页.html';
+                }
+            });
+            
+            // 弹窗确认提交
+            $('#confirmSubmitBtn').on('click', function() {
                 window.location.href = '休息页.html';
+            });
+            
+            // 切换Part
+            $('.part-tab-item').on('click', function() {
+                $('.part-tab-item').removeClass('active');
+                $(this).addClass('active');
+                
+                var partText = $(this).text();
+                $('.part-title').text(partText);
+                
+                // 模拟切换内容，改变题目提示
+                if (partText === 'Part 1') {
+                    $('.instruction-text').text('Listen and answer question 1 – 10');
+                } else if (partText === 'Part 2') {
+                    $('.instruction-text').text('Listen and answer question 11 – 20');
+                } else if (partText === 'Part 3') {
+                    $('.instruction-text').text('Listen and answer question 21 – 30');
+                } else if (partText === 'Part 4') {
+                    $('.instruction-text').text('Listen and answer question 31 – 40');
+                }
+            });
+
+            // 左右箭头切换Part
+            $('.left-arrow').on('click', function() {
+                var $active = $('.part-tab-item.active');
+                var $prev = $active.prev('.part-tab-item');
+                if ($prev.length) {
+                    $prev.click();
+                }
+            });
+
+            $('.right-arrow').on('click', function() {
+                var $active = $('.part-tab-item.active');
+                var $next = $active.next('.part-tab-item');
+                if ($next.length) {
+                    $next.click();
+                }
             });
         });
     </script>

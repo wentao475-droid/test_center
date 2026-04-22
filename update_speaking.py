@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+import os
+import re
+
+part1_html = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -298,4 +301,56 @@
         });
     </script>
 </body>
-</html>
+</html>"""
+
+with open('e:/产品学习/AI/project/test_center/雅思口语考试_Part1.html', 'w', encoding='utf-8') as f:
+    f.write(part1_html)
+
+# Generate Part 3 HTML based on Part 1
+part3_html = part1_html.replace('雅思口语考试 - Part 1', '雅思口语考试 - Part 3')
+part3_html = part3_html.replace('Part 1: Introduction & Interview', 'Part 3: Discussion')
+part3_html = part3_html.replace('width: 33%', 'width: 100%')
+
+js_part1_questions = """            const questions = [
+                "Good morning. My name is Alex. Could you tell me your full name, please?",
+                "Let's talk about where you live. Do you live in a house or an apartment?"
+            ];"""
+            
+js_part3_questions = """            const questions = [
+                "We've been talking about a memorable journey. Now I'd like to discuss with you one or two more general questions related to this. Do you think it is necessary to prepare before travelling?",
+                "How has the way people travel changed over the last few decades?",
+                "That's all for the speaking test. Thank you and good luck."
+            ];"""
+
+part3_html = part3_html.replace(js_part1_questions, js_part3_questions)
+
+js_part1_logic = """                    setTimeout(() => {
+                        currentStep++;
+                        if(currentStep < questions.length) {
+                            simulateAISpeaking(questions[currentStep]);
+                        } else {
+                            window.location.href = '雅思口语考试_Part2.html';
+                        }
+                    }, 1000);"""
+
+js_part3_logic = """                    setTimeout(() => {
+                        currentStep++;
+                        if(currentStep < questions.length - 1) {
+                            simulateAISpeaking(questions[currentStep]);
+                        } else if(currentStep === questions.length - 1) {
+                            simulateAISpeaking(questions[currentStep]);
+                            // End of test after last phrase
+                            setTimeout(() => {
+                                alert('口语考试已全部完成！');
+                                window.location.href = '休息页.html';
+                            }, 5000);
+                        } else {
+                            alert('口语考试已全部完成！');
+                            window.location.href = '休息页.html';
+                        }
+                    }, 1000);"""
+
+part3_html = part3_html.replace(js_part1_logic, js_part3_logic)
+
+with open('e:/产品学习/AI/project/test_center/雅思口语考试_Part3.html', 'w', encoding='utf-8') as f:
+    f.write(part3_html)

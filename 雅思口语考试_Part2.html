@@ -216,16 +216,56 @@
             display: flex;
         }
 
-        /* 答题卡空状态 */
-        .empty-status {
-            flex: 1;
+        /* 答题卡图例 */
+        .legend-area {
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+            background-color: #fff;
+        }
+        .legend-item {
             display: flex;
             align-items: center;
+            gap: 5px;
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .legend-dot.answered { background-color: #165dff; }
+        .legend-dot.unanswered { background-color: #ccc; }
+
+        /* 题号网格 */
+        .grid-area {
+            padding: 0 15px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            overflow-y: auto;
+            flex: 1;
+            background-color: #fff;
+        }
+        .grid-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
             justify-content: center;
-            color: #999;
+            align-items: center;
             font-size: 14px;
-            padding: 20px;
-            text-align: center;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .grid-item.answered { background-color: #165dff; color: white; }
+        .grid-item.current {
+            border: 2px solid #165dff;
+            background-color: #e6f7ff;
+            color: #165dff;
+            font-weight: bold;
         }
 
         /* 工具箱列表条目样式 */
@@ -334,8 +374,25 @@
                 
                 <!-- 答题卡面板内容 -->
                 <div class="tab-content" id="answer-card">
-                    <div class="empty-status">
-                        口语考试 Part 2 无需使用答题卡。<br>请直接进行口头作答。
+                    <div class="legend-area">
+                        <div class="legend-item">
+                            <div class="legend-dot answered"></div> 已答
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot unanswered"></div> 未答
+                        </div>
+                    </div>
+                    <div class="grid-area">
+                        <div class="grid-item answered">1</div>
+                        <div class="grid-item answered">2</div>
+                        <div class="grid-item answered">3</div>
+                        <div class="grid-item answered">4</div>
+                        <div class="grid-item answered">5</div>
+                        <div class="grid-item current">6</div>
+                        <div class="grid-item">7</div>
+                        <div class="grid-item">8</div>
+                        <div class="grid-item">9</div>
+                        <div class="grid-item">10</div>
                     </div>
                 </div>
 

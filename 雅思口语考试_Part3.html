@@ -6,153 +6,87 @@
     <title>雅思口语考试 - Part 3 - VISION ACADEMY</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <!-- 引入 Part 1 的样式，因为它们结构相似 -->
     <style>
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #165dff;
-        }
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 14px;
-            color: #666;
-        }
+        body { font-family: "Microsoft YaHei", sans-serif; background-color: #fff; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; color: #333; }
+        .header { background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
+        .header-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: bold; color: #165dff; }
+        .header-user { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #666; }
         .logout-btn { color: #165dff; text-decoration: none; }
         
         .progress-bar-top { height: 4px; background-color: #eee; width: 100%; }
-        .progress-bar-fill { height: 100%; background-color: #165dff; width: var(--progress-percent, 100%); transition: width 0.3s; }
+        .progress-bar-fill { height: 100%; background-color: #165dff; width: 100%; transition: width 0.3s; }
 
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-        }
-        .part-indicator {
-            position: absolute;
-            top: 20px;
-            left: 30px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
+        .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        .examiner-area { display: flex; flex-direction: column; align-items: center; margin-bottom: 50px; }
-        .examiner-avatar {
-            width: 120px;
-            height: 120px;
-            background-color: #e6f7ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            color: #165dff;
-            box-shadow: 0 0 0 0 rgba(22, 93, 255, 0);
-            transition: all 0.3s;
-        }
+        .question-section { flex: 1.2; padding: 40px 60px 40px 80px; overflow-y: auto; border-right: 1px solid #eee; display: flex; flex-direction: column; align-items: center; }
+        .part-title { font-size: 24px; font-weight: bold; margin-bottom: 30px; align-self: flex-start; }
+
+        .examiner-area { display: flex; flex-direction: column; align-items: center; margin-bottom: 50px; margin-top: 30px; }
+        .examiner-avatar { width: 120px; height: 120px; background-color: #e6f7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; color: #165dff; box-shadow: 0 0 0 0 rgba(22, 93, 255, 0); transition: all 0.3s; }
         .examiner-avatar.speaking { animation: pulse-blue 1.5s infinite; }
-        @keyframes pulse-blue {
-            0% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.4); }
-            70% { box-shadow: 0 0 0 30px rgba(22, 93, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0); }
-        }
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.4); } 70% { box-shadow: 0 0 0 30px rgba(22, 93, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(22, 93, 255, 0); } }
         .examiner-status { margin-top: 15px; font-size: 14px; color: #666; font-weight: 500; }
 
-        .text-blind-zone {
-            width: 100%;
-            max-width: 600px;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 50px;
-        }
-        .subtitle-text {
-            font-size: 18px;
-            color: #333;
-            text-align: center;
-            line-height: 1.6;
-            display: none;
-            background: #fff;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid #ff7d00;
-        }
-        .btn-show-text { background: none; border: none; color: #999; font-size: 13px; text-decoration: underline; cursor: pointer; }
+        .text-blind-zone { width: 100%; max-width: 600px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 50px; }
+        .subtitle-text { font-size: 18px; color: #333; text-align: center; line-height: 1.6; display: none; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #ff7d00; width: 100%; }
+        .btn-show-text { background: none; border: none; color: #999; font-size: 13px; text-decoration: underline; cursor: pointer; transition: color 0.2s; }
         .btn-show-text:hover { color: #ff7d00; }
 
+        .answer-section { flex: 1; padding: 40px 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; background-color: #fafafa; }
+        
         .controls-area { display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .main-controls { display: flex; align-items: center; gap: 30px; }
-
-        .btn-action {
-            width: 50px; height: 50px; border-radius: 50%; border: none; background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #666; font-size: 20px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
+        .btn-action { width: 50px; height: 50px; border-radius: 50%; border: none; background-color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #666; font-size: 20px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; position: relative; }
         .btn-action:hover:not(:disabled) { background-color: #f0f0f0; color: #333; }
         .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-action .badge {
-            position: absolute; top: -5px; right: -5px; background-color: #ff4d4f;
-            color: white; font-size: 10px; border-radius: 10px; padding: 2px 6px;
-        }
+        .btn-action .badge { position: absolute; top: -5px; right: -5px; background-color: #ff4d4f; color: white; font-size: 10px; border-radius: 10px; padding: 2px 6px; }
 
-        .btn-record {
-            width: 80px; height: 80px; border-radius: 50%; border: none; background-color: #ccc;
-            color: white; font-size: 30px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s; cursor: not-allowed;
-        }
+        .btn-record { width: 80px; height: 80px; border-radius: 50%; border: none; background-color: #ccc; color: white; font-size: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s; cursor: not-allowed; }
         .btn-record.ready { background-color: #165dff; cursor: pointer; }
         .btn-record.ready:hover { background-color: #0e4bc2; transform: scale(1.05); }
         .btn-record.recording { background-color: #ff4d4f; animation: pulse-red 1.5s infinite; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 77, 79, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
-        }
-        .record-hint { font-size: 14px; color: #666; height: 20px; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(255, 77, 79, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); } }
+        .record-hint { font-size: 14px; color: #666; height: 20px; margin-top: 10px; }
 
-        .toast-warning {
-            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-            background-color: #fff1f0; border: 1px solid #ffa39e; color: #cf1322;
-            padding: 10px 20px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            display: none; z-index: 1000; font-weight: 500;
-        }
+        .toast-warning { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); background-color: #fff1f0; border: 1px solid #ffa39e; color: #cf1322; padding: 10px 20px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; z-index: 1000; font-weight: 500; }
+
+        /* 右侧侧边栏 */
+        .sidebar-section { width: 320px; background-color: #fff; border-left: 1px solid #eee; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.02); }
+        .status-bar { display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin-bottom: 15px; font-size: 14px; }
+        .net-speed { color: #52c41a; }
+        .time-left { font-size: 18px; color: #165dff; }
+        .monitor-box { background-color: #000; height: 160px; border-radius: 8px; position: relative; margin-bottom: 20px; overflow: hidden; }
+        .monitor-icon { position: absolute; top: 10px; left: 10px; color: #fff; opacity: 0.5; }
+        .monitor-tag { position: absolute; top: 10px; right: 10px; background-color: rgba(255, 0, 0, 0.8); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; display: flex; align-items: center; gap: 5px; }
+        .monitor-tag .dot { width: 6px; height: 6px; background-color: #fff; border-radius: 50%; }
+        .monitor-status { position: absolute; bottom: 10px; left: 10px; color: #52c41a; font-size: 12px; }
+
+        .sidebar-panel { background-color: #f8f9fa; border-radius: 8px; flex: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eee; }
+        .panel-tabs { display: flex; border-bottom: 1px solid #eee; background-color: #fff; }
+        .panel-tab { flex: 1; text-align: center; padding: 12px 0; font-size: 14px; cursor: pointer; color: #666; font-weight: 500; }
+        .panel-tab.active { color: #165dff; border-bottom: 2px solid #165dff; }
+        .tab-content { flex: 1; display: none; flex-direction: column; background-color: #fff; }
+        .tab-content.active { display: flex; }
+
+        /* 答题卡图例 */
+        .legend-area { padding: 15px; display: flex; gap: 20px; font-size: 12px; color: #666; background-color: #fff; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .legend-dot.answered { background-color: #165dff; }
+        .legend-dot.unanswered { background-color: #ccc; }
+        .grid-area { padding: 0 15px 15px; display: flex; flex-wrap: wrap; gap: 12px; overflow-y: auto; flex: 1; background-color: #fff; }
+        .grid-item { width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; background-color: #f5f5f5; color: #666; }
+        .grid-item.answered { background-color: #165dff; color: white; }
+        .grid-item.current { border: 2px solid #165dff; background-color: #e6f7ff; color: #165dff; font-weight: bold; }
+
+        .tool-list { padding: 20px; }
+        .tool-item { display: flex; align-items: center; gap: 10px; color: #165dff; font-size: 14px; cursor: pointer; padding: 10px; border-radius: 4px; transition: background-color 0.2s; }
+        .tool-item:hover { background-color: #e6f7ff; }
+
+        .modal-notepad-body { width: 100%; height: 400px; background-color: #fffde7; border: 1px solid #e6c85c; border-radius: 4px; padding: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); resize: none; font-family: "Courier New", Courier, monospace; font-size: 16px; outline: none; }
     </style>
 </head>
 <body>
-
     <header class="header">
         <div class="header-logo"><i class="fa fa-graduation-cap"></i> VISION ACADEMY 测评系统</div>
         <div class="header-user"><span>Hi, 测试老师01</span><a href="#" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a></div>
@@ -162,39 +96,117 @@
     <div class="toast-warning" id="warningToast"><i class="fa fa-exclamation-circle me-1"></i> <span id="warningText">提示信息</span></div>
 
     <div class="main-container">
-        <div class="part-indicator">Part 3: Discussion</div>
+        
+        <!-- 左侧题目区 -->
+        <div class="question-section">
+            <div class="part-title">Part 3: Discussion</div>
 
-        <div class="examiner-area">
-            <div class="examiner-avatar" id="aiAvatar"><i class="fa fa-user"></i></div>
-            <div class="examiner-status" id="aiStatus">考官准备中...</div>
-        </div>
+            <div class="examiner-area">
+                <div class="examiner-avatar" id="aiAvatar"><i class="fa fa-user"></i></div>
+                <div class="examiner-status" id="aiStatus">考官准备中...</div>
+            </div>
 
-        <div class="text-blind-zone">
-            <button class="btn-show-text" id="btnShowText"><i class="fa fa-eye"></i> 显示字幕 (将扣除相应隐藏分)</button>
-            <div class="subtitle-text" id="subtitleText">
-                We've been talking about a memorable journey. Now I'd like to discuss with you one or two more general questions related to this...
+            <div class="text-blind-zone">
+                <button class="btn-show-text" id="btnShowText"><i class="fa fa-eye"></i> 显示字幕 (将扣除相应隐藏分)</button>
+                <div class="subtitle-text" id="subtitleText">
+                    Good morning. My name is Alex. Could you tell me your full name, please?
+                </div>
             </div>
         </div>
 
-        <div class="controls-area">
-            <div class="main-controls">
-                <button class="btn-action" id="btnRepeat" title="再说一遍" disabled>
-                    <i class="fa fa-refresh"></i>
-                    <span class="badge" id="repeatCount">2</span>
-                </button>
-                <button class="btn-record" id="btnRecord" disabled><i class="fa fa-microphone"></i></button>
-                <button class="btn-action" style="visibility: hidden;"><i class="fa fa-cog"></i></button>
+        <!-- 中间作答区 -->
+        <div class="answer-section">
+            <div class="controls-area">
+                <div class="main-controls">
+                    <button class="btn-action" id="btnRepeat" title="再说一遍" disabled>
+                        <i class="fa fa-refresh"></i>
+                        <span class="badge" id="repeatCount">2</span>
+                    </button>
+                    <button class="btn-record" id="btnRecord" disabled><i class="fa fa-microphone"></i></button>
+                    <button class="btn-action" style="visibility: hidden;"><i class="fa fa-cog"></i></button>
+                </div>
+                <div class="record-hint" id="recordHint">等待考官提问完毕...</div>
             </div>
-            <div class="record-hint" id="recordHint">等待考官提问完毕...</div>
+        </div>
+
+        <!-- 右侧侧边栏 -->
+        <div class="sidebar-section">
+            <div class="status-bar">
+                <span class="net-speed">2.29MB/s</span>
+                <span class="time-left"><i class="fa fa-clock-o"></i> 剩余时间: 00:15:00</span>
+            </div>
+            <div class="monitor-box">
+                <i class="fa fa-video-camera monitor-icon"></i>
+                <div class="monitor-tag"><span class="dot"></span> 监控中</div>
+                <div class="monitor-status"><i class="fa fa-microphone"></i> 正常</div>
+            </div>
+            
+            <div class="sidebar-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-target="answer-card">答题卡 (10)</div>
+                    <div class="panel-tab" data-target="toolbox">工具箱(1)</div>
+                </div>
+                
+                <div class="tab-content active" id="answer-card">
+                    <div class="legend-area">
+                        <div class="legend-item"><div class="legend-dot answered"></div> 已答</div>
+                        <div class="legend-item"><div class="legend-dot unanswered"></div> 未答</div>
+                    </div>
+                    <div class="grid-area">
+                        <div class="grid-item current" id="grid-1">1</div>
+                        <div class="grid-item" id="grid-2">2</div>
+                        <div class="grid-item" id="grid-3">3</div>
+                        <div class="grid-item" id="grid-4">4</div>
+                        <div class="grid-item" id="grid-5">5</div>
+                        <div class="grid-item" id="grid-6">6</div>
+                        <div class="grid-item" id="grid-7">7</div>
+                        <div class="grid-item" id="grid-8">8</div>
+                        <div class="grid-item" id="grid-9">9</div>
+                        <div class="grid-item" id="grid-10">10</div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="toolbox">
+                    <div class="tool-list">
+                        <div class="tool-item" data-bs-toggle="modal" data-bs-target="#notepadModal">
+                            <i class="fa fa-pencil-square-o"></i> 数字草稿本 (Notepad)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 数字草稿本弹窗 (Modal) -->
+    <div class="modal fade" id="notepadModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title fs-6"><i class="fa fa-pencil text-primary me-2"></i>数字草稿本 (Notepad)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <textarea id="notepadTextarea" class="modal-notepad-body" placeholder="在此输入您的草稿内容..."></textarea>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('.panel-tab').on('click', function() {
+                $('.panel-tab').removeClass('active');
+                $(this).addClass('active');
+                var targetId = $(this).data('target');
+                $('.tab-content').removeClass('active');
+                $('#' + targetId).addClass('active');
+            });
+
             let repeatLeft = 2;
             let silenceTimer = null;
-            let currentStep = 0; 
+            let currentStep = 0;
             let isRecording = false;
 
             const questions = [
@@ -209,7 +221,7 @@
                 setTimeout(() => { $('#warningToast').fadeOut(200); }, duration);
             }
 
-            function simulateAISpeaking(questionText, duration = 3500) {
+            function simulateAISpeaking(questionText, duration = 3000) {
                 $('#subtitleText').hide();
                 $('#btnShowText').show();
                 $('#subtitleText').text(questionText);
@@ -220,22 +232,16 @@
                 $('#btnRepeat').prop('disabled', true);
                 $('#recordHint').text('请仔细聆听考官提问...');
 
+                // 更新答题卡当前题号高亮
+                $('.grid-item').removeClass('current');
+                $('#grid-' + (currentStep + 1)).addClass('current');
+
                 setTimeout(() => {
                     $('#aiAvatar').removeClass('speaking');
                     $('#aiStatus').text('考官倾听中');
-                    
-                    if (currentStep === questions.length - 1) {
-                        // 结束语
-                        $('#recordHint').text('考试结束，正在上传录音...');
-                        setTimeout(() => {
-                            alert('口语考试已全部完成！');
-                            window.location.href = '休息页.html';
-                        }, 2000);
-                    } else {
-                        $('#btnRecord').addClass('ready').prop('disabled', false);
-                        $('#recordHint').text('点击麦克风开始录音');
-                        if(repeatLeft > 0) $('#btnRepeat').prop('disabled', false);
-                    }
+                    $('#btnRecord').addClass('ready').prop('disabled', false);
+                    $('#recordHint').text('点击麦克风开始录音');
+                    if(repeatLeft > 0) $('#btnRepeat').prop('disabled', false);
                 }, duration);
             }
 
@@ -264,10 +270,25 @@
                     $('#recordHint').text('录音已结束，正在处理...');
                     $(this).removeClass('ready').prop('disabled', true);
                     $('#btnRepeat').prop('disabled', true);
+                    
+                    // 标记当前题为已答
+                    $('#grid-' + (currentStep + 1)).addClass('answered');
 
                     setTimeout(() => {
                         currentStep++;
-                        simulateAISpeaking(questions[currentStep]);
+                        if(currentStep < questions.length - 1) {
+                            simulateAISpeaking(questions[currentStep]);
+                        } else if(currentStep === questions.length - 1) {
+                            simulateAISpeaking(questions[currentStep]);
+                            // End of test after last phrase
+                            setTimeout(() => {
+                                alert('口语考试已全部完成！');
+                                window.location.href = '休息页.html';
+                            }, 5000);
+                        } else {
+                            alert('口语考试已全部完成！');
+                            window.location.href = '休息页.html';
+                        }
                     }, 1000);
 
                 } else {
@@ -282,8 +303,7 @@
                 }
             });
 
-            // 初始化
-            setTimeout(() => { simulateAISpeaking(questions[0], 4000); }, 1000);
+            setTimeout(() => { simulateAISpeaking(questions[0], 3500); }, 1000);
         });
     </script>
 </body>
