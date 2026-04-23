@@ -413,7 +413,7 @@
     <div class="modal fade" id="notepadModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content shadow">
-                <div class="modal-header modal-header-custom">
+                <div class="modal-header modal-header-custom" style="cursor: move;">
                     <h5 class="modal-title fs-6"><i class="fa fa-pencil text-primary me-2"></i>数字草稿本 (Notepad)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -436,6 +436,34 @@
                 var targetId = $(this).data('target');
                 $('.tab-content').removeClass('active');
                 $('#' + targetId).addClass('active');
+            });
+
+            // 弹窗拖拽逻辑
+            $('.modal-header').on('mousedown', function(e) {
+                var $modalDialog = $(this).closest('.modal-dialog');
+                var offset = $modalDialog.offset();
+                var x = e.pageX - offset.left;
+                var y = e.pageY - offset.top;
+                
+                // 移除 Bootstrap 的居中等样式限制，使其自由移动
+                $modalDialog.removeClass('modal-dialog-centered');
+                $modalDialog.css({
+                    'margin': '0',
+                    'position': 'absolute',
+                    'left': offset.left + 'px',
+                    'top': offset.top + 'px'
+                });
+                
+                $(document).on('mousemove.draggable', function(e) {
+                    $modalDialog.css({
+                        'left': (e.pageX - x) + 'px',
+                        'top': (e.pageY - y) + 'px'
+                    });
+                });
+                
+                $(document).on('mouseup.draggable', function() {
+                    $(document).off('mousemove.draggable mouseup.draggable');
+                });
             });
 
             // 倒计时与考试逻辑

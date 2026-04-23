@@ -583,6 +583,7 @@
                         <div class="part-tab-item active">Part 1</div>
                         <div class="part-tab-item">Part 2</div>
                         <div class="part-tab-item">Part 3</div>
+                        <div class="part-tab-item">Part 4</div>
                     </div>
                     <button class="btn btn-submit">提交试卷</button>
                 </div>
@@ -697,21 +698,16 @@
             
             // 切换Part
             $('.part-tab-item').on('click', function() {
-                $('.part-tab-item').removeClass('active');
-                $(this).addClass('active');
-                
                 var partText = $(this).text();
-                $('.part-title').text(partText);
                 
-                // 模拟切换内容，改变题目提示
                 if (partText === 'Part 1') {
-                    $('.instruction-text').text('Listen and answer question 1 – 10');
+                    // 当前页
                 } else if (partText === 'Part 2') {
-                    $('.instruction-text').text('Listen and answer question 11 – 20');
+                    window.location.href = '雅思听力考试_Part2.html';
                 } else if (partText === 'Part 3') {
-                    $('.instruction-text').text('Listen and answer question 21 – 30');
+                    alert('Part 3 页面开发中');
                 } else if (partText === 'Part 4') {
-                    $('.instruction-text').text('Listen and answer question 31 – 40');
+                    alert('Part 4 页面开发中');
                 }
             });
 

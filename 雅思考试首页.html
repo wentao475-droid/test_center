@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思考试首页 - VISION ACADEMY</title>
+    <!-- 引入Bootstrap样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局与布局 */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f6f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 左侧边栏 */
+        .sidebar {
+            width: 240px;
+            background-color: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .sidebar-logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #165dff;
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-logo img {
+            height: 30px;
+        }
+        .sidebar-logo i {
+            font-size: 24px;
+        }
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 10px;
+        }
+        .menu-item {
+            padding: 15px 20px;
+            color: #666;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .menu-item:hover {
+            background-color: #f8f9fa;
+        }
+        .menu-item.active {
+            background-color: #f0f4ff;
+            color: #165dff;
+        }
+
+        /* 主体区域 */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部 Header */
+        .header {
+            height: 60px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .exam-select {
+            padding: 6px 30px 6px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23666" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+            background-color: #fff;
+        }
+        .user-info {
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .page-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .page-desc {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Tabs */
+        .round-tabs {
+            display: flex;
+            gap: 40px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+        .round-tab {
+            padding: 10px 0;
+            font-size: 16px;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        .round-tab.active {
+            color: #333;
+            border-bottom-color: #333;
+        }
+
+        /* 轮次区块 */
+        .round-section {
+            margin-bottom: 50px;
+        }
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .section-time {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 筛选器 */
+        .filters {
+            display: inline-flex;
+            background: #fff;
+            padding: 6px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            gap: 5px;
+        }
+        .filter-btn {
+            padding: 6px 20px;
+            border-radius: 20px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
+            background-color: #2b3a4a;
+            color: #fff;
+        }
+        .filter-btn:hover:not(.active) {
+            background-color: #f5f6f8;
+        }
+
+        /* 卡片网格 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* 考试卡片 */
+        .exam-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .exam-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+        
+        /* 卡片顶部彩色渐变条 */
+        .card-top-border {
+            height: 6px;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .border-blue { background: linear-gradient(90deg, #7fb5ff, #4e8df5); }
+        .border-purple { background: linear-gradient(90deg, #9b8cff, #7a65f2); }
+        .border-green { background: linear-gradient(90deg, #6ee2d3, #45cbb9); }
+        .border-orange { background: linear-gradient(90deg, #ffc799, #f9a66c); }
+        
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            margin-top: 5px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .card-tag {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        .tag-normal {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+        .tag-advanced {
+            background-color: #fff2e8;
+            color: #ff7d00;
+        }
+        
+        .card-duration {
+            color: #999;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        
+        .btn-start {
+            background-color: #2b3a4a;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .btn-start:hover {
+            background-color: #1e2933;
+            color: #fff;
+        }
+        .btn-start i {
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- 左侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa fa-graduation-cap"></i>
+            VISION ACADEMY
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active"><i class="fa fa-home"></i> 雅思考试首页</div>
+            <div class="menu-item"><i class="fa fa-file-text-o"></i> 考试记录</div>
+            <div class="menu-item"><i class="fa fa-book"></i> 真题案例</div>
+            <div class="menu-item"><i class="fa fa-user-o"></i> 个人中心</div>
+        </div>
+    </div>
+
+    <!-- 主体区域 -->
+    <div class="main-wrapper">
+        <!-- 顶部 Header -->
+        <div class="header">
+            <div class="header-actions">
+                <select class="exam-select">
+                    <option>雅思全真模考</option>
+                    <option>托福全真模考</option>
+                </select>
+                <div class="user-info">Hi, 王力宏</div>
+                <a href="#" class="logout-btn">退出登录</a>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content-area">
+            <div class="page-title">2026届雅思全真模拟考试安排</div>
+            <div class="page-desc">雅思全科模拟考试，还原真实考试流程与题型，助力高效备考。。。。</div>
+
+            <!-- Tabs -->
+            <div class="round-tabs">
+                <div class="round-tab active">Test 1</div>
+                <div class="round-tab">Test 2</div>
+                <div class="round-tab">Test 3</div>
+                <div class="round-tab">Test 4</div>
+            </div>
+
+            <!-- 轮次区块: Test 1 -->
+            <div class="round-section">
+                <div class="section-header">
+                    <div class="section-title">Test 1</div>
+                    <div class="section-time">考试时间: 2026年3月10日-5月18日</div>
+                </div>
+
+                <!-- 卡片网格 -->
+                <div class="card-grid">
+                    
+                    <!-- 全科卡片 -->
+                    <div class="exam-card">
+                        <div class="card-top-border border-blue"></div>
+                        <div class="card-header-top">
+                            <div class="card-title">全科 综合模考</div>
+                            <div class="card-tag tag-advanced">全科</div>
+                        </div>
+                        <div class="card-duration">
+                            <i class="fa fa-clock-o"></i> 考试时长: ~3小时
+                        </div>
+                        <a href="雅思考前确认.html" class="btn-start">开始考试 <i class="fa fa-arrow-right"></i></a>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- 轮次区块: Test 2 (简略展示) -->
+            <div class="round-section">
+                <div class="section-header">
+                    <div class="section-title">Test 2</div>
+                    <div class="section-time">考试时间: 2026年3月10日-5月18日</div>
+                </div>
+
+                <!-- 卡片网格 -->
+                <div class="card-grid">
+                    <div class="exam-card">
+                        <div class="card-top-border border-purple"></div>
+                        <div class="card-header-top">
+                            <div class="card-title">全科 综合模考</div>
+                            <div class="card-tag tag-advanced">全科</div>
+                        </div>
+                        <div class="card-duration">
+                            <i class="fa fa-clock-o"></i> 考试时长: ~3小时
+                        </div>
+                        <a href="雅思考前确认.html" class="btn-start">开始考试 <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Tabs 点击交互
+        $('.round-tab').on('click', function() {
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+        });
+        
+        // 侧边栏点击交互
+        $('.menu-item').on('click', function() {
+            $(this).siblings().removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+</script>
+</body>
+</html>
