@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雅思听力考试 - VISION ACADEMY</title>
+    <title>雅思听力考试 - Part 4 - VISION ACADEMY</title>
     <!-- 引入Bootstrap样式 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入Font Awesome图标 -->
@@ -70,6 +70,74 @@
             position: relative;
         }
 
+        /* 音频播放器 */
+        .audio-player-container {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .play-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .play-btn:hover {
+            background-color: #165dff;
+        }
+        .progress-bar-container {
+            flex: 1;
+            height: 4px;
+            background-color: #ddd;
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        .progress-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: #165dff;
+            width: 40%;
+            border-radius: 2px;
+        }
+        .progress-bar-handle {
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: #165dff;
+            border-radius: 50%;
+        }
+        .audio-time {
+            font-size: 13px;
+            color: #666;
+            font-variant-numeric: tabular-nums;
+        }
+        .audio-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        
         /* 左右导航箭头 */
         .nav-arrow {
             position: absolute;
@@ -102,10 +170,12 @@
 
         /* 左侧题目区 */
         .question-section {
-            flex: 1.2;
-            padding: 40px 60px 40px 80px;
-            overflow-y: auto;
+            width: 350px;
+            padding: 30px;
             border-right: 1px solid #eee;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
         .part-title {
             font-size: 24px;
@@ -114,7 +184,7 @@
         }
         .instruction-text {
             font-size: 16px;
-            margin-bottom: 20px;
+            color: #666;
         }
         .sub-instruction {
             font-size: 14px;
@@ -122,48 +192,7 @@
             margin-bottom: 30px;
         }
         
-        /* 模拟的试卷图片区 */
-        .mock-paper {
-            border: 2px solid #666;
-            padding: 30px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-        }
-        .paper-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-        .paper-row {
-            display: flex;
-            margin-bottom: 8px;
-            font-size: 15px;
-        }
-        .paper-label {
-            width: 200px;
-        }
-        .paper-value {
-            flex: 1;
-        }
-        .paper-group-title {
-            font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 5px;
-        }
-        .dotted-line {
-            display: inline-block;
-            border-bottom: 1px dotted #333;
-            width: 150px;
-            margin-left: 5px;
-        }
-        .blank-num {
-            font-weight: bold;
-        }
-
-        /* 中间答题区 */
+        /* 中间作答区 */
         .answer-section {
             flex: 1;
             padding: 40px 60px;
@@ -193,6 +222,117 @@
             border-color: #165dff;
             outline: none;
             box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+        }
+
+        /* Part 2 题型样式 */
+        .question-group {
+            margin-bottom: 50px;
+        }
+        .question-group-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .matching-container {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .matching-questions {
+            flex: 1.5;
+        }
+        .matching-options {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fcfcfc;
+            border-radius: 4px;
+        }
+        .q-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .q-num {
+            font-weight: bold;
+            margin-right: 15px;
+            background: #e6f7ff;
+            color: #165dff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px dashed #165dff;
+        }
+        .opt-row {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        .opt-letter {
+            font-weight: bold;
+            margin-right: 10px;
+            min-width: 20px;
+        }
+        .opt-box {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .mcq-item {
+            margin-bottom: 30px;
+        }
+        .mcq-q {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .mcq-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+        .mcq-option:hover {
+            background-color: #f0f5ff;
+            border-color: #165dff;
+        }
+        .mcq-option.selected {
+            background-color: #e6f7ff;
+            border-color: #165dff;
+            color: #165dff;
+            font-weight: bold;
+        }
+        .mcq-opt-letter {
+            margin-right: 10px;
+            font-weight: bold;
+            width: 20px;
+        }
+        
+        .inline-answer {
+            width: 120px;
+            margin-left: 10px;
+            height: 32px;
+            border: 1px solid #165dff;
+            border-radius: 4px;
+            padding: 0 10px;
+            font-size: 14px;
+            color: #165dff;
+            font-weight: bold;
+            background-color: #e6f7ff;
+            transition: all 0.3s;
+        }
+        .inline-answer:focus {
+            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+            outline: none;
+        }
+        .inline-answer::placeholder {
+            color: #999;
+            font-weight: normal;
         }
 
         /* 右侧侧边栏 */
@@ -486,120 +626,84 @@
         
         <div class="nav-arrow left-arrow"><i class="fa fa-angle-left"></i></div>
         
-        <!-- 左侧题目区 -->
+        <!-- 左侧区域 -->
         <div class="question-section">
-            <div class="part-title">Part 1</div>
-            <div class="instruction-text">Listen and answer questions 1-10</div>
+            <div class="part-title">Part 4</div>
+            <div class="instruction-text">Listen and answer questions 31-40</div>
             
-            <div class="sub-instruction">
-                Complete the notes below.<br>
-                Write ONE WORD AND/OR A NUMBER for each answer.
-            </div>
-            
-            <!-- 模拟的试卷区 -->
-            <div class="mock-paper">
-                <div class="paper-title">Transport survey</div>
-                
-                <div class="paper-row">
-                    <div class="paper-label">Name:</div>
-                    <div class="paper-value">Sadie Jones</div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Year of birth:</div>
-                    <div class="paper-value">1991</div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Postcode:</div>
-                    <div class="paper-value"><span class="blank-num">1</span> <span class="dotted-line"></span></div>
-                </div>
-                
-                <div class="paper-group-title">Travelling by bus</div>
-                <div class="paper-row">
-                    <div class="paper-label">Date of bus journey:</div>
-                    <div class="paper-value"><span class="blank-num">2</span> <span class="dotted-line"></span></div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Reason for trip:</div>
-                    <div class="paper-value">shopping and visit to the <span class="blank-num">3</span> <span class="dotted-line"></span></div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Travelled by bus because cost of</div>
-                    <div class="paper-value"><span class="blank-num">4</span> <span class="dotted-line"></span> too high</div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Got on bus at</div>
-                    <div class="paper-value"><span class="blank-num">5</span> <span class="dotted-line"></span> Street</div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label">Complaints about bus service:</div>
-                    <div class="paper-value">
-                        - bus today was <span class="blank-num">6</span> <span class="dotted-line"></span><br>
-                        - frequency of buses in the <span class="blank-num">7</span> <span class="dotted-line" style="width:100px;"></span>
+            <!-- 音频播放器 -->
+            <div class="audio-player-container">
+                <div class="audio-controls">
+                    <div class="play-btn">
+                        <i class="fa fa-play"></i>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill"></div>
+                        <div class="progress-bar-handle"></div>
+                    </div>
+                    <div class="audio-time">00:12/30:03</div>
+                    <div class="audio-tools">
+                        <i class="fa fa-volume-up" style="cursor: pointer;"></i>
+                        <span style="cursor: pointer;">1倍速</span>
                     </div>
                 </div>
-                
-                <div class="paper-group-title">Travelling by car</div>
-                <div class="paper-row">
-                    <div class="paper-label">Goes to the</div>
-                    <div class="paper-value"><span class="blank-num">8</span> <span class="dotted-line"></span> by car</div>
-                </div>
-                
-                <div class="paper-group-title">Travelling by bicycle</div>
-                <div class="paper-row">
-                    <div class="paper-label" style="width: auto; margin-right: 10px;">Dislikes travelling by bike in the city centre because of the</div>
-                    <div class="paper-value"><span class="blank-num">9</span> <span class="dotted-line"></span></div>
-                </div>
-                <div class="paper-row">
-                    <div class="paper-label" style="width: auto; margin-right: 10px;">Doesn't own a bike because of a lack of</div>
-                    <div class="paper-value"><span class="blank-num">10</span> <span class="dotted-line"></span></div>
-                </div>
             </div>
         </div>
-        
-        <!-- 中间答题区 -->
+
+        <!-- 中间作答区 -->
         <div class="answer-section">
-            <div class="answer-row">
-                <div class="answer-num">1</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="1">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">2</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="2">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">3</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="3">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">4</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="4">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">5</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="5">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">6</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="6">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">7</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="7">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">8</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="8">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">9</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="9">
-            </div>
-            <div class="answer-row">
-                <div class="answer-num">10</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="10">
+            <div class="question-group">
+                <div class="question-group-title">Questions 31-40</div>
+                <div class="sub-instruction">
+                    Complete the notes below.<br>
+                    <i>Write <b>ONE WORD ONLY</b> for each answer.</i>
+                </div>
+
+                <div style="background:#fff; border:1px solid #eee; border-radius:8px; padding:20px 24px; line-height:2;">
+                    <div style="font-weight:bold; font-size:18px; margin-bottom:10px;">Developing food trends</div>
+
+                    <div class="q-row"><span class="q-num">31</span> The growth in interest in food fashions started with
+                        <input type="text" class="answer-input inline-answer" data-qnum="31" placeholder="请输入"> of food being shared on social media.
+                    </div>
+                    <div class="q-row">- Sales of
+                        <input type="text" class="answer-input inline-answer" data-qnum="32" placeholder="请输入"> food brands have grown rapidly this way.
+                    </div>
+                    <div class="q-row">- Famous
+                        <input type="text" class="answer-input inline-answer" data-qnum="33" placeholder="请输入"> are influential.
+                    </div>
+
+                    <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Marketing campaigns</div>
+                    <div class="q-row">The avocado:</div>
+                    <div class="q-row">-
+                        <input type="text" class="answer-input inline-answer" data-qnum="34" placeholder="请输入"> were invited to visit growers in South Africa.
+                    </div>
+                    <div class="q-row">- Advertising focused on its
+                        <input type="text" class="answer-input inline-answer" data-qnum="35" placeholder="请输入"> benefits.
+                    </div>
+                    <div class="q-row">- Promotion in the USA through
+                        <input type="text" class="answer-input inline-answer" data-qnum="36" placeholder="请输入"> shops reduced the need for advertising.
+                    </div>
+                    <div class="q-row">- It appealed to consumers who are concerned about the
+                        <input type="text" class="answer-input inline-answer" data-qnum="37" placeholder="请输入">.
+                    </div>
+
+                    <div class="q-row" style="margin-top:12px;">Norwegian skrei:</div>
+                    <div class="q-row">- has helped strengthen the
+                        <input type="text" class="answer-input inline-answer" data-qnum="38" placeholder="请输入"> of Norwegian seafood.
+                    </div>
+
+                    <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Ethical concerns</div>
+                    <div class="q-row">Quinoa:</div>
+                    <div class="q-row">- its use led to an increase in its
+                        <input type="text" class="answer-input inline-answer" data-qnum="39" placeholder="请输入">.
+                    </div>
+                    <div class="q-row">- overuse of resources resulted in poor quality
+                        <input type="text" class="answer-input inline-answer" data-qnum="40" placeholder="请输入">.
+                    </div>
+                </div>
             </div>
         </div>
-        
+
         <div class="nav-arrow right-arrow"><i class="fa fa-angle-right"></i></div>
         
         <!-- 右侧侧边栏 -->
@@ -631,24 +735,24 @@
                 </div>
                 
                 <div class="grid-area">
-                    <div class="grid-item" id="grid-1">1</div>
-                    <div class="grid-item" id="grid-2">2</div>
-                    <div class="grid-item" id="grid-3">3</div>
-                    <div class="grid-item" id="grid-4">4</div>
-                    <div class="grid-item" id="grid-5">5</div>
-                    <div class="grid-item" id="grid-6">6</div>
-                    <div class="grid-item" id="grid-7">7</div>
-                    <div class="grid-item" id="grid-8">8</div>
-                    <div class="grid-item" id="grid-9">9</div>
-                    <div class="grid-item" id="grid-10">10</div>
+                    <div class="grid-item" id="grid-31">31</div>
+                    <div class="grid-item" id="grid-32">32</div>
+                    <div class="grid-item" id="grid-33">33</div>
+                    <div class="grid-item" id="grid-34">34</div>
+                    <div class="grid-item" id="grid-35">35</div>
+                    <div class="grid-item" id="grid-36">36</div>
+                    <div class="grid-item" id="grid-37">37</div>
+                    <div class="grid-item" id="grid-38">38</div>
+                    <div class="grid-item" id="grid-39">39</div>
+                    <div class="grid-item" id="grid-40">40</div>
                 </div>
                 
                 <div class="bottom-actions">
                     <div class="part-tabs">
-                        <div class="part-tab-item active">Part 1</div>
+                        <div class="part-tab-item">Part 1</div>
                         <div class="part-tab-item">Part 2</div>
                         <div class="part-tab-item">Part 3</div>
-                        <div class="part-tab-item">Part 4</div>
+                        <div class="part-tab-item active">Part 4</div>
                     </div>
                     <button class="btn btn-submit">提交试卷</button>
                 </div>
@@ -739,6 +843,7 @@
 
                 // 读题时间内允许看题，但禁止输入/作答
                 $('.answer-input').prop('disabled', true);
+                $('.mcq-option').css('pointer-events', 'none');
 
                 readTimer = setInterval(function() {
                     remainingSeconds -= 1;
@@ -748,6 +853,7 @@
                         readTimer = null;
                         $('#readCountdownBanner').fadeOut(150);
                         $('.answer-input').prop('disabled', false);
+                        $('.mcq-option').css('pointer-events', 'auto');
                         window.history.replaceState({}, document.title, window.location.pathname);
                     }
                 }, 1000);
@@ -965,23 +1071,61 @@
                 $('#grid-' + qnum).removeClass('current');
             });
 
-            // 点击答题卡题号定位到输入框
+            // 点击答题卡题号定位到输入框或选择题
             $('.grid-item').on('click', function() {
                 var num = $(this).text();
                 var $input = $('.answer-input[data-qnum="' + num + '"]');
+                var $mcq = $('.mcq-item[data-qnum="' + num + '"]');
+                
                 if($input.length) {
                     $input.focus();
+                } else if($mcq.length) {
+                    // 滚动到选择题
+                    var $container = $('.answer-section');
+                    $container.animate({
+                        scrollTop: $mcq.offset().top - $container.offset().top + $container.scrollTop() - 20
+                    }, 200);
+                    
+                    // 高亮答题卡
+                    $('.grid-item').removeClass('current');
+                    $(this).addClass('current');
                 }
+            });
+            
+            // 选择题点击交互
+            $('.mcq-option').on('click', function() {
+                var $mcqItem = $(this).closest('.mcq-item');
+                var qnum = $mcqItem.data('qnum');
+                var val = $(this).data('val');
+                
+                // 移除同级的选中状态
+                $mcqItem.find('.mcq-option').removeClass('selected');
+                // 添加当前选中状态
+                $(this).addClass('selected');
+                
+                // 更新右侧答题卡
+                var $gridItem = $('#grid-' + qnum);
+                $gridItem.addClass('answered');
+                
+                // 高亮当前答题卡
+                $('.grid-item').removeClass('current');
+                $gridItem.addClass('current');
             });
             
             // 提交按钮事件
             $('.btn-submit').on('click', function() {
                 // 检查未答题目
-                var totalQuestions = $('.answer-input').length;
-                var answeredQuestions = $('.answer-input').filter(function() {
+                var totalQuestions = $('.answer-input').length + $('.mcq-item').length;
+                
+                var answeredInputs = $('.answer-input').filter(function() {
                     return $(this).val().trim().length > 0;
                 }).length;
                 
+                var answeredMcqs = $('.mcq-item').filter(function() {
+                    return $(this).find('.mcq-option.selected').length > 0;
+                }).length;
+                
+                var answeredQuestions = answeredInputs + answeredMcqs;
                 var unansweredCount = totalQuestions - answeredQuestions;
                 
                 if (unansweredCount > 0) {
@@ -1005,33 +1149,28 @@
                 var partText = $(this).text();
                 
                 if (partText === 'Part 1') {
-                    // 当前页
+                    window.location.href = '雅思听力考试_Part1.html?read=1&qcount=10&from=part4';
                 } else if (partText === 'Part 2') {
-                    window.location.href = '雅思听力考试_Part2.html?read=1&qcount=10&from=part1';
+                    window.location.href = '雅思听力考试_Part2.html?read=1&qcount=10&from=part4';
                 } else if (partText === 'Part 3') {
-                    window.location.href = '雅思听力考试_Part3.html?read=1&qcount=10&from=part1';
+                    window.location.href = '雅思听力考试_Part3.html?read=1&qcount=10&from=part4';
                 } else if (partText === 'Part 4') {
-                    window.location.href = '雅思听力考试_Part4.html?read=1&qcount=10&from=part1';
+                    // 已经在 Part 4
                 }
             });
 
             // 左右箭头切换Part
             $('.left-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $prev = $active.prev('.part-tab-item');
-                if ($prev.length) {
-                    $prev.click();
-                }
+                // Part 4 回退到 Part 3
+                window.location.href = '雅思听力考试_Part3.html?read=1&qcount=10&from=part4';
             });
 
             $('.right-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $next = $active.next('.part-tab-item');
-                if ($next.length) {
-                    $next.click();
-                }
+                // Part 4 为最后一部分，不再向右切换
+                return false;
             });
         });
     </script>
 </body>
 </html>
+
