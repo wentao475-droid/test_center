@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -46,7 +46,7 @@
             font-size: 14px;
             color: #666;
         }
-        .logout-btn { color: #165dff; text-decoration: none; }
+        .logout-btn { color: #165dff; text-decoration: none; display: flex; align-items: center; gap: 5px; background-color: #f0f5ff; padding: 5px 15px; border-radius: 15px; }
         
         .progress-bar-top { height: 4px; background-color: #eee; width: 100%; }
         .progress-bar-fill { height: 100%; background-color: #165dff; width: var(--progress-percent, 66%); transition: width 0.3s; }
@@ -316,7 +316,7 @@
 
     <header class="header">
         <div class="header-logo"><i class="fa fa-graduation-cap"></i> VISION ACADEMY 测评系统</div>
-        <div class="header-user"><span>Hi, 测试老师01</span><a href="index.html" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a></div>
+        <div class="header-user"><span>Hi, 测试老师01</span><a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a></div>
     </header>
     <div class="progress-bar-top"><div class="progress-bar-fill"></div></div>
 
@@ -534,3 +534,4 @@
     </script>
 </body>
 </html>
+

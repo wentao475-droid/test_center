@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -54,10 +54,7 @@
             font-size: 14px;
             color: #666;
         }
-        .logout-btn {
-            color: #165dff;
-            text-decoration: none;
-        }
+        .logout-btn { color: #165dff; text-decoration: none; display: flex; align-items: center; gap: 5px; background-color: #f0f5ff; padding: 5px 15px; border-radius: 15px; }
         .main-container {
             flex: 1;
             display: flex;
@@ -111,7 +108,7 @@
             padding: 28px 24px 24px;
             display: flex;
             flex-direction: column;
-            background-color: #fff;
+            background-color: #f7f8fa;
             min-width: 0;
         }
         .right-sidebar {
@@ -178,38 +175,73 @@
             line-height: 1.8;
             font-size: 14px;
         }
+        .response-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            background-color: #fff;
+            border: 1px solid #e8ebf0;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(15, 35, 95, 0.04);
+            overflow: hidden;
+        }
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eef1f5;
+            background-color: #fbfcfe;
+            flex-shrink: 0;
+        }
+        .response-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2329;
+        }
+        .response-tip {
+            font-size: 13px;
+            color: #86909c;
+        }
         .editor-wrap {
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
+            padding: 0 20px 20px;
         }
         .editor-box {
             flex: 1;
             width: 100%;
             resize: none;
-            border: 1px solid #ddd;
-            border-radius: 2px;
-            padding: 18px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
             font-size: 15px;
             line-height: 1.9;
             color: #333;
             outline: none;
             box-shadow: none;
+            background-color: #fff;
+            min-height: 360px;
         }
         .editor-box:focus {
             border-color: #165dff;
-            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(22, 93, 255, 0.16);
         }
         .editor-footer {
-            border: 1px solid #ddd;
+            border: 1px solid #dcdfe6;
             border-top: none;
             padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #fff;
-            border-radius: 0 0 4px 4px;
+            background-color: #fbfcfe;
+            border-radius: 0 0 8px 8px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .word-count {
             font-size: 14px;
@@ -218,19 +250,28 @@
         .word-count strong {
             color: #333;
         }
+        .editor-hint {
+            font-size: 13px;
+            color: #86909c;
+        }
         
         /* 扫码上传工具区样�?- 移至中间区域 */
         .upload-section {
-            margin-top: 15px;
+            margin: 0 20px 20px;
             display: flex;
-            align-items: flex-start;
-            gap: 15px;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            border: 1px dashed #c9d4ff;
+            border-radius: 8px;
+            background-color: #f8faff;
         }
         .qr-box {
             width: 80px;
             height: 80px;
             background-color: #fff;
-            border: 1px solid #ddd;
+            border: 1px solid #d9dfe8;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -244,16 +285,22 @@
         }
         .qr-info {
             flex: 1;
-            padding-top: 5px;
+            min-width: 0;
         }
         .qr-tip {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 5px;
+            font-size: 13px;
+            color: #4e5969;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+        .qr-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2329;
+            margin-bottom: 4px;
         }
         .sync-btn {
-            font-size: 12px;
+            font-size: 13px;
             color: #165dff;
             cursor: pointer;
             text-decoration: none;
@@ -439,6 +486,14 @@
             background-color: #e67000;
             color: white;
         }
+        @media (max-width: 1440px) {
+            .left-panel {
+                width: 460px;
+            }
+            .editor-box {
+                min-height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -453,7 +508,7 @@
         </div>
         <div class="header-user">
             <span>Hi, 测试老师01</span>
-            <a href="index.html" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登�?/a>
+            <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
         </div>
     </header>
 
@@ -477,34 +532,42 @@
         </section>
 
         <section class="center-panel">
-            <div class="editor-wrap">
-                <textarea id="writingEditor" class="editor-box" placeholder="在此输入您的写作内容..."></textarea>
-                <div class="editor-footer">
-                    <div class="word-count">Words Count: <strong id="wordCount">0</strong></div>
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="response-title">Writing Answer Sheet</div>
+                    <div class="response-tip">请在此区域完成机考作答，支持键盘输入与扫码上传同步</div>
                 </div>
-            </div>
-            <div class="upload-section">
-                <div class="qr-box">
-                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="qr code">
-                        <rect width="120" height="120" fill="#fff"/>
-                        <rect x="6" y="6" width="30" height="30" fill="#111"/><rect x="12" y="12" width="18" height="18" fill="#fff"/><rect x="17" y="17" width="8" height="8" fill="#111"/>
-                        <rect x="84" y="6" width="30" height="30" fill="#111"/><rect x="90" y="12" width="18" height="18" fill="#fff"/><rect x="95" y="17" width="8" height="8" fill="#111"/>
-                        <rect x="6" y="84" width="30" height="30" fill="#111"/><rect x="12" y="90" width="18" height="18" fill="#fff"/><rect x="17" y="95" width="8" height="8" fill="#111"/>
-                        <rect x="48" y="8" width="8" height="8" fill="#111"/><rect x="56" y="8" width="8" height="8" fill="#111"/><rect x="64" y="16" width="8" height="8" fill="#111"/>
-                        <rect x="48" y="24" width="8" height="8" fill="#111"/><rect x="56" y="32" width="8" height="8" fill="#111"/><rect x="64" y="24" width="8" height="8" fill="#111"/>
-                        <rect x="42" y="42" width="8" height="8" fill="#111"/><rect x="50" y="42" width="8" height="8" fill="#111"/><rect x="58" y="42" width="8" height="8" fill="#111"/><rect x="66" y="42" width="8" height="8" fill="#111"/>
-                        <rect x="74" y="42" width="8" height="8" fill="#111"/><rect x="82" y="42" width="8" height="8" fill="#111"/>
-                        <rect x="42" y="50" width="8" height="8" fill="#111"/><rect x="58" y="50" width="8" height="8" fill="#111"/><rect x="74" y="50" width="8" height="8" fill="#111"/><rect x="90" y="50" width="8" height="8" fill="#111"/>
-                        <rect x="42" y="58" width="8" height="8" fill="#111"/><rect x="50" y="58" width="8" height="8" fill="#111"/><rect x="66" y="58" width="8" height="8" fill="#111"/><rect x="82" y="58" width="8" height="8" fill="#111"/><rect x="90" y="58" width="8" height="8" fill="#111"/>
-                        <rect x="42" y="66" width="8" height="8" fill="#111"/><rect x="58" y="66" width="8" height="8" fill="#111"/><rect x="66" y="66" width="8" height="8" fill="#111"/><rect x="74" y="66" width="8" height="8" fill="#111"/>
-                        <rect x="90" y="66" width="8" height="8" fill="#111"/>
-                        <rect x="48" y="74" width="8" height="8" fill="#111"/><rect x="56" y="74" width="8" height="8" fill="#111"/><rect x="72" y="74" width="8" height="8" fill="#111"/><rect x="80" y="74" width="8" height="8" fill="#111"/>
-                        <rect x="90" y="82" width="8" height="8" fill="#111"/><rect x="42" y="90" width="8" height="8" fill="#111"/><rect x="58" y="90" width="8" height="8" fill="#111"/><rect x="66" y="90" width="8" height="8" fill="#111"/><rect x="74" y="90" width="8" height="8" fill="#111"/>
-                        <rect x="42" y="98" width="8" height="8" fill="#111"/><rect x="50" y="98" width="8" height="8" fill="#111"/><rect x="82" y="98" width="8" height="8" fill="#111"/><rect x="90" y="98" width="8" height="8" fill="#111"/>
-                    </svg>
+                <div class="editor-wrap">
+                    <textarea id="writingEditor" class="editor-box" placeholder="在此输入您的写作内容..."></textarea>
+                    <div class="editor-footer">
+                        <div class="word-count">Words Count: <strong id="wordCount">0</strong></div>
+                        <div class="editor-hint">Task 2 建议不少于 250 词</div>
+                    </div>
                 </div>
-                <div class="qr-info">
-                    <div class="qr-tip">请使用微信扫码上传作答纸张过程，上传完成后点击 <a href="#" class="sync-btn"><i class="fa fa-refresh"></i> 同步</a></div>
+                <div class="upload-section">
+                    <div class="qr-box">
+                        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="qr code">
+                            <rect width="120" height="120" fill="#fff"/>
+                            <rect x="6" y="6" width="30" height="30" fill="#111"/><rect x="12" y="12" width="18" height="18" fill="#fff"/><rect x="17" y="17" width="8" height="8" fill="#111"/>
+                            <rect x="84" y="6" width="30" height="30" fill="#111"/><rect x="90" y="12" width="18" height="18" fill="#fff"/><rect x="95" y="17" width="8" height="8" fill="#111"/>
+                            <rect x="6" y="84" width="30" height="30" fill="#111"/><rect x="12" y="90" width="18" height="18" fill="#fff"/><rect x="17" y="95" width="8" height="8" fill="#111"/>
+                            <rect x="48" y="8" width="8" height="8" fill="#111"/><rect x="56" y="8" width="8" height="8" fill="#111"/><rect x="64" y="16" width="8" height="8" fill="#111"/>
+                            <rect x="48" y="24" width="8" height="8" fill="#111"/><rect x="56" y="32" width="8" height="8" fill="#111"/><rect x="64" y="24" width="8" height="8" fill="#111"/>
+                            <rect x="42" y="42" width="8" height="8" fill="#111"/><rect x="50" y="42" width="8" height="8" fill="#111"/><rect x="58" y="42" width="8" height="8" fill="#111"/><rect x="66" y="42" width="8" height="8" fill="#111"/>
+                            <rect x="74" y="42" width="8" height="8" fill="#111"/><rect x="82" y="42" width="8" height="8" fill="#111"/>
+                            <rect x="42" y="50" width="8" height="8" fill="#111"/><rect x="58" y="50" width="8" height="8" fill="#111"/><rect x="74" y="50" width="8" height="8" fill="#111"/><rect x="90" y="50" width="8" height="8" fill="#111"/>
+                            <rect x="42" y="58" width="8" height="8" fill="#111"/><rect x="50" y="58" width="8" height="8" fill="#111"/><rect x="66" y="58" width="8" height="8" fill="#111"/><rect x="82" y="58" width="8" height="8" fill="#111"/><rect x="90" y="58" width="8" height="8" fill="#111"/>
+                            <rect x="42" y="66" width="8" height="8" fill="#111"/><rect x="58" y="66" width="8" height="8" fill="#111"/><rect x="66" y="66" width="8" height="8" fill="#111"/><rect x="74" y="66" width="8" height="8" fill="#111"/>
+                            <rect x="90" y="66" width="8" height="8" fill="#111"/>
+                            <rect x="48" y="74" width="8" height="8" fill="#111"/><rect x="56" y="74" width="8" height="8" fill="#111"/><rect x="72" y="74" width="8" height="8" fill="#111"/><rect x="80" y="74" width="8" height="8" fill="#111"/>
+                            <rect x="90" y="82" width="8" height="8" fill="#111"/><rect x="42" y="90" width="8" height="8" fill="#111"/><rect x="58" y="90" width="8" height="8" fill="#111"/><rect x="66" y="90" width="8" height="8" fill="#111"/><rect x="74" y="90" width="8" height="8" fill="#111"/>
+                            <rect x="42" y="98" width="8" height="8" fill="#111"/><rect x="50" y="98" width="8" height="8" fill="#111"/><rect x="82" y="98" width="8" height="8" fill="#111"/><rect x="90" y="98" width="8" height="8" fill="#111"/>
+                        </svg>
+                    </div>
+                    <div class="qr-info">
+                        <div class="qr-title">扫码上传手写作答</div>
+                        <div class="qr-tip">请使用微信扫码上传作答纸张，上传完成后点击 <a href="#" class="sync-btn"><i class="fa fa-refresh"></i> 同步</a>，系统会在监考端同步显示。</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -624,4 +687,5 @@
     </script>
 </body>
 </html>
+
 

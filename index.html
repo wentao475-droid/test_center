@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -112,11 +112,7 @@
             font-size: 14px;
             color: #666;
         }
-        .logout-btn {
-            color: #165dff;
-            text-decoration: none;
-            font-size: 14px;
-        }
+        .logout-btn { color: #165dff; text-decoration: none; display: flex; align-items: center; gap: 5px; background-color: #f0f5ff; padding: 5px 15px; border-radius: 15px; }
 
         /* 内容区域 */
         .content-area {
@@ -328,7 +324,7 @@
                     <option>托福全真模考</option>
                 </select>
                 <div class="user-info">Hi, 王力宏</div>
-                <a href="index.html" class="logout-btn">退出登录</a>
+                <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
             </div>
         </div>
 
@@ -416,3 +412,4 @@
 </script>
 </body>
 </html>
+

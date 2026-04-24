@@ -686,14 +686,14 @@
                     var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
                     submitModal.show();
                 } else {
-                    // 全部答完，直接返回考前确认页
-                    window.location.href = '雅思考前确认.html';
+                    // 全部答完，进入听力已完成页
+                    window.location.href = '雅思听力已完成.html';
                 }
             });
             
             // 弹窗确认提交
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '雅思考前确认.html';
+                window.location.href = '雅思听力已完成.html';
             });
             
             // 切换Part
