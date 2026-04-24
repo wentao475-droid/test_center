@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -495,7 +495,54 @@
                 min-height: 300px;
             }
         }
-    </style>
+    
+        
+        
+        /* === Unified Exam Theme Override (UI Sync) === */
+        :root {
+            --va-blue: #1f4fd6;
+            --va-navy: #1b2f4b;
+            --va-slate: #4e5969;
+            --va-bg: #f5f7fb;
+            --va-border: #e7ebf3;
+            --va-ok: #27ae60;
+        }
+        body { background-color: var(--va-bg); }
+        .header { background-color: #fff; border-bottom: 1px solid var(--va-border); box-shadow: none; padding: 10px 18px; }
+        .header-logo { color: var(--va-blue); font-size: 17px; font-weight: 700; }
+        .header-user { color: var(--va-slate); font-size: 14px; }
+        .logout-btn { color: var(--va-blue) !important; background-color: #edf3ff; border: 1px solid #d9e5ff; border-radius: 16px; padding: 4px 12px; font-weight: 600; }
+        .progress-bar-top { background-color: #edf1f7; height: 3px; }
+        .progress-bar-fill { background-color: var(--va-blue); }
+        .right-sidebar, .sidebar-section { width: 320px; background: #fff; border-left: 1px solid var(--va-border); box-shadow: none; padding: 14px 12px; }
+        .status-bar, .status-row { margin-bottom: 10px; gap: 12px; font-size: 13px; }
+        .net-speed { color: var(--va-ok); font-weight: 600; }
+        .time-left { color: var(--va-blue); font-size: 20px; font-weight: 700; line-height: 1; }
+        .time-left i { color: #101828; font-size: 14px; }
+        .monitor-box { border-radius: 10px; border: 1px solid #111827; margin-bottom: 12px; }
+        .monitor-tag { background-color: rgba(255, 77, 79, .92); border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .monitor-status { color: var(--va-ok); font-weight: 600; }
+        .sidebar-panel { border: 1px solid var(--va-border); border-radius: 10px; background: #fff; overflow: hidden; }
+        .panel-tabs { background: #fff; border-bottom: 1px solid var(--va-border); }
+        .panel-tab { color: #6b7280; font-weight: 600; padding: 11px 0; }
+        .panel-tab.active { color: var(--va-blue); border-bottom: 2px solid var(--va-blue); }
+        .legend-area { font-size: 12px; color: #667085; }
+        .legend-dot.answered { background-color: var(--va-blue); }
+        .legend-dot.unanswered { background-color: #cfd6e4; }
+        .grid-area { gap: 10px; }
+        .grid-item { width: 34px; height: 34px; border-radius: 50%; background-color: #f3f5f8; color: #667085; border: 1px solid transparent; font-weight: 600; }
+        .grid-item.answered { background-color: #1f324f; color: #fff; }
+        .grid-item.current { background-color: #fff; color: var(--va-blue); border-color: var(--va-blue); }
+        .part-tab-item { color: #98a2b3; font-weight: 600; }
+        .part-tab-item.active { color: var(--va-blue); border-bottom: 2px solid var(--va-blue); }
+        .btn-submit { background-color: var(--va-navy) !important; border: none; color: #fff !important; border-radius: 8px; font-weight: 700; height: 40px; }
+        .btn-submit:hover { background-color: #15263d !important; }
+        .tool-item { color: var(--va-blue); }
+        .tool-item:hover { background-color: #eff5ff; }
+        .nav-arrow { width: 34px; height: 56px; border-radius: 6px; background: rgba(27, 47, 75, .32); color: #fff; opacity: 1; }
+        .nav-arrow:hover { background: rgba(27, 47, 75, .52); }
+
+</style>
 </head>
 <body>
     <div class="progress-bar-top">

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,25 @@
         .progress-bar-fill { height: 100%; background-color: #165dff; width: var(--progress-percent, 33%); transition: width 0.3s; }
 
         .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 6;
+            transition: background 0.2s;
+        }
+        .nav-arrow:hover { background: rgba(0, 0, 0, 0.22); }
+        .left-arrow { left: 0; }
+        .right-arrow { right: 320px; }
 
         /* 左侧文章�?*/
         .article-section {
@@ -292,7 +311,93 @@
         .part-tab-item.active { color: #165dff; font-weight: bold; border-bottom: 2px solid #165dff; }
         .btn-submit { width: 100%; background-color: #ff7d00; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; }
         .btn-submit:hover { background-color: #e67000; color: white; }
-    </style>
+        .toolbox-area {
+            padding: 15px;
+            overflow-y: auto;
+            flex: 1;
+            display: none;
+            background: #fff;
+        }
+        .toolbox-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #fafafa;
+        }
+        .toolbox-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .toolbox-tip {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .toolbox-note-list {
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+        .toolbox-note-item {
+            border: 1px solid #e6f0ff;
+            background: #f5f8ff;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #444;
+            word-break: break-word;
+        }
+    
+        
+        
+        /* === Unified Exam Theme Override (UI Sync) === */
+        :root {
+            --va-blue: #1f4fd6;
+            --va-navy: #1b2f4b;
+            --va-slate: #4e5969;
+            --va-bg: #f5f7fb;
+            --va-border: #e7ebf3;
+            --va-ok: #27ae60;
+        }
+        body { background-color: var(--va-bg); }
+        .header { background-color: #fff; border-bottom: 1px solid var(--va-border); box-shadow: none; padding: 10px 18px; }
+        .header-logo { color: var(--va-blue); font-size: 17px; font-weight: 700; }
+        .header-user { color: var(--va-slate); font-size: 14px; }
+        .logout-btn { color: var(--va-blue) !important; background-color: #edf3ff; border: 1px solid #d9e5ff; border-radius: 16px; padding: 4px 12px; font-weight: 600; }
+        .progress-bar-top { background-color: #edf1f7; height: 3px; }
+        .progress-bar-fill { background-color: var(--va-blue); }
+        .right-sidebar, .sidebar-section { width: 320px; background: #fff; border-left: 1px solid var(--va-border); box-shadow: none; padding: 14px 12px; }
+        .status-bar, .status-row { margin-bottom: 10px; gap: 12px; font-size: 13px; }
+        .net-speed { color: var(--va-ok); font-weight: 600; }
+        .time-left { color: var(--va-blue); font-size: 20px; font-weight: 700; line-height: 1; }
+        .time-left i { color: #101828; font-size: 14px; }
+        .monitor-box { border-radius: 10px; border: 1px solid #111827; margin-bottom: 12px; }
+        .monitor-tag { background-color: rgba(255, 77, 79, .92); border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .monitor-status { color: var(--va-ok); font-weight: 600; }
+        .sidebar-panel { border: 1px solid var(--va-border); border-radius: 10px; background: #fff; overflow: hidden; }
+        .panel-tabs { background: #fff; border-bottom: 1px solid var(--va-border); }
+        .panel-tab { color: #6b7280; font-weight: 600; padding: 11px 0; }
+        .panel-tab.active { color: var(--va-blue); border-bottom: 2px solid var(--va-blue); }
+        .legend-area { font-size: 12px; color: #667085; }
+        .legend-dot.answered { background-color: var(--va-blue); }
+        .legend-dot.unanswered { background-color: #cfd6e4; }
+        .grid-area { gap: 10px; }
+        .grid-item { width: 34px; height: 34px; border-radius: 50%; background-color: #f3f5f8; color: #667085; border: 1px solid transparent; font-weight: 600; }
+        .grid-item.answered { background-color: #1f324f; color: #fff; }
+        .grid-item.current { background-color: #fff; color: var(--va-blue); border-color: var(--va-blue); }
+        .part-tab-item { color: #98a2b3; font-weight: 600; }
+        .part-tab-item.active { color: var(--va-blue); border-bottom: 2px solid var(--va-blue); }
+        .btn-submit { background-color: var(--va-navy) !important; border: none; color: #fff !important; border-radius: 8px; font-weight: 700; height: 40px; }
+        .btn-submit:hover { background-color: #15263d !important; }
+        .tool-item { color: var(--va-blue); }
+        .tool-item:hover { background-color: #eff5ff; }
+        .nav-arrow { width: 34px; height: 56px; border-radius: 6px; background: rgba(27, 47, 75, .32); color: #fff; opacity: 1; }
+        .nav-arrow:hover { background: rgba(27, 47, 75, .52); }
+
+</style>
 </head>
 <body>
 
@@ -312,6 +417,7 @@
     </header>
 
     <div class="main-container">
+        <div class="nav-arrow left-arrow"><i class="fa fa-angle-left"></i></div>
         
         <!-- 划词工具栏 -->
         <div id="selectionToolbar" class="selection-toolbar">
@@ -442,6 +548,8 @@
             </div>
         </div>
 
+        <div class="nav-arrow right-arrow"><i class="fa fa-angle-right"></i></div>
+
         <!-- 右侧侧边栏 -->
         <div class="sidebar-section">
             <div class="status-bar">
@@ -457,16 +565,16 @@
             
             <div class="sidebar-panel">
                 <div class="panel-tabs">
-                    <div class="panel-tab active">答题卡(13)</div>
-                    <div class="panel-tab">工具箱(1)</div>
+                    <div class="panel-tab active" data-panel="answer-card">答题卡(13)</div>
+                    <div class="panel-tab" data-panel="toolbox">工具箱(1)</div>
                 </div>
                 
-                <div class="legend-area">
+                <div class="legend-area answer-card-area">
                     <div class="legend-item"><div class="legend-dot answered"></div> 已答</div>
                     <div class="legend-item"><div class="legend-dot unanswered"></div> 未答</div>
                 </div>
                 
-                <div class="grid-area">
+                <div class="grid-area answer-card-area">
                     <div class="grid-item" id="grid-1">1</div>
                     <div class="grid-item" id="grid-2">2</div>
                     <div class="grid-item" id="grid-3">3</div>
@@ -481,12 +589,24 @@
                     <div class="grid-item" id="grid-12">12</div>
                     <div class="grid-item" id="grid-13">13</div>
                 </div>
+
+                <div class="toolbox-area">
+                    <div class="toolbox-card">
+                        <div class="toolbox-title">段落标签/笔记</div>
+                        <button class="btn btn-sm btn-primary" id="openReadingNoteBtn">打开笔记弹窗</button>
+                        <div class="toolbox-tip">提示：也可点击左侧段落前的标签图标，给指定段落添加标签。</div>
+                    </div>
+                    <div class="toolbox-card">
+                        <div class="toolbox-title">工具箱笔记</div>
+                        <div id="toolboxNoteList" class="toolbox-note-list"></div>
+                    </div>
+                </div>
                 
                 <div class="bottom-actions">
                     <div class="part-tabs">
-                        <div class="part-tab-item active">Part 1</div>
-                        <div class="part-tab-item">Part 2</div>
-                        <div class="part-tab-item">Part 3</div>
+                        <div class="part-tab-item active" data-part="1">Part 1</div>
+                        <div class="part-tab-item" data-part="2">Part 2</div>
+                        <div class="part-tab-item" data-part="3">Part 3</div>
                     </div>
                     <button class="btn btn-submit">提交试卷</button>
                 </div>
@@ -683,18 +803,23 @@
             $('#confirmAddTagBtn').on('click', function() {
                 var labelText = $('#tagInput').val();
                 
-                if (labelText && labelText.trim() !== '' && currentTagTarget) {
-                    var $p = currentTagTarget;
-                    // 检查是否已经有标签容器
-                    var $tagsContainer = $p.prev('.tags-container');
-                    if ($tagsContainer.length === 0) {
-                        $tagsContainer = $('<div class="tags-container"></div>');
-                        $p.before($tagsContainer);
+                if (labelText && labelText.trim() !== '') {
+                    if (currentTagTarget) {
+                        var $p = currentTagTarget;
+                        // 检查是否已经有标签容器
+                        var $tagsContainer = $p.prev('.tags-container');
+                        if ($tagsContainer.length === 0) {
+                            $tagsContainer = $('<div class="tags-container"></div>');
+                            $p.before($tagsContainer);
+                        }
+                        
+                        // 添加新标签
+                        var $tag = $('<div class="paragraph-tag">' + labelText + '<i class="fa fa-times remove-tag" title="删除标签"></i></div>');
+                        $tagsContainer.append($tag);
+                    } else {
+                        // 从工具箱打开时，保存成工具箱笔记
+                        $('#toolboxNoteList').prepend('<div class="toolbox-note-item">' + labelText + '</div>');
                     }
-                    
-                    // 添加新标签
-                    var $tag = $('<div class="paragraph-tag">' + labelText + '<i class="fa fa-times remove-tag" title="删除标签"></i></div>');
-                    $tagsContainer.append($tag);
                 }
                 
                 addTagModal.hide();
@@ -716,6 +841,28 @@
 
 
             // ================= 答题卡联动功能 =================
+            // 答题卡/工具箱切换
+            $('.panel-tab').on('click', function() {
+                var panel = $(this).data('panel');
+                $('.panel-tab').removeClass('active');
+                $(this).addClass('active');
+
+                if (panel === 'toolbox') {
+                    $('.answer-card-area').hide();
+                    $('.toolbox-area').show();
+                } else {
+                    $('.toolbox-area').hide();
+                    $('.answer-card-area').show();
+                }
+            });
+
+            // 工具箱打开笔记弹窗
+            $('#openReadingNoteBtn').on('click', function() {
+                currentTagTarget = null;
+                $('#tagInput').val('');
+                addTagModal.show();
+            });
+
             // 填空题联动
             $('.answer-input').on('input focus', function() {
                 var qnum = $(this).data('qnum');
@@ -779,6 +926,37 @@
             // 提交试卷
             $('.btn-submit').on('click', function() {
                 window.location.href = '休息页.html';
+            });
+
+            // Part 切换（当前仅 Part 1 页面）
+            function goToReadingPart(part) {
+                if (part === '1') {
+                    return;
+                }
+                alert('Reading Part ' + part + ' 页面开发中');
+            }
+
+            $('.part-tab-item').on('click', function() {
+                var part = $(this).data('part');
+                $('.part-tab-item').removeClass('active');
+                $(this).addClass('active');
+                goToReadingPart(part);
+            });
+
+            $('.left-arrow').on('click', function() {
+                var $active = $('.part-tab-item.active');
+                var $prev = $active.prev('.part-tab-item');
+                if ($prev.length) {
+                    $prev.click();
+                }
+            });
+
+            $('.right-arrow').on('click', function() {
+                var $active = $('.part-tab-item.active');
+                var $next = $active.next('.part-tab-item');
+                if ($next.length) {
+                    $next.click();
+                }
             });
         });
     </script>
