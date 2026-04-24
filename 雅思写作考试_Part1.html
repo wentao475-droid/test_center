@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思写作考试 - Part 1 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: #333;
+        }
+        .progress-bar-top {
+            height: 4px;
+            background-color: #eee;
+            width: 100%;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #165dff;
+            width: var(--progress-percent, 50%);
+            transition: width 0.3s;
+        }
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #165dff;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+        }
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 46px;
+            height: 64px;
+            background-color: rgba(0, 0, 0, 0.16);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 5;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .nav-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.28);
+        }
+        .nav-arrow.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .left-arrow {
+            left: 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .right-arrow {
+            right: 0;
+            border-radius: 4px 0 0 4px;
+        }
+        .left-panel,
+        .right-panel {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .left-panel {
+            width: 520px;
+            padding: 28px 24px 40px;
+            background-color: #fafafa;
+            border-right: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .center-panel {
+            flex: 1;
+            padding: 28px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            min-width: 0;
+        }
+        .right-sidebar {
+            width: 320px;
+            background-color: #fff;
+            border-left: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex-shrink: 0;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.02);
+            z-index: 1;
+        }
+        .status-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #666;
+            flex-shrink: 0;
+        }
+        .net-speed {
+            color: #52c41a;
+            font-weight: 500;
+        }
+        .time-left {
+            font-size: 18px;
+            color: #165dff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        .task-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .task-time {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 22px;
+        }
+        .task-desc {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        .visual-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            padding: 18px;
+            max-width: 520px;
+        }
+        .visual-card svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .editor-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .editor-box {
+            flex: 1;
+            width: 100%;
+            resize: none;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            padding: 18px;
+            font-size: 15px;
+            line-height: 1.9;
+            color: #333;
+            outline: none;
+            box-shadow: none;
+        }
+        .editor-box:focus {
+            border-color: #165dff;
+            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.12);
+        }
+        .editor-footer {
+            border: 1px solid #ddd;
+            border-top: none;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 0 0 4px 4px;
+        }
+        .word-count {
+            font-size: 14px;
+            color: #555;
+        }
+        .word-count strong {
+            color: #333;
+        }
+        
+        /* 渚ц竟鏍忓伐鍏峰尯鏍峰紡 */
+        .monitor-box {
+            background-color: #000;
+            height: 160px;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #333;
+        }
+        .monitor-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: #333;
+        }
+        .monitor-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .monitor-tag .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .monitor-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #fff;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        /* 扫码上传工具区样�?- 移至中间区域 */
+        .upload-section {
+            margin-top: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .qr-box {
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            flex-shrink: 0;
+        }
+        .qr-box svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .qr-info {
+            flex: 1;
+            padding-top: 5px;
+        }
+        .qr-tip {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+        .sync-btn {
+            font-size: 12px;
+            color: #165dff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .sync-btn:hover {
+            text-decoration: underline;
+        }
+        
+        /* 右侧答题卡区�?*/
+        .sidebar-panel {
+            background-color: #fff;
+            border-radius: 8px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+            overflow: hidden;
+        }
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        .panel-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            cursor: pointer;
+            color: #666;
+        }
+        .panel-tab.active {
+            color: #165dff;
+            border-bottom: 2px solid #165dff;
+            font-weight: 500;
+        }
+        .panel-content {
+            flex: 1;
+            padding: 20px;
+            display: none;
+        }
+        .panel-content.active {
+            display: block;
+        }
+        
+        .grid-legend {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .dot.answered { background-color: #165dff; }
+        .dot.unanswered { background-color: #d9d9d9; }
+        
+        .grid-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .grid-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #d9d9d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .grid-item.current {
+            background-color: #165dff;
+            color: #fff;
+            border-color: #165dff;
+        }
+        .grid-item.answered:not(.current) {
+            border-color: #165dff;
+            color: #165dff;
+        }
+        
+        /* 底部提交区域 */
+        .bottom-actions {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+        .part-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .part-tab-item {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            padding-bottom: 10px;
+            border-bottom: 2px solid transparent;
+            flex: 1;
+            text-align: center;
+        }
+        .part-tab-item.active {
+            color: #165dff;
+            border-bottom-color: #165dff;
+            font-weight: 500;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #ff7d00;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-submit:hover {
+            background-color: #e67000;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar-top">
+        <div class="progress-bar-fill"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-logo">
+            <i class="fa fa-graduation-cap"></i>
+            VISION ACADEMY 测评系统
+        </div>
+        <div class="header-user">
+            <span>Hi, 测试老师01</span>
+            <a href="index.html" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登�?/a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="nav-arrow left-arrow disabled"><i class="fa fa-angle-left"></i></div>
+        <div class="nav-arrow right-arrow"><i class="fa fa-angle-right"></i></div>
+
+        <section class="left-panel">
+            <div class="task-title">Part 1</div>
+            <div class="task-time">You should spend about 20 minutes on this task.</div>
+            <div class="task-desc">
+                The graph below shows the average monthly change in the prices of three metals during 2014.<br>
+                Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+            </div>
+
+            <div class="visual-card">
+                <svg viewBox="0 0 680 470" xmlns="http://www.w3.org/2000/svg" aria-label="line chart">
+                    <rect x="0" y="0" width="680" height="470" fill="#ffffff"/>
+                    <text x="340" y="38" text-anchor="middle" font-size="28" font-weight="700" fill="#555">Average monthly change in prices of</text>
+                    <text x="340" y="72" text-anchor="middle" font-size="28" font-weight="700" fill="#555">copper, nickel and zinc (2014)</text>
+                    <g stroke="#c9c9c9" stroke-width="2">
+                        <line x1="110" y1="95" x2="110" y2="355"/>
+                        <line x1="110" y1="355" x2="560" y2="355"/>
+                        <line x1="110" y1="315" x2="560" y2="315"/>
+                        <line x1="110" y1="275" x2="560" y2="275"/>
+                        <line x1="110" y1="235" x2="560" y2="235"/>
+                        <line x1="110" y1="195" x2="560" y2="195"/>
+                        <line x1="110" y1="155" x2="560" y2="155"/>
+                        <line x1="110" y1="115" x2="560" y2="115"/>
+                    </g>
+                    <g fill="#666" font-size="20">
+                        <text x="84" y="362">-4</text>
+                        <text x="84" y="322">-2</text>
+                        <text x="94" y="282">0</text>
+                        <text x="94" y="242">2</text>
+                        <text x="94" y="202">4</text>
+                        <text x="94" y="162">6</text>
+                        <text x="94" y="122">8</text>
+                    </g>
+                    <g fill="#666" font-size="19">
+                        <text x="105" y="388">J</text>
+                        <text x="145" y="388">F</text>
+                        <text x="185" y="388">M</text>
+                        <text x="225" y="388">A</text>
+                        <text x="265" y="388">M</text>
+                        <text x="305" y="388">J</text>
+                        <text x="345" y="388">J</text>
+                        <text x="385" y="388">A</text>
+                        <text x="425" y="388">S</text>
+                        <text x="465" y="388">O</text>
+                        <text x="505" y="388">N</text>
+                        <text x="545" y="388">D</text>
+                    </g>
+                    <text x="340" y="430" text-anchor="middle" font-size="24" font-weight="700" fill="#555">Month</text>
+                    <text x="36" y="260" transform="rotate(-90 36,260)" font-size="21" font-weight="700" fill="#555">% change in price compared</text>
+                    <text x="64" y="260" transform="rotate(-90 64,260)" font-size="21" font-weight="700" fill="#555">with previous month</text>
+
+                    <polyline fill="none" stroke="#666" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                        points="110,155 150,255 190,275 230,275 270,275 310,355 350,275 390,275 430,275 470,275 510,315 550,235"/>
+                    <g fill="#666">
+                        <circle cx="110" cy="155" r="5"/><circle cx="150" cy="255" r="5"/><circle cx="190" cy="275" r="5"/>
+                        <circle cx="230" cy="275" r="5"/><circle cx="270" cy="275" r="5"/><circle cx="310" cy="355" r="5"/>
+                        <circle cx="350" cy="275" r="5"/><circle cx="390" cy="275" r="5"/><circle cx="430" cy="275" r="5"/>
+                        <circle cx="470" cy="275" r="5"/><circle cx="510" cy="315" r="5"/><circle cx="550" cy="235" r="5"/>
+                    </g>
+
+                    <polyline fill="none" stroke="#999" stroke-width="4" stroke-dasharray="8 7" stroke-linecap="round" stroke-linejoin="round"
+                        points="110,235 150,265 190,275 230,285 270,285 310,285 350,235 390,235 430,235 470,235 510,255 550,245"/>
+                    <g fill="#999">
+                        <circle cx="110" cy="235" r="5"/><circle cx="150" cy="265" r="5"/><circle cx="190" cy="275" r="5"/>
+                        <circle cx="230" cy="285" r="5"/><circle cx="270" cy="285" r="5"/><circle cx="310" cy="285" r="5"/>
+                        <circle cx="350" cy="235" r="5"/><circle cx="390" cy="235" r="5"/><circle cx="430" cy="235" r="5"/>
+                        <circle cx="470" cy="235" r="5"/><circle cx="510" cy="255" r="5"/><circle cx="550" cy="245" r="5"/>
+                    </g>
+
+                    <polyline fill="none" stroke="#b7b7b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                        points="110,195 150,205 190,235 230,245 270,265 310,315 350,295 390,295 430,295 470,295 510,335 550,215"/>
+                    <g fill="#b7b7b7">
+                        <rect x="106" y="191" width="8" height="8"/><rect x="146" y="201" width="8" height="8"/>
+                        <rect x="186" y="231" width="8" height="8"/><rect x="226" y="241" width="8" height="8"/>
+                        <rect x="266" y="261" width="8" height="8"/><rect x="306" y="311" width="8" height="8"/>
+                        <rect x="346" y="291" width="8" height="8"/><rect x="386" y="291" width="8" height="8"/>
+                        <rect x="426" y="291" width="8" height="8"/><rect x="466" y="291" width="8" height="8"/>
+                        <rect x="506" y="331" width="8" height="8"/><rect x="546" y="211" width="8" height="8"/>
+                    </g>
+
+                    <rect x="160" y="404" width="350" height="48" fill="#fff" stroke="#bbb"/>
+                    <line x1="276" y1="404" x2="276" y2="452" stroke="#bbb"/>
+                    <line x1="390" y1="404" x2="390" y2="452" stroke="#bbb"/>
+                    <g font-size="20" fill="#666">
+                        <line x1="176" y1="428" x2="212" y2="428" stroke="#999" stroke-width="4" stroke-dasharray="8 7"/>
+                        <text x="220" y="434">Copper</text>
+                        <line x1="292" y1="428" x2="328" y2="428" stroke="#666" stroke-width="4"/>
+                        <text x="336" y="434">Nickel</text>
+                        <line x1="406" y1="428" x2="442" y2="428" stroke="#b7b7b7" stroke-width="4"/>
+                        <text x="450" y="434">Zinc</text>
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <section class="center-panel">
+            <div class="editor-wrap">
+                <textarea id="writingEditor" class="editor-box" placeholder="在此输入您的写作内容..."></textarea>
+                <div class="editor-footer">
+                    <div class="word-count">Words Count: <strong id="wordCount">0</strong></div>
+                </div>
+            </div>
+            <div class="upload-section">
+                <div class="qr-box">
+                    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="qr code">
+                        <rect width="120" height="120" fill="#fff"/>
+                        <rect x="6" y="6" width="30" height="30" fill="#111"/><rect x="12" y="12" width="18" height="18" fill="#fff"/><rect x="17" y="17" width="8" height="8" fill="#111"/>
+                        <rect x="84" y="6" width="30" height="30" fill="#111"/><rect x="90" y="12" width="18" height="18" fill="#fff"/><rect x="95" y="17" width="8" height="8" fill="#111"/>
+                        <rect x="6" y="84" width="30" height="30" fill="#111"/><rect x="12" y="90" width="18" height="18" fill="#fff"/><rect x="17" y="95" width="8" height="8" fill="#111"/>
+                        <rect x="48" y="8" width="8" height="8" fill="#111"/><rect x="56" y="8" width="8" height="8" fill="#111"/><rect x="64" y="16" width="8" height="8" fill="#111"/>
+                        <rect x="48" y="24" width="8" height="8" fill="#111"/><rect x="56" y="32" width="8" height="8" fill="#111"/><rect x="64" y="24" width="8" height="8" fill="#111"/>
+                        <rect x="42" y="42" width="8" height="8" fill="#111"/><rect x="50" y="42" width="8" height="8" fill="#111"/><rect x="58" y="42" width="8" height="8" fill="#111"/><rect x="66" y="42" width="8" height="8" fill="#111"/>
+                        <rect x="74" y="42" width="8" height="8" fill="#111"/><rect x="82" y="42" width="8" height="8" fill="#111"/>
+                        <rect x="42" y="50" width="8" height="8" fill="#111"/><rect x="58" y="50" width="8" height="8" fill="#111"/><rect x="74" y="50" width="8" height="8" fill="#111"/><rect x="90" y="50" width="8" height="8" fill="#111"/>
+                        <rect x="42" y="58" width="8" height="8" fill="#111"/><rect x="50" y="58" width="8" height="8" fill="#111"/><rect x="66" y="58" width="8" height="8" fill="#111"/><rect x="82" y="58" width="8" height="8" fill="#111"/><rect x="90" y="58" width="8" height="8" fill="#111"/>
+                        <rect x="42" y="66" width="8" height="8" fill="#111"/><rect x="58" y="66" width="8" height="8" fill="#111"/><rect x="66" y="66" width="8" height="8" fill="#111"/><rect x="74" y="66" width="8" height="8" fill="#111"/>
+                        <rect x="90" y="66" width="8" height="8" fill="#111"/>
+                        <rect x="48" y="74" width="8" height="8" fill="#111"/><rect x="56" y="74" width="8" height="8" fill="#111"/><rect x="72" y="74" width="8" height="8" fill="#111"/><rect x="80" y="74" width="8" height="8" fill="#111"/>
+                        <rect x="90" y="82" width="8" height="8" fill="#111"/><rect x="42" y="90" width="8" height="8" fill="#111"/><rect x="58" y="90" width="8" height="8" fill="#111"/><rect x="66" y="90" width="8" height="8" fill="#111"/><rect x="74" y="90" width="8" height="8" fill="#111"/>
+                        <rect x="42" y="98" width="8" height="8" fill="#111"/><rect x="50" y="98" width="8" height="8" fill="#111"/><rect x="82" y="98" width="8" height="8" fill="#111"/><rect x="90" y="98" width="8" height="8" fill="#111"/>
+                    </svg>
+                </div>
+                <div class="qr-info">
+                    <div class="qr-tip">请使用微信扫码上传作答纸张过程，上传完成后点击 <a href="#" class="sync-btn"><i class="fa fa-refresh"></i> 同步</a></div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="right-sidebar">
+            <div class="status-row">
+                <span class="net-speed">2.29MB/s</span>
+                <span class="time-left"><i class="fa fa-clock-o"></i> 剩余时间: 00:59:52</span>
+            </div>
+
+            <div class="monitor-box" style="margin-bottom: 10px;">
+                <i class="fa fa-video-camera monitor-icon"></i>
+                <div class="monitor-tag"><span class="dot"></span> 监控中</div>
+                <div class="monitor-status"><i class="fa fa-microphone" style="color: #52c41a;"></i> <span style="color: #52c41a;">正常</span></div>
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-target="answerPane">答题卡(1)</div>
+                    <div class="panel-tab" data-target="toolPane">工具箱(0)</div>
+                </div>
+                
+                <div class="panel-content active" id="answerPane">
+                    <div class="grid-legend">
+                        <div class="legend-item"><span class="dot answered"></span> 已答</div>
+                        <div class="legend-item"><span class="dot unanswered"></span> 未答</div>
+                    </div>
+                    <div class="grid-container">
+                        <div class="grid-item current" id="grid-1">1</div>
+                    </div>
+                </div>
+                
+                <div class="panel-content" id="toolPane">
+                    <div style="text-align: center; color: #999; padding-top: 20px;">暂无工具</div>
+                </div>
+            </div>
+            
+            <div class="bottom-actions">
+                <div class="part-tabs">
+                    <div class="part-tab-item active">Part1</div>
+                    <div class="part-tab-item" id="navToPart2">Part2</div>
+                </div>
+                <button class="btn btn-submit" id="nextPartBtn">提交试卷</button>
+            </div>
+        </aside>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function updateWordCount() {
+                var text = $('#writingEditor').val().trim();
+                var count = text ? text.split(/\s+/).length : 0;
+                $('#wordCount').text(count);
+                
+                // 有内容则更新答题卡状态为已答
+                if (count > 0) {
+                    $('#grid-1').addClass('answered').removeClass('current');
+                } else {
+                    $('#grid-1').removeClass('answered').addClass('current');
+                }
+            }
+
+            $('#writingEditor').on('input', updateWordCount);
+
+            // 右侧面板切换
+            $('.panel-tab').on('click', function() {
+                var target = $(this).data('target');
+                $('.panel-tab').removeClass('active');
+                $(this).addClass('active');
+                $('.panel-content').removeClass('active');
+                $('#' + target).addClass('active');
+            });
+
+            // 页面跳转逻辑
+            $('#navToPart2, .right-arrow').on('click', function() {
+                window.location.href = '雅思写作考试_Part2.html';
+            });
+
+            // 底部按钮跳转到 Part 2
+            $('#nextPartBtn').on('click', function() {
+                window.location.href = '雅思写作考试_Part2.html';
+            });
+
+            $('.left-arrow').on('click', function() {
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
+

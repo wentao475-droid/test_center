@@ -119,7 +119,7 @@
             margin-bottom: 40px;
         }
 
-        /* 中间作答区 (选项区) */
+        /* 中间作答区（选项） */
         .answer-section {
             flex: 1;
             padding: 40px 60px;
@@ -292,7 +292,7 @@
             border-bottom: 2px solid #165dff;
         }
 
-        /* 答题卡图例 */
+        /* 答题卡图区 */
         .legend-area {
             padding: 15px;
             display: flex;
@@ -388,7 +388,7 @@
         </div>
         <div class="header-user">
             <span>Hi, 测试老师01</span>
-            <a href="#" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
         </div>
     </header>
 
@@ -405,7 +405,7 @@
             </div>
         </div>
         
-        <!-- 中间答题区 (选项区) -->
+        <!-- 中间答题区（选项） -->
         <div class="answer-section">
             <div class="option-item" data-value="A">
                 <div class="option-radio"></div>
@@ -455,7 +455,7 @@
             
             <div class="sidebar-panel">
                 <div class="panel-tabs">
-                    <div class="panel-tab active">答题卡 (18)</div>
+                    <div class="panel-tab active">答题卡(18)</div>
                     <div class="panel-tab">工具箱(1)</div>
                 </div>
                 
@@ -469,7 +469,7 @@
                 </div>
                 
                 <div class="grid-area" id="answerGrid">
-                    <!-- JS动态生成题号 -->
+                    <!-- JS 动态生成题号 -->
                 </div>
                 
                 <div class="bottom-actions">
@@ -484,7 +484,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            // 初始化答题卡 (1-18题)
+            // 初始化答题卡 (1-18)
             var totalQuestions = 18;
             var currentQuestion = 1;
             var answers = {}; // 存储作答情况 {1: 'A', 2: 'B'}

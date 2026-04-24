@@ -51,7 +51,7 @@
         .progress-bar-top { height: 4px; background-color: #eee; width: 100%; }
         .progress-bar-fill { height: 100%; background-color: #165dff; width: var(--progress-percent, 66%); transition: width 0.3s; }
 
-        /* 三列主布局 */
+        /* 三列主体布局 */
         .main-container {
             display: flex;
             flex: 1;
@@ -205,7 +205,7 @@
             border-bottom: 2px solid #165dff;
         }
 
-        /* 选项卡内容区域 */
+        /* 选项卡内容区 */
         .tab-content {
             flex: 1;
             display: none;
@@ -216,7 +216,7 @@
             display: flex;
         }
 
-        /* 答题卡图例 */
+        /* 答题卡图区 */
         .legend-area {
             padding: 15px;
             display: flex;
@@ -316,7 +316,7 @@
 
     <header class="header">
         <div class="header-logo"><i class="fa fa-graduation-cap"></i> VISION ACADEMY 测评系统</div>
-        <div class="header-user"><span>Hi, 测试老师01</span><a href="#" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a></div>
+        <div class="header-user"><span>Hi, 测试老师01</span><a href="index.html" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a></div>
     </header>
     <div class="progress-bar-top"><div class="progress-bar-fill"></div></div>
 
@@ -367,7 +367,7 @@
             
             <div class="sidebar-panel">
                 <div class="panel-tabs">
-                    <div class="panel-tab" data-target="answer-card">答题卡 (0)</div>
+                    <div class="panel-tab" data-target="answer-card">答题卡(0)</div>
                     <!-- 默认激活工具箱 -->
                     <div class="panel-tab active" data-target="toolbox">工具箱(1)</div>
                 </div>
@@ -515,7 +515,7 @@
                 // 显示中间巨大的录音状态栏
                 $('#recordingBar').fadeIn();
 
-                // 重置定时器开始作答倒数
+                // 重新开始作答倒计时
                 timerInterval = setInterval(updateTimer, 1000);
             }
 

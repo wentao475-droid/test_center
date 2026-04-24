@@ -164,7 +164,7 @@
             border-radius: 0 4px 4px 0;
         }
         .right-arrow {
-            right: 320px; /* 侧边栏宽度 */
+            right: 320px; /* 侧边栏宽�?*/
             border-radius: 4px 0 0 4px;
         }
 
@@ -197,7 +197,7 @@
             flex: 1;
             padding: 40px 60px;
             overflow-y: auto;
-            padding-right: 80px; /* 留出右箭头空间 */
+            padding-right: 80px; /* 留出右箭头空�?*/
         }
         .answer-row {
             display: flex;
@@ -442,7 +442,7 @@
             border-bottom: 2px solid #165dff;
         }
 
-        /* 答题卡图例 */
+        /* 答题卡图区 */
         .legend-area {
             padding: 15px;
             display: flex;
@@ -552,8 +552,8 @@
             VISION ACADEMY 测评系统
         </div>
         <div class="header-user">
-            <span>Hi, 关天任1</span>
-            <a href="#" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            <span>Hi, 关天虹</span>
+            <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
         </div>
     </header>
 
@@ -564,7 +564,7 @@
         <!-- 左侧区域 -->
         <div class="question-section">
             <div class="part-title">Part 2</div>
-            <div class="instruction-text">Listen and answer questions 11 – 20</div>
+            <div class="instruction-text">Listen and answer questions 11-20</div>
             
             <!-- 音频播放器 -->
             <div class="audio-player-container">
@@ -690,7 +690,7 @@
             
             <div class="sidebar-panel">
                 <div class="panel-tabs">
-                    <div class="panel-tab active">答题卡 (10)</div>
+                    <div class="panel-tab active">答题卡(10)</div>
                     <div class="panel-tab">工具箱(1)</div>
                 </div>
                 
@@ -862,14 +862,14 @@
                     var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
                     submitModal.show();
                 } else {
-                    // 全部答完，直接提交
-                    window.location.href = '休息页.html';
+                    // 全部答完，直接返回考前确认页
+                    window.location.href = '雅思考前确认.html';
                 }
             });
             
             // 弹窗确认提交
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '休息页.html';
+                window.location.href = '雅思考前确认.html';
             });
             
             // 切换Part

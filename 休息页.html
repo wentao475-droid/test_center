@@ -184,7 +184,7 @@
         </div>
         <div class="header-user">
             <span>Hi, 测试老师01</span>
-            <a href="#" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a>
+            <a href="index.html" class="logout-btn"><i class="fa fa-sign-out"></i> 退出登录</a>
         </div>
     </header>
 
@@ -223,7 +223,7 @@
     <script>
         $(document).ready(function() {
             // ===================== 配置项（可根据实际需求修改） =====================
-            const COUNTDOWN_SECONDS = 120; // 倒计时时长（秒），默认2分钟=120秒，可改为60秒（1分钟）
+            const COUNTDOWN_SECONDS = 120; // 倒计时时长（秒），默认 2 分钟 = 120 秒，可改为 60 秒（1分钟）
             const NEXT_SUBJECT_NAME = "雅思阅读"; // 下一门科目名称
             const NEXT_EXAM_URL = "雅思考前确认.html"; // 下一门考试页面链接
             // =====================================================================
@@ -256,7 +256,7 @@
             function updateCountdownDisplay() {
                 const minutes = Math.floor(remainingSeconds / 60);
                 const seconds = remainingSeconds % 60;
-                // 补零处理（如1分5秒显示为01:05）
+                // 补零处理（如 1 分 5 秒显示为 01:05）
                 const formattedMinutes = minutes.toString().padStart(2, '0');
                 const formattedSeconds = seconds.toString().padStart(2, '0');
                 $('#countdown').text(`${formattedMinutes}:${formattedSeconds}`);
@@ -265,10 +265,11 @@
             // 防止用户刷新/关闭页面的提示（可选）
             window.addEventListener('beforeunload', function(e) {
                 e.preventDefault();
-                e.returnValue = '您即将离开考试过渡页，可能导致无法正常进入下一门考试，确定要刷新/关闭吗？';
+                e.returnValue = '您即将离开考试过渡页，可能导致无法正常进入下一门考试，确定要刷新或关闭吗？';
                 return e.returnValue;
             });
         });
     </script>
 </body>
 </html>
+
