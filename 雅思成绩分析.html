@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思成绩分析 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f3f5f9;
+            color: #344054;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #fff;
+            border-right: 1px solid #e9edf3;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #eef1f5;
+            color: #165dff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #165dff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 18px 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            color: #667085;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #f7f9fc;
+            color: #344054;
+        }
+
+        .menu-item.active {
+            background-color: #edf4ff;
+            color: #165dff;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .header {
+            height: 64px;
+            background-color: #fff;
+            border-bottom: 1px solid #e9edf3;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 28px;
+            gap: 18px;
+            flex-shrink: 0;
+        }
+
+        .exam-select {
+            padding: 7px 34px 7px 14px;
+            border: 1px solid #d7ddea;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #344054;
+            outline: none;
+            appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="%23667085" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        .user-info {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f0f5ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 24px 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .btn-back {
+            border: 1px solid #d9deea;
+            background-color: #fff;
+            color: #667085;
+            border-radius: 18px;
+            padding: 5px 13px;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .paper-tabs {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+            padding: 0 8px;
+            margin-bottom: 12px;
+        }
+
+        .paper-tab {
+            position: relative;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .paper-tab.active {
+            color: #344054;
+        }
+
+        .paper-tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background-color: #344054;
+            border-radius: 2px;
+        }
+
+        .subject-panel {
+            display: none;
+        }
+
+        .subject-panel.active {
+            display: block;
+        }
+
+        .summary-card,
+        .analysis-card {
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+        }
+
+        .summary-card {
+            padding: 18px 22px 16px;
+            margin-bottom: 12px;
+        }
+
+        .summary-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #475467;
+            margin-bottom: 12px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 56px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 20px;
+            line-height: 1.1;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #98a2b3;
+            font-weight: 600;
+        }
+
+        .summary-divider {
+            border-top: 1px solid #edf1f5;
+            margin: 0 0 14px;
+        }
+
+        .grid-legend {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #98a2b3;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-unanswered { background-color: #e8edf4; }
+        .dot-wrong { background-color: #ff8d8d; }
+        .dot-correct { background-color: #7cd992; }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 44px);
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .grid-num {
+            width: 44px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .num-correct {
+            background-color: #dff5e3;
+            color: #31a95b;
+        }
+
+        .num-wrong {
+            background-color: #ffe4e4;
+            color: #f06565;
+        }
+
+        .num-unanswered {
+            background-color: #f2f4f7;
+            color: #98a2b3;
+        }
+
+        .analysis-card {
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .analysis-inner {
+            padding: 18px 22px 16px;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 18px;
+        }
+
+        .question-text {
+            font-size: 14px;
+            line-height: 1.85;
+            color: #344054;
+            margin-bottom: 18px;
+        }
+
+        .choice-list {
+            margin-bottom: 18px;
+        }
+
+        .choice-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .choice-key {
+            width: 18px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .answer-caption {
+            font-size: 14px;
+            font-weight: 700;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 42px;
+            border-radius: 8px;
+            padding: 0 14px;
+            border: 1px solid #e6ebf2;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .answer-bullet {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #d0d5dd;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        .answer-key {
+            width: 18px;
+            font-weight: 800;
+            color: #344054;
+        }
+
+        .answer-text {
+            flex: 1;
+            color: #344054;
+        }
+
+        .answer-status {
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .answer-option.wrong {
+            background-color: #fff1f1;
+            border-color: #ffd1d1;
+        }
+
+        .answer-option.wrong .answer-bullet {
+            background-color: #ff8d8d;
+            border-color: #ff8d8d;
+        }
+
+        .answer-option.wrong .answer-key,
+        .answer-option.wrong .answer-text,
+        .answer-option.wrong .answer-status {
+            color: #ef6666;
+        }
+
+        .answer-option.correct {
+            background-color: #effcf3;
+            border-color: #cdeecf;
+        }
+
+        .answer-option.correct .answer-bullet {
+            background-color: #7cd992;
+            border-color: #7cd992;
+        }
+
+        .answer-option.correct .answer-key,
+        .answer-option.correct .answer-text,
+        .answer-option.correct .answer-status {
+            color: #31a95b;
+        }
+
+        .analysis-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0 12px;
+        }
+
+        .toggle-btn {
+            border: 1px solid #d9deea;
+            background-color: #fff;
+            color: #667085;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .correct-answer {
+            font-size: 14px;
+            font-weight: 700;
+            color: #344054;
+        }
+
+        .answer-analysis-wrapper {
+            display: none;
+            padding-top: 12px;
+            border-top: 1px solid #eef2f6;
+            margin-top: 6px;
+        }
+
+        .answer-analysis-wrapper.show {
+            display: block;
+        }
+
+        .analysis-section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .analysis-text {
+            font-size: 14px;
+            color: #667085;
+            line-height: 1.8;
+        }
+
+        .score-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .score-tag {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .score-tag.blue {
+            background-color: #eef4ff;
+            color: #165dff;
+        }
+
+        .score-tag.green {
+            background-color: #effcf3;
+            color: #31a95b;
+        }
+
+        .writing-metrics,
+        .speaking-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .metric-item {
+            background-color: #f8fafc;
+            border: 1px solid #e7ecf3;
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: center;
+        }
+
+        .metric-name {
+            font-size: 12px;
+            color: #98a2b3;
+            margin-bottom: 6px;
+        }
+
+        .metric-score {
+            font-size: 18px;
+            font-weight: 800;
+            color: #344054;
+        }
+
+        .writing-answer-box,
+        .speaking-box {
+            background-color: #fbfcfe;
+            border: 1px solid #edf1f5;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        .box-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475467;
+            margin-bottom: 10px;
+        }
+
+        .box-text {
+            font-size: 14px;
+            line-height: 1.85;
+            color: #667085;
+        }
+
+        @media (max-width: 1200px) {
+            .question-grid {
+                grid-template-columns: repeat(5, 44px);
+            }
+            .stats-row {
+                gap: 36px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                padding: 16px;
+            }
+            .writing-metrics,
+            .speaking-metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+            .stats-row {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+            .question-grid {
+                grid-template-columns: repeat(4, 44px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .paper-tabs {
+                gap: 20px;
+                overflow-x: auto;
+            }
+            .question-grid {
+                grid-template-columns: repeat(3, 44px);
+            }
+            .analysis-inner {
+                padding: 16px;
+            }
+            .writing-metrics,
+            .speaking-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fa fa-graduation-cap"></i></div>
+                <div>VISION ACADEMY</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <i class="fa fa-home"></i>
+                    <span>考试首页</span>
+                </a>
+                <a href="考试记录.html" class="menu-item active">
+                    <i class="fa fa-file-text-o"></i>
+                    <span>考试记录</span>
+                </a>
+                <a href="学科考试.html" class="menu-item">
+                    <i class="fa fa-th-large"></i>
+                    <span>真题案例</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa fa-user-o"></i>
+                    <span>个人中心</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="header">
+                <select class="exam-select">
+                    <option>雅思成绩分析</option>
+                    <option>雅思模考</option>
+                </select>
+                <div class="user-info">Hi，王力宏</div>
+                <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            </header>
+
+            <div class="content-area">
+                <div class="top-bar">
+                    <a href="javascript:history.back()" class="btn-back">
+                        <i class="fa fa-angle-left"></i> 返回
+                    </a>
+                </div>
+
+                <div class="paper-tabs">
+                    <div class="paper-tab active" data-target="listening-panel">听力</div>
+                    <div class="paper-tab" data-target="reading-panel">阅读</div>
+                    <div class="paper-tab" data-target="writing-panel">写作</div>
+                    <div class="paper-tab" data-target="speaking-panel">口语</div>
+                </div>
+
+                <section class="subject-panel active" id="listening-panel">
+                    <div class="summary-card">
+                        <div class="summary-title">Listening Analysis</div>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-value">7.5</span>
+                                <span class="stat-label">Band 分</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">31/40</span>
+                                <span class="stat-label">正确题数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">00:28</span>
+                                <span class="stat-label">作答用时</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="grid-legend">
+                            <div class="legend-item"><span class="dot dot-unanswered"></span> 未答题</div>
+                            <div class="legend-item"><span class="dot dot-wrong"></span> 错误题</div>
+                            <div class="legend-item"><span class="dot dot-correct"></span> 答对题</div>
+                        </div>
+                        <div class="question-grid">
+                            <div class="grid-num num-correct">1</div>
+                            <div class="grid-num num-correct">2</div>
+                            <div class="grid-num num-wrong">3</div>
+                            <div class="grid-num num-correct">4</div>
+                            <div class="grid-num num-correct">5</div>
+                            <div class="grid-num num-wrong">6</div>
+                            <div class="grid-num num-correct">7</div>
+                            <div class="grid-num num-correct">8</div>
+                            <div class="grid-num num-unanswered">9</div>
+                            <div class="grid-num num-correct">10</div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">1. 填空题（Part 1）</div>
+                            <div class="question-text">
+                                Complete the notes below. Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.
+                            </div>
+                            <div class="answer-caption">题目：Postcode</div>
+                            <div class="answer-option wrong">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">1</span>
+                                <span class="answer-text">学生答案：1910</span>
+                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                            </div>
+                            <div class="answer-option correct">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">1</span>
+                                <span class="answer-text">正确答案：1190</span>
+                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#listening-analysis-1" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-up"></i> 收起解析</button>
+                            </div>
+                            <div class="answer-analysis-wrapper show" id="listening-analysis-1">
+                                <div class="analysis-section-title">解析</div>
+                                <div class="analysis-text">
+                                    本题考查数字辨音。录音中先提到一个干扰数字，随后说出最终的 postcode，正确答案应为 `1190`。做听力填空时需特别注意说话人更正信息。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">6. 单选题（Part 2）</div>
+                            <div class="question-text">
+                                What is the main reason the museum changed its opening hours?
+                            </div>
+                            <div class="choice-list">
+                                <div class="choice-line"><span class="choice-key">A</span><span>To reduce staff costs</span></div>
+                                <div class="choice-line"><span class="choice-key">B</span><span>To meet visitor demand</span></div>
+                                <div class="choice-line"><span class="choice-key">C</span><span>To prepare for renovation</span></div>
+                            </div>
+                            <div class="answer-caption">学生作答：</div>
+                            <div class="answer-option wrong">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">A</span>
+                                <span class="answer-text">To reduce staff costs</span>
+                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                            </div>
+                            <div class="answer-option correct">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">B</span>
+                                <span class="answer-text">To meet visitor demand</span>
+                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#listening-analysis-2" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-down"></i> 展开解析</button>
+                            </div>
+                            <div class="answer-analysis-wrapper" id="listening-analysis-2">
+                                <div class="analysis-section-title">解析</div>
+                                <div class="analysis-text">
+                                    题干问的是“主要原因”，录音先提到了人员安排问题，但随后明确说明调整开放时间是为了适应更多访客需求，因此答案选 B。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="subject-panel" id="reading-panel">
+                    <div class="summary-card">
+                        <div class="summary-title">Reading Analysis</div>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-value">7.0</span>
+                                <span class="stat-label">Band 分</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">29/40</span>
+                                <span class="stat-label">正确题数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">00:57</span>
+                                <span class="stat-label">作答用时</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="grid-legend">
+                            <div class="legend-item"><span class="dot dot-unanswered"></span> 未答题</div>
+                            <div class="legend-item"><span class="dot dot-wrong"></span> 错误题</div>
+                            <div class="legend-item"><span class="dot dot-correct"></span> 答对题</div>
+                        </div>
+                        <div class="question-grid">
+                            <div class="grid-num num-correct">1</div>
+                            <div class="grid-num num-correct">2</div>
+                            <div class="grid-num num-correct">3</div>
+                            <div class="grid-num num-wrong">4</div>
+                            <div class="grid-num num-correct">5</div>
+                            <div class="grid-num num-wrong">6</div>
+                            <div class="grid-num num-correct">7</div>
+                            <div class="grid-num num-correct">8</div>
+                            <div class="grid-num num-wrong">9</div>
+                            <div class="grid-num num-unanswered">10</div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">4. 判断题（Passage 1）</div>
+                            <div class="question-text">
+                                The writer believes that frozen food was first commercially successful in Australia.
+                            </div>
+                            <div class="answer-caption">学生作答：</div>
+                            <div class="answer-option wrong">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">T</span>
+                                <span class="answer-text">TRUE</span>
+                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                            </div>
+                            <div class="answer-option correct">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">N</span>
+                                <span class="answer-text">NOT GIVEN</span>
+                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#reading-analysis-1" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-up"></i> 收起解析</button>
+                            </div>
+                            <div class="answer-analysis-wrapper show" id="reading-analysis-1">
+                                <div class="analysis-section-title">解析</div>
+                                <div class="analysis-text">
+                                    文章只说澳大利亚人发明了机械制冷并运输了冷冻肉类，但没有明确说明“首次商业成功”发生在澳大利亚，因此应选 `NOT GIVEN`。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">10. 填空题（Passage 2）</div>
+                            <div class="question-text">
+                                Complete the summary. Choose <strong>ONE WORD ONLY</strong> from the passage.
+                            </div>
+                            <div class="answer-caption">题目：A large number of homes now had a ____.</div>
+                            <div class="answer-option correct">
+                                <span class="answer-bullet"></span>
+                                <span class="answer-key">10</span>
+                                <span class="answer-text">学生答案：freezer</span>
+                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#reading-analysis-2" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-down"></i> 展开解析</button>
+                            </div>
+                            <div class="answer-analysis-wrapper" id="reading-analysis-2">
+                                <div class="analysis-section-title">解析</div>
+                                <div class="analysis-text">
+                                    回到原文定位到 1950s 的信息，可见 “a large number of homes now had a freezer”，因此答案直接为 `freezer`。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="subject-panel" id="writing-panel">
+                    <div class="summary-card">
+                        <div class="summary-title">Writing Analysis</div>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-value">6.5</span>
+                                <span class="stat-label">Band 分</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">282</span>
+                                <span class="stat-label">总词数</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">00:58</span>
+                                <span class="stat-label">作答用时</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="score-tags">
+                            <div class="score-tag blue">Task 1：6.0</div>
+                            <div class="score-tag blue">Task 2：6.5</div>
+                            <div class="score-tag green">总体完成度良好</div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">Task 1 图表写作</div>
+                            <div class="question-text">
+                                The graph below shows the average monthly change in prices of copper, nickel and zinc in 2014. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+                            </div>
+                            <div class="writing-metrics">
+                                <div class="metric-item">
+                                    <div class="metric-name">Task Achievement</div>
+                                    <div class="metric-score">6.0</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Coherence</div>
+                                    <div class="metric-score">6.0</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Lexical Resource</div>
+                                    <div class="metric-score">6.5</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Grammar</div>
+                                    <div class="metric-score">6.0</div>
+                                </div>
+                            </div>
+                            <div class="writing-answer-box">
+                                <div class="box-title">作答概览</div>
+                                <div class="box-text">
+                                    文章能够概括主要趋势，但对个别月份的对比不够充分；部分句式重复，少量时态和冠词错误影响表达精确度。
+                                </div>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#writing-analysis-1" data-expand-label="展开点评" data-collapse-label="收起点评"><i class="fa fa-angle-up"></i> 收起点评</button>
+                            </div>
+                            <div class="answer-analysis-wrapper show" id="writing-analysis-1">
+                                <div class="analysis-section-title">AI 点评</div>
+                                <div class="analysis-text">
+                                    建议在概述段中更明确指出 “nickel showed the greatest fluctuation”，并在细节段按照上升、下降、回升的逻辑组织信息，避免简单逐月罗列。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">Task 2 议论文写作</div>
+                            <div class="question-text">
+                                Some people say an ageing population creates problems for governments. Others think there are benefits if society has more elderly people. Discuss both views and give your opinion.
+                            </div>
+                            <div class="writing-metrics">
+                                <div class="metric-item">
+                                    <div class="metric-name">Task Response</div>
+                                    <div class="metric-score">6.5</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Coherence</div>
+                                    <div class="metric-score">6.5</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Lexical Resource</div>
+                                    <div class="metric-score">7.0</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-name">Grammar</div>
+                                    <div class="metric-score">6.5</div>
+                                </div>
+                            </div>
+                            <div class="writing-answer-box">
+                                <div class="box-title">作答概览</div>
+                                <div class="box-text">
+                                    论证结构清晰，能够回应双方观点并表明立场。部分论据展开不够深入，复杂句准确率还有提升空间。
+                                </div>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#writing-analysis-2" data-expand-label="展开点评" data-collapse-label="收起点评"><i class="fa fa-angle-down"></i> 展开点评</button>
+                            </div>
+                            <div class="answer-analysis-wrapper" id="writing-analysis-2">
+                                <div class="analysis-section-title">AI 点评</div>
+                                <div class="analysis-text">
+                                    可以进一步增强论证层次，例如在支持“elderly people bring benefits”时加入更具体的社会价值例证；同时注意减少重复使用 “on the other hand” 等连接词。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="subject-panel" id="speaking-panel">
+                    <div class="summary-card">
+                        <div class="summary-title">Speaking Analysis</div>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-value">7.0</span>
+                                <span class="stat-label">Band 分</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">00:13</span>
+                                <span class="stat-label">作答时长</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">3 Parts</span>
+                                <span class="stat-label">完成部分</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="speaking-metrics">
+                            <div class="metric-item">
+                                <div class="metric-name">Fluency</div>
+                                <div class="metric-score">7.0</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-name">Lexical Resource</div>
+                                <div class="metric-score">7.0</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-name">Grammar</div>
+                                <div class="metric-score">6.5</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-name">Pronunciation</div>
+                                <div class="metric-score">7.0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">Part 1: Introduction & Interview</div>
+                            <div class="speaking-box">
+                                <div class="box-title">题目表现</div>
+                                <div class="box-text">
+                                    能够自然回答居住、学习和日常生活相关问题，反应较快，但部分答案较短，缺少展开说明。
+                                </div>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#speaking-analysis-1" data-expand-label="展开点评" data-collapse-label="收起点评"><i class="fa fa-angle-up"></i> 收起点评</button>
+                            </div>
+                            <div class="answer-analysis-wrapper show" id="speaking-analysis-1">
+                                <div class="analysis-section-title">AI 点评</div>
+                                <div class="analysis-text">
+                                    建议在 Part 1 中多使用 “because / for example / especially” 等扩展语，让每个回答达到 2 到 3 句，更有利于体现语言丰富度。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">Part 2: Long Turn</div>
+                            <div class="speaking-box">
+                                <div class="box-title">题目表现</div>
+                                <div class="box-text">
+                                    能够围绕 cue card 完成一段完整陈述，内容较连贯，语速稳定，但故事细节和情感描述仍可更具体。
+                                </div>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#speaking-analysis-2" data-expand-label="展开点评" data-collapse-label="收起点评"><i class="fa fa-angle-down"></i> 展开点评</button>
+                            </div>
+                            <div class="answer-analysis-wrapper" id="speaking-analysis-2">
+                                <div class="analysis-section-title">AI 点评</div>
+                                <div class="analysis-text">
+                                    Part 2 建议提前准备时间线表达，如 “at first / after that / eventually”，并补充更多感受类词汇，例如 “memorable / impressive / relaxing”。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-inner">
+                            <div class="question-title">Part 3: Discussion</div>
+                            <div class="speaking-box">
+                                <div class="box-title">题目表现</div>
+                                <div class="box-text">
+                                    回答具备一定逻辑性，能够表达观点并简单比较不同立场，但在抽象话题上论据仍偏少。
+                                </div>
+                            </div>
+                            <div class="analysis-actions">
+                                <button class="toggle-btn" data-target="#speaking-analysis-3" data-expand-label="展开点评" data-collapse-label="收起点评"><i class="fa fa-angle-down"></i> 展开点评</button>
+                            </div>
+                            <div class="answer-analysis-wrapper" id="speaking-analysis-3">
+                                <div class="analysis-section-title">AI 点评</div>
+                                <div class="analysis-text">
+                                    建议增加让步和对比表达，例如 “although / whereas / from another perspective”，帮助答案在 Part 3 中体现更成熟的讨论能力。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function setToggleState($btn, expanded) {
+                var expandLabel = $btn.data('expand-label') || '展开解析';
+                var collapseLabel = $btn.data('collapse-label') || '收起解析';
+                if (expanded) {
+                    $btn.html('<i class="fa fa-angle-up"></i> ' + collapseLabel);
+                } else {
+                    $btn.html('<i class="fa fa-angle-down"></i> ' + expandLabel);
+                }
+            }
+
+            $('.paper-tab').on('click', function() {
+                var targetId = $(this).data('target');
+                $('.paper-tab').removeClass('active');
+                $(this).addClass('active');
+                $('.subject-panel').removeClass('active');
+                $('#' + targetId).addClass('active');
+            });
+
+            $('.toggle-btn').on('click', function() {
+                var $btn = $(this);
+                var target = $btn.data('target');
+                var $panel = $(target);
+                var willShow = !$panel.hasClass('show');
+                $panel.toggleClass('show', willShow);
+                setToggleState($btn, willShow);
+            });
+        });
+    </script>
+</body>
+</html>

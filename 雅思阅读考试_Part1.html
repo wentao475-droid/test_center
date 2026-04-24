@@ -180,19 +180,23 @@
             background-color: #fff;
             position: relative;
         }
-        .part-header {
-            background-color: #f5f5f5;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            font-size: 15px;
-            color: #555;
-        }
-        .part-header strong {
-            display: block;
+        .part-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
             color: #333;
-            font-size: 18px;
-            margin-bottom: 5px;
+        }
+        .part-intro {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.7;
+        }
+        .part-sub-instruction {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.8;
         }
         
         .question-group {
@@ -299,11 +303,35 @@
         .legend-dot.answered { background-color: #165dff; }
         .legend-dot.unanswered { background-color: #ccc; }
 
-        .grid-area { padding: 0 15px 15px; display: flex; flex-wrap: wrap; gap: 12px; overflow-y: auto; flex: 1; background-color: #fff; }
+        .grid-area { padding: 0; display: flex; flex-wrap: wrap; gap: 12px; background-color: #fff; }
         .grid-item { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; background-color: #f5f5f5; color: #666; transition: all 0.2s; border: 2px solid transparent; }
         .grid-item.answered { background-color: #165dff; color: white; }
         .grid-item.current { border: 2px solid #165dff; background-color: #fff; color: #165dff; font-weight: bold; }
         .grid-item.answered.current { border: 2px solid #0e4bc2; background-color: #e6f7ff; color: #165dff; }
+        .answer-card-body {
+            padding: 0 15px 15px;
+            overflow-y: auto;
+            flex: 1;
+            background-color: #fff;
+        }
+        .part-question-group {
+            margin-bottom: 14px;
+        }
+        .part-question-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #344054;
+            margin: 8px 0 10px;
+        }
+        .part-question-title.active {
+            color: var(--va-blue);
+        }
+        .part-question-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 10px;
+            justify-items: center;
+        }
 
         .bottom-actions { background-color: #fff; padding: 15px; border-top: 1px solid #eee; }
         .part-tabs { display: flex; justify-content: space-between; margin-bottom: 15px; }
@@ -443,15 +471,13 @@
 
         <!-- 中间题目�?-->
         <div class="question-section">
-            <div class="part-header">
-                <strong>Part 1</strong>
-                You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1 below.
-            </div>
+            <div class="part-title">Part 1</div>
+            <div class="part-intro">You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1 below.</div>
             
             <!-- Questions 1-7 -->
             <div class="question-group">
                 <div class="question-group-title">Questions 1-7</div>
-                <div class="instruction-text">
+                <div class="part-sub-instruction">
                     Complete the notes below.<br>
                     Choose <b>ONE WORD ONLY</b> from the passage for each answer.<br>
                     Write your answers in boxes 1-7 on your answer sheet.
@@ -489,7 +515,7 @@
             <!-- Questions 8-13 -->
             <div class="question-group">
                 <div class="question-group-title">Questions 8-13</div>
-                <div class="instruction-text">
+                <div class="part-sub-instruction">
                     Do the following statements agree with the information given in Reading Passage 1?<br>
                     In boxes 8-13 on your answer sheet, write:<br><br>
                     <b>TRUE</b> if the statement agrees with the information<br>
@@ -574,20 +600,25 @@
                     <div class="legend-item"><div class="legend-dot unanswered"></div> 未答</div>
                 </div>
                 
-                <div class="grid-area answer-card-area">
-                    <div class="grid-item" id="grid-1">1</div>
-                    <div class="grid-item" id="grid-2">2</div>
-                    <div class="grid-item" id="grid-3">3</div>
-                    <div class="grid-item" id="grid-4">4</div>
-                    <div class="grid-item" id="grid-5">5</div>
-                    <div class="grid-item" id="grid-6">6</div>
-                    <div class="grid-item" id="grid-7">7</div>
-                    <div class="grid-item" id="grid-8">8</div>
-                    <div class="grid-item" id="grid-9">9</div>
-                    <div class="grid-item" id="grid-10">10</div>
-                    <div class="grid-item" id="grid-11">11</div>
-                    <div class="grid-item" id="grid-12">12</div>
-                    <div class="grid-item" id="grid-13">13</div>
+                <div class="answer-card-body answer-card-area">
+                    <div class="part-question-group">
+                        <div class="part-question-title active">Part 1</div>
+                        <div class="part-question-grid">
+                            <div class="grid-item" id="grid-1">1</div>
+                            <div class="grid-item" id="grid-2">2</div>
+                            <div class="grid-item" id="grid-3">3</div>
+                            <div class="grid-item" id="grid-4">4</div>
+                            <div class="grid-item" id="grid-5">5</div>
+                            <div class="grid-item" id="grid-6">6</div>
+                            <div class="grid-item" id="grid-7">7</div>
+                            <div class="grid-item" id="grid-8">8</div>
+                            <div class="grid-item" id="grid-9">9</div>
+                            <div class="grid-item" id="grid-10">10</div>
+                            <div class="grid-item" id="grid-11">11</div>
+                            <div class="grid-item" id="grid-12">12</div>
+                            <div class="grid-item" id="grid-13">13</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="toolbox-area">
@@ -603,11 +634,6 @@
                 </div>
                 
                 <div class="bottom-actions">
-                    <div class="part-tabs">
-                        <div class="part-tab-item active" data-part="1">Part 1</div>
-                        <div class="part-tab-item" data-part="2">Part 2</div>
-                        <div class="part-tab-item" data-part="3">Part 3</div>
-                    </div>
                     <button class="btn btn-submit">提交试卷</button>
                 </div>
             </div>
@@ -928,35 +954,12 @@
                 window.location.href = '休息页.html';
             });
 
-            // Part 切换（当前仅 Part 1 页面）
-            function goToReadingPart(part) {
-                if (part === '1') {
-                    return;
-                }
-                alert('Reading Part ' + part + ' 页面开发中');
-            }
-
-            $('.part-tab-item').on('click', function() {
-                var part = $(this).data('part');
-                $('.part-tab-item').removeClass('active');
-                $(this).addClass('active');
-                goToReadingPart(part);
-            });
-
             $('.left-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $prev = $active.prev('.part-tab-item');
-                if ($prev.length) {
-                    $prev.click();
-                }
+                return false;
             });
 
             $('.right-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $next = $active.next('.part-tab-item');
-                if ($next.length) {
-                    $next.click();
-                }
+                return false;
             });
         });
     </script>

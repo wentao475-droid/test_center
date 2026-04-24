@@ -3,424 +3,732 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>考试成绩分析 - 9709_w24_qp_53</title>
-    <!-- 引入Bootstrap样式 -->
+    <title>成绩分析 - VISION ACADEMY</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 引入Font Awesome图标 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <style>
-        /* 全局样式 */
         body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background-color: #f5f7fa;
             margin: 0;
-            padding: 20px 0;
-            color: #333;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f3f5f9;
+            color: #344054;
         }
 
-        .container-custom {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* 顶部导航与返回 */
-        .header-nav {
+        .app-container {
             display: flex;
-            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #fff;
+            border-right: 1px solid #e9edf3;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 12px;
+            border-bottom: 1px solid #eef1f5;
+            color: #165dff;
+            font-weight: 700;
+            font-size: 18px;
         }
-        .btn-back {
-            background-color: #165dff;
-            color: white;
-            border: none;
-            padding: 6px 18px;
-            border-radius: 4px;
-            font-size: 14px;
+
+        .sidebar-logo .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #165dff;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 18px 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            color: #667085;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #f7f9fc;
+            color: #344054;
+        }
+
+        .menu-item.active {
+            background-color: #edf4ff;
+            color: #165dff;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .header {
+            height: 64px;
+            background-color: #fff;
+            border-bottom: 1px solid #e9edf3;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 28px;
+            gap: 18px;
+            flex-shrink: 0;
+        }
+
+        .exam-select {
+            padding: 7px 34px 7px 14px;
+            border: 1px solid #d7ddea;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #344054;
+            outline: none;
+            appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="%23667085" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        .user-info {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-        .btn-back:hover {
-            color: white;
-            opacity: 0.9;
+            background-color: #f0f5ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
-        /* 成绩统计卡片 */
-        .stats-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 24px 30px;
         }
-        .exam-id {
-            color: #999;
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .btn-back {
+            border: 1px solid #d9deea;
+            background-color: #fff;
+            color: #667085;
+            border-radius: 18px;
+            padding: 5px 13px;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .paper-tabs {
+            display: flex;
+            align-items: center;
+            gap: 34px;
+            padding: 0 8px;
+            margin-bottom: 12px;
+        }
+
+        .paper-tab {
+            position: relative;
+            color: #667085;
             font-size: 14px;
-            margin-bottom: 20px;
+            font-weight: 700;
+            padding: 10px 0;
+            cursor: pointer;
         }
+
+        .paper-tab.active {
+            color: #344054;
+        }
+
+        .paper-tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background-color: #344054;
+            border-radius: 2px;
+        }
+
+        .summary-card,
+        .analysis-card {
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+        }
+
+        .summary-card {
+            padding: 18px 22px 16px;
+            margin-bottom: 12px;
+        }
+
+        .summary-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #475467;
+            margin-bottom: 12px;
+        }
+
         .stats-row {
             display: flex;
             justify-content: center;
-            gap: 60px;
-            margin-bottom: 25px;
-        }
-        .stat-item .value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            display: block;
-        }
-        .stat-item .label {
-            font-size: 13px;
-            color: #999;
+            gap: 72px;
+            margin-bottom: 14px;
         }
 
-        /* 题号网格 */
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 20px;
+            line-height: 1.1;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #98a2b3;
+            font-weight: 600;
+        }
+
+        .summary-divider {
+            border-top: 1px solid #edf1f5;
+            margin: 0 0 14px;
+        }
+
         .grid-legend {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-bottom: 12px;
             font-size: 12px;
-            color: #999;
+            color: #98a2b3;
         }
+
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
+
         .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             display: inline-block;
         }
-        .dot-unanswered { background-color: #eee; border: 1px solid #ddd; }
-        .dot-wrong { background-color: #ff4d4f; }
-        .dot-correct { background-color: #52c41a; }
+
+        .dot-unanswered { background-color: #e8edf4; }
+        .dot-wrong { background-color: #ff8d8d; }
+        .dot-correct { background-color: #7cd992; }
 
         .question-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(10, 44px);
             justify-content: center;
-            gap: 12px;
-            max-width: 500px;
-            margin: 0 auto;
+            gap: 10px;
         }
+
         .grid-num {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .num-unanswered { background-color: #fff; border: 1px solid #eee; color: #666; }
-        .num-correct { background-color: #e6f7ff; color: #52c41a; border: 1px solid #b7eb8f; background-color: #f6ffed; }
-        .num-wrong { background-color: #fff1f0; color: #ff4d4f; border: 1px solid #ffa39e; }
-        .grid-num:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        /* 题目详情卡片 */
-        .analysis-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin-top: 30px;
-        }
-        .analysis-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            text-align: center;
-            font-weight: 600;
             font-size: 16px;
-        }
-        .question-content {
-            padding: 30px 40px;
-        }
-        .question-number {
             font-weight: 700;
-            margin-right: 10px;
+            cursor: pointer;
         }
-        .question-text {
-            line-height: 1.8;
-            margin-bottom: 30px;
-            font-size: 15px;
-        }
-        .option-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 30px;
-        }
-        .option-item {
-            padding: 8px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        .option-label {
-            font-weight: 600;
-            color: #666;
-        }
-        .tags-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        .tag-item {
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        .tag-blue { background-color: #e6f7ff; color: #1890ff; }
-        .tag-pink { background-color: #fff1f0; color: #ff4d4f; }
-        .tag-green { background-color: #f6ffed; color: #52c41a; }
 
-        /* 答案解析区域样式 */
-        .answer-analysis-wrapper {
-            padding: 20px 40px;
-            background-color: #fafafa;
-            border-top: 1px solid #f0f0f0;
+        .num-correct {
+            background-color: #dff5e3;
+            color: #31a95b;
         }
-        .analysis-section-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
+
+        .num-wrong {
+            background-color: #ffe4e4;
+            color: #f06565;
+        }
+
+        .num-unanswered {
+            background-color: #f2f4f7;
+            color: #98a2b3;
+        }
+
+        .analysis-card {
             margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .analysis-inner {
+            padding: 18px 22px 16px;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 18px;
+        }
+
+        .question-text {
+            font-size: 14px;
+            line-height: 1.85;
+            color: #344054;
+            margin-bottom: 18px;
+        }
+
+        .choice-list {
+            margin-bottom: 18px;
+        }
+
+        .choice-line {
             display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .choice-key {
+            width: 18px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .answer-caption {
+            font-size: 14px;
+            font-weight: 700;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .answer-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 42px;
+            border-radius: 8px;
+            padding: 0 14px;
+            border: 1px solid #e6ebf2;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .answer-bullet {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #d0d5dd;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        .answer-key {
+            width: 18px;
+            font-weight: 800;
+            color: #344054;
+        }
+
+        .answer-text {
+            flex: 1;
+            color: #344054;
+        }
+
+        .answer-status {
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-        .analysis-section-title i {
-            color: #165dff;
-        }
-        .analysis-text {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-        }
-        .correct-answer-box {
-            display: inline-block;
-            padding: 2px 10px;
-            background-color: #e6f7ff;
-            color: #1890ff;
-            border-radius: 4px;
-            font-weight: 600;
-            margin-bottom: 15px;
+
+        .answer-option.wrong {
+            background-color: #fff1f1;
+            border-color: #ffd1d1;
         }
 
-        /* 选项状态样式 */
-        .option-item {
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        .option-item.correct {
-            background-color: #f6ffed;
-            border-color: #b7eb8f;
-        }
-        .option-item.wrong {
-            background-color: #fff1f0;
-            border-color: #ffa39e;
+        .answer-option.wrong .answer-bullet {
+            background-color: #ff8d8d;
+            border-color: #ff8d8d;
         }
 
-        .analysis-footer {
-            padding: 20px 40px;
-            border-top: 1px solid #f0f0f0;
+        .answer-option.wrong .answer-key,
+        .answer-option.wrong .answer-text,
+        .answer-option.wrong .answer-status {
+            color: #ef6666;
+        }
+
+        .answer-option.correct {
+            background-color: #effcf3;
+            border-color: #cdeecf;
+        }
+
+        .answer-option.correct .answer-bullet {
+            background-color: #7cd992;
+            border-color: #7cd992;
+        }
+
+        .answer-option.correct .answer-key,
+        .answer-option.correct .answer-text,
+        .answer-option.correct .answer-status {
+            color: #31a95b;
+        }
+
+        .analysis-actions {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 12px;
+            margin: 8px 0 12px;
         }
-        .btn-toggle-answer {
-            background: white;
-            border: 1px solid #165dff;
-            color: #165dff;
-            padding: 6px 15px;
-            border-radius: 4px;
-            font-size: 14px;
+
+        .toggle-btn {
+            border: 1px solid #d9deea;
+            background-color: #fff;
+            color: #667085;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
         }
-        .btn-toggle-answer:hover {
-            background-color: #f0f5ff;
-        }
-        .link-record {
-            color: #165dff;
-            text-decoration: none;
+
+        .correct-answer {
             font-size: 14px;
+            font-weight: 700;
+            color: #344054;
         }
 
-        /* 数学公式字体优化（模拟效果） */
-        .math {
-            font-style: italic;
-            font-family: "Times New Roman", serif;
+        .answer-analysis-wrapper {
+            display: none;
+            padding-top: 12px;
+            border-top: 1px solid #eef2f6;
+            margin-top: 6px;
+        }
+
+        .answer-analysis-wrapper.show {
+            display: block;
+        }
+
+        .analysis-section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .analysis-text {
+            font-size: 14px;
+            color: #667085;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 1200px) {
+            .question-grid {
+                grid-template-columns: repeat(5, 44px);
+            }
+            .stats-row {
+                gap: 36px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+            .stats-row {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+            .question-grid {
+                grid-template-columns: repeat(4, 44px);
+            }
         }
 
         @media (max-width: 576px) {
-            .stats-row { gap: 20px; }
-            .question-content { padding: 20px; }
-            .analysis-footer { padding: 15px 20px; }
+            .paper-tabs {
+                gap: 20px;
+                overflow-x: auto;
+            }
+            .question-grid {
+                grid-template-columns: repeat(3, 44px);
+            }
+            .analysis-inner {
+                padding: 16px;
+            }
         }
-    
-        </style>
+    </style>
 </head>
 <body>
-    <div class="container-custom">
-        <!-- 顶部导航 -->
-        <div class="header-nav">
-            <a href="javascript:history.back()" class="btn-back">
-                返回
-            </a>
-            <div style="flex: 1; text-align: center;">
-                <p class="mb-0 text-muted small">阅卷和解析结果均由AI提供，结果仅供参考</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fa fa-graduation-cap"></i></div>
+                <div>VISION ACADEMY</div>
             </div>
-            <div style="width: 60px;"></div> <!-- 占位平衡 -->
-        </div>
-
-        <!-- 成绩统计 -->
-        <div class="stats-card">
-            <div class="exam-id">9709_w24_qp_53</div>
-            <div class="stats-row">
-                <div class="stat-item">
-                    <span class="value">98%</span>
-                    <span class="label">正确率</span>
-                </div>
-                <div class="stat-item">
-                    <span class="value">1h15m</span>
-                    <span class="label">用时</span>
-                </div>
-                <div class="stat-item">
-                    <span class="value">36/50</span>
-                    <span class="label">试卷分数</span>
-                </div>
+            <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <i class="fa fa-home"></i>
+                    <span>考试首页</span>
+                </a>
+                <a href="考试记录.html" class="menu-item active">
+                    <i class="fa fa-file-text-o"></i>
+                    <span>考试记录</span>
+                </a>
+                <a href="学科考试.html" class="menu-item">
+                    <i class="fa fa-th-large"></i>
+                    <span>真题案例</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa fa-user-o"></i>
+                    <span>个人中心</span>
+                </a>
             </div>
+        </aside>
 
-            <!-- 图例 -->
-            <div class="grid-legend">
-                <div class="legend-item"><span class="dot dot-unanswered"></span> 未作答</div>
-                <div class="legend-item"><span class="dot dot-wrong"></span> 答错题</div>
-                <div class="legend-item"><span class="dot dot-correct"></span> 答对题</div>
-            </div>
+        <main class="main-wrapper">
+            <header class="header">
+                <select class="exam-select">
+                    <option>维考杯</option>
+                    <option>雅思考试</option>
+                </select>
+                <div class="user-info">Hi，王力宏</div>
+                <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            </header>
 
-            <!-- 题号网格 -->
-            <div class="question-grid">
-                <div class="grid-num num-correct">1</div>
-                <div class="grid-num num-correct">2</div>
-                <div class="grid-num num-wrong">3</div>
-                <div class="grid-num num-wrong">4</div>
-                <div class="grid-num num-correct">5</div>
-                <div class="grid-num num-correct">6</div>
-                <div class="grid-num num-wrong">7</div>
-                <div class="grid-num num-correct">8</div>
-                <div class="grid-num num-wrong">9</div>
-                <div class="grid-num num-wrong">10</div>
-                <div class="grid-num num-correct">11</div>
-                <div class="grid-num num-unanswered">12</div>
-                <div class="grid-num num-unanswered">13</div>
-            </div>
-        </div>
-
-        <!-- 题目解析 -->
-        <div class="analysis-card">
-            <div class="analysis-header">2026-TMUA前测</div>
-            <div class="question-content">
-                <div class="question-text">
-                    <span class="question-number">1.</span>
-                    The line <span class="math">L</span> with equation <span class="math">y = mx + c</span>, where <span class="math">m > 0</span> and <span class="math">c ≥ 0</span>, passes through the point (2,4).
-                    <br><br>
-                    A line is drawn through the point (2,4) perpendicular to <span class="math">L</span>.
-                    <br><br>
-                    The triangle enclosed between the two lines and the <span class="math">y</span>-axis has area 5 square units.
-                    <br><br>
-                    What is the <span class="math">larger</span> of the two possible values of <span class="math">m</span>?
+            <div class="content-area">
+                <div class="top-bar">
+                    <a href="javascript:history.back()" class="btn-back">
+                        <i class="fa fa-angle-left"></i> 返回
+                    </a>
                 </div>
 
-                <ul class="option-list">
-                    <li class="option-item"><span class="option-label">A</span> -0.5</li>
-                    <li class="option-item wrong">
-                        <span class="option-label">B</span> 0.5 
-                        <span class="ms-2 text-danger small"><i class="fa fa-close"></i> 您的选择</span>
-                    </li>
-                    <li class="option-item"><span class="option-label">C</span> 1.25</li>
-                    <li class="option-item correct">
-                        <span class="option-label">D</span> 2
-                        <span class="ms-2 text-success small"><i class="fa fa-check"></i> 正确答案</span>
-                    </li>
-                    <li class="option-item"><span class="option-label">E</span> 5</li>
-                </ul>
-
-                <div class="tags-row">
-                    <span class="tag-item tag-blue">2026-TMUA前测</span>
-                    <span class="tag-item tag-blue">2026</span>
-                    <span class="tag-item tag-pink">高阶考试</span>
-                    <span class="tag-item tag-green">其他</span>
+                <div class="paper-tabs">
+                    <div class="paper-tab active">试卷1</div>
+                    <div class="paper-tab">试卷2</div>
+                    <div class="paper-tab">试卷3</div>
                 </div>
-            </div>
 
-            <!-- 答案解析内容区域 -->
-            <div class="answer-analysis-wrapper" id="answerAnalysis">
-                <div class="correct-answer-box">正确答案：D</div>
-                <div class="analysis-section">
-                    <div class="analysis-section-title">
-                        <i class="fa fa-lightbulb-o"></i> 题目解析
+                <div class="summary-card">
+                    <div class="summary-title">2026-TMUA前测</div>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value">98%</span>
+                            <span class="stat-label">正确率</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">1h15m</span>
+                            <span class="stat-label">用时</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">36/50</span>
+                            <span class="stat-label">试卷分数</span>
+                        </div>
                     </div>
-                    <div class="analysis-text">
-                        1. <strong>理解题意</strong>：直线 <span class="math">L</span> 的方程为 <span class="math">y = mx + c</span>，经过点 (2,4)。由于 <span class="math">m > 0</span> 且 <span class="math">c ≥ 0</span>，直线斜率为正。<br>
-                        2. <strong>垂线方程</strong>：通过 (2,4) 且垂直于 <span class="math">L</span> 的直线斜率为 <span class="math">-1/m</span>。方程为 <span class="math">y - 4 = -1/m(x - 2)</span>。<br>
-                        3. <strong>求交点</strong>：这两条直线与 <span class="math">y</span> 轴的交点分别为 <span class="math">c</span> 和 <span class="math">4 + 2/m</span>。<br>
-                        4. <strong>计算面积</strong>：三角形底边在 <span class="math">y</span> 轴上，长度为 <span class="math">|c - (4 + 2/m)|</span>，高为点 (2,4) 的横坐标 2。面积 <span class="math">A = 1/2 * 底 * 高 = |c - 4 - 2/m| * 2 / 2 = 5</span>。<br>
-                        5. <strong>联立求解</strong>：代入点 (2,4) 到 <span class="math">L</span>，得到 <span class="math">4 = 2m + c</span>，即 <span class="math">c = 4 - 2m</span>。代入面积公式：<span class="math">|(4 - 2m) - 4 - 2/m| = 5</span>，整理得 <span class="math">|2m + 2/m| = 5</span>。<br>
-                        6. <strong>得出结果</strong>：解方程 <span class="math">2m² - 5m + 2 = 0</span>，得到 <span class="math">m = 2</span> 或 <span class="math">m = 0.5</span>。题目要求较大的值，故 <span class="math">m = 2</span>。
+                    <div class="summary-divider"></div>
+                    <div class="grid-legend">
+                        <div class="legend-item"><span class="dot dot-unanswered"></span> 未答题</div>
+                        <div class="legend-item"><span class="dot dot-wrong"></span> 错误题</div>
+                        <div class="legend-item"><span class="dot dot-correct"></span> 答对题</div>
+                    </div>
+                    <div class="question-grid">
+                        <div class="grid-num num-correct">1</div>
+                        <div class="grid-num num-correct">2</div>
+                        <div class="grid-num num-wrong">3</div>
+                        <div class="grid-num num-wrong">4</div>
+                        <div class="grid-num num-correct">5</div>
+                        <div class="grid-num num-correct">6</div>
+                        <div class="grid-num num-wrong">7</div>
+                        <div class="grid-num num-correct">8</div>
+                        <div class="grid-num num-wrong">9</div>
+                        <div class="grid-num num-wrong">10</div>
+                        <div class="grid-num num-correct">11</div>
+                        <div class="grid-num num-correct">12</div>
+                        <div class="grid-num num-wrong">13</div>
+                        <div class="grid-num num-wrong">14</div>
+                        <div class="grid-num num-correct">15</div>
+                        <div class="grid-num num-correct">16</div>
+                        <div class="grid-num num-wrong">17</div>
+                        <div class="grid-num num-correct">18</div>
+                        <div class="grid-num num-wrong">19</div>
+                        <div class="grid-num num-wrong">20</div>
                     </div>
                 </div>
-            </div>
 
-            <div class="analysis-footer">
-                <button class="btn-toggle-answer" id="toggleAnswer">
-                    收起答案 <i class="fa fa-angle-up ms-1"></i>
-                </button>
-                <a href="#" class="link-record">录制解析</a>
+                <div class="analysis-card">
+                    <div class="analysis-inner">
+                        <div class="question-title">1. 单选题（共15题）</div>
+                        <div class="question-text">
+                            The functional group in a primary alcohol is =CH2OH. Which reagent reacts with a primary alcohol, under suitable conditions, to give an organic product with the same number of oxygen atoms as the alcohol?
+                        </div>
+                        <div class="choice-list">
+                            <div class="choice-line"><span class="choice-key">A</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">B</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">C</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">D</span><span>Al2O3: 20250924</span></div>
+                        </div>
+                        <div class="answer-caption">学生作答：</div>
+                        <div class="answer-option">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">A</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                        </div>
+                        <div class="answer-option wrong">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">B</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                            <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                        </div>
+                        <div class="answer-option">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">C</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                        </div>
+                        <div class="answer-option correct">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">D</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                            <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                        </div>
+                        <div class="analysis-actions">
+                            <button class="toggle-btn" data-target="#analysis-1"><i class="fa fa-angle-up"></i> 收起答案</button>
+                        </div>
+                        <div class="correct-answer">正确答案： D</div>
+                        <div class="answer-analysis-wrapper show" id="analysis-1">
+                            <div class="analysis-section-title">题目解析</div>
+                            <div class="analysis-text">
+                                该题主要考查对有机化学基础反应条件的理解。先判断题干中“氧原子数不变”的条件，再结合伯醇的常见反应类型逐项排除，即可定位到正确选项 D。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="analysis-inner">
+                        <div class="question-title">1. 单选题（共15题）</div>
+                        <div class="question-text">
+                            The functional group in a primary alcohol is =CH2OH. Which reagent reacts with a primary alcohol, under suitable conditions, to give an organic product with the same number of oxygen atoms as the alcohol?
+                        </div>
+                        <div class="choice-list">
+                            <div class="choice-line"><span class="choice-key">A</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">B</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">C</span><span>Al2O3: 20250924</span></div>
+                            <div class="choice-line"><span class="choice-key">D</span><span>Al2O3: 20250924</span></div>
+                        </div>
+                        <div class="answer-caption">学生作答：</div>
+                        <div class="answer-option">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">A</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                        </div>
+                        <div class="answer-option wrong">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">B</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                            <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                        </div>
+                        <div class="answer-option">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">C</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                        </div>
+                        <div class="answer-option correct">
+                            <span class="answer-bullet"></span>
+                            <span class="answer-key">D</span>
+                            <span class="answer-text">Al2O3: 20250924</span>
+                            <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                        </div>
+                        <div class="analysis-actions">
+                            <button class="toggle-btn" data-target="#analysis-2"><i class="fa fa-angle-down"></i> 展开答案</button>
+                        </div>
+                        <div class="answer-analysis-wrapper" id="analysis-2">
+                            <div class="analysis-section-title">题目解析</div>
+                            <div class="analysis-text">
+                                本题与上题为同类题型，核心是结合反应条件和官能团转化过程，判断产物中氧原子数是否保持不变，再进行选项排除。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </main>
     </div>
 
-    <!-- 引入jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            // 答案显示/收起切换
-            let isAnswerVisible = true;
-            $('#toggleAnswer').on('click', function() {
-                isAnswerVisible = !isAnswerVisible;
-                if (isAnswerVisible) {
-                    $(this).html('收起答案 <i class="fa fa-angle-up ms-1"></i>');
-                    $('#answerAnalysis').slideDown(200);
+            function setToggleState($btn, expanded) {
+                if (expanded) {
+                    $btn.html('<i class="fa fa-angle-up"></i> 收起答案');
                 } else {
-                    $(this).html('展开答案 <i class="fa fa-angle-down ms-1"></i>');
-                    $('#answerAnalysis').slideUp(200);
+                    $btn.html('<i class="fa fa-angle-down"></i> 展开答案');
                 }
+            }
+
+            $('.toggle-btn').on('click', function() {
+                var $btn = $(this);
+                var target = $btn.data('target');
+                var $panel = $(target);
+                var willShow = !$panel.hasClass('show');
+
+                $panel.toggleClass('show', willShow);
+                setToggleState($btn, willShow);
             });
 
-            // 题号点击切换（模拟逻辑）
-            $('.grid-num').on('click', function() {
-                const num = $(this).text();
-                // 可以在这里更新题目内容
-                console.log('点击了第' + num + '题');
-            });
         });
     </script>
 </body>

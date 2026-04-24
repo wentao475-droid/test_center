@@ -765,12 +765,6 @@
                 </div>
 
                 <div class="bottom-actions">
-                    <div class="part-tabs">
-                        <div class="part-tab-item active">Part 1</div>
-                        <div class="part-tab-item">Part 2</div>
-                        <div class="part-tab-item">Part 3</div>
-                        <div class="part-tab-item">Part 4</div>
-                    </div>
                     <button class="btn btn-submit">提交试卷</button>
                 </div>
             </div>
@@ -1102,7 +1096,7 @@
             $('.grid-item').on('click', function() {
                 var num = parseInt($(this).text(), 10);
                 var targetPart = Math.ceil(num / 10);
-                var currentPart = parseInt(($('.part-tab-item.active').text().match(/Part\s*(\d+)/) || [0, 1])[1], 10);
+                var currentPart = 1;
 
                 if (targetPart !== currentPart) {
                     navigateToPart(targetPart);
@@ -1141,36 +1135,13 @@
                 window.location.href = '雅思听力已完成.html';
             });
             
-            // 切换Part
-            $('.part-tab-item').on('click', function() {
-                var partText = $(this).text();
-                
-                if (partText === 'Part 1') {
-                    // 当前页
-                } else if (partText === 'Part 2') {
-                    navigateToPart(2);
-                } else if (partText === 'Part 3') {
-                    navigateToPart(3);
-                } else if (partText === 'Part 4') {
-                    navigateToPart(4);
-                }
-            });
-
             // 左右箭头切换Part
             $('.left-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $prev = $active.prev('.part-tab-item');
-                if ($prev.length) {
-                    $prev.click();
-                }
+                return false;
             });
 
             $('.right-arrow').on('click', function() {
-                var $active = $('.part-tab-item.active');
-                var $next = $active.next('.part-tab-item');
-                if ($next.length) {
-                    $next.click();
-                }
+                navigateToPart(2);
             });
         });
     </script>

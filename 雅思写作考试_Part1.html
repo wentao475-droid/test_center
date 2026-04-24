@@ -102,8 +102,8 @@
         }
         .left-panel {
             width: 520px;
-            padding: 28px 24px 40px;
-            background-color: #fafafa;
+            padding: 40px 24px 40px;
+            background-color: #fff;
             border-right: 1px solid #eee;
             flex-shrink: 0;
         }
@@ -149,25 +149,25 @@
             font-weight: 500;
         }
         .task-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 10px;
         }
         .task-time {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 22px;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 20px;
         }
         .task-desc {
             font-size: 14px;
             line-height: 1.8;
-            margin-bottom: 20px;
-            color: #444;
+            margin-bottom: 30px;
+            color: #555;
         }
         .visual-card {
             background-color: #fff;
             border: 1px solid #eee;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            box-shadow: none;
             padding: 18px;
             max-width: 520px;
         }
@@ -733,10 +733,6 @@
             </div>
             
             <div class="bottom-actions">
-                <div class="part-tabs">
-                    <div class="part-tab-item active">Part1</div>
-                    <div class="part-tab-item" id="navToPart2">Part2</div>
-                </div>
                 <button class="btn btn-submit" id="nextPartBtn">进入 Part 2</button>
             </div>
         </aside>
@@ -770,7 +766,7 @@
             });
 
             // 页面跳转逻辑
-            $('#navToPart2, .right-arrow').on('click', function() {
+            $('.right-arrow').on('click', function() {
                 window.location.href = '雅思写作考试_Part2.html';
             });
 

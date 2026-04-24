@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试记录 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f3f5f9;
+            color: #333;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #fff;
+            border-right: 1px solid #e9edf3;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #eef1f5;
+            color: #165dff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #165dff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 18px 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            color: #667085;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #f7f9fc;
+            color: #344054;
+        }
+
+        .menu-item.active {
+            background-color: #edf4ff;
+            color: #165dff;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .header {
+            height: 64px;
+            background-color: #fff;
+            border-bottom: 1px solid #e9edf3;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 28px;
+            gap: 18px;
+            flex-shrink: 0;
+        }
+
+        .exam-select {
+            padding: 7px 34px 7px 14px;
+            border: 1px solid #d7ddea;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #344054;
+            outline: none;
+            appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="%23667085" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        .user-info {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f0f5ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px 28px 34px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            border: 1px solid #d9deea;
+            background-color: #fff;
+            color: #667085;
+            border-radius: 18px;
+            padding: 6px 14px;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d2939;
+        }
+
+        .month-section {
+            margin-bottom: 28px;
+        }
+
+        .month-title {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #344054;
+        }
+
+        .record-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+
+        .record-card {
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 18px;
+            padding: 22px 22px 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .record-meta {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .record-title-row {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .record-subject {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2f3a56;
+            letter-spacing: 0.5px;
+        }
+
+        .record-level {
+            font-size: 19px;
+            font-weight: 500;
+            color: #59637d;
+            letter-spacing: 0.4px;
+        }
+
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #8a94ab;
+            font-size: 13px;
+        }
+
+        .meta-item i {
+            width: 16px;
+            text-align: center;
+            color: #98a2b3;
+            font-size: 15px;
+        }
+
+        .meta-label {
+            min-width: 58px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            color: #4a556f;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .score-wrap {
+            width: 138px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .score-panel {
+            border: 1px solid #d9e9ef;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .score-top {
+            background-color: #eaf5f8;
+            padding: 16px 8px 14px;
+        }
+
+        .score-value {
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 800;
+            color: #3594c6;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .score-bottom {
+            padding: 12px 8px 11px;
+            color: #59a6c9;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .score-range {
+            font-size: 12px;
+            color: #a3acbd;
+            font-weight: 600;
+        }
+
+        .detail-btn {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            background-color: #fff;
+            color: #344054;
+            border: 2px solid #d9deea;
+            border-radius: 999px;
+            padding: 11px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .detail-btn:hover {
+            color: #165dff;
+            border-color: #b8d0ff;
+            background-color: #f8fbff;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                padding: 20px;
+            }
+            .record-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                padding: 0 16px;
+            }
+            .top-bar {
+                flex-wrap: wrap;
+            }
+            .record-grid {
+                grid-template-columns: 1fr;
+            }
+            .record-header {
+                flex-direction: column;
+            }
+            .score-wrap {
+                width: 100%;
+                max-width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fa fa-graduation-cap"></i></div>
+                <div>VISION ACADEMY</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <i class="fa fa-home"></i>
+                    <span>考试首页</span>
+                </a>
+                <a href="考试记录.html" class="menu-item active">
+                    <i class="fa fa-file-text-o"></i>
+                    <span>考试记录</span>
+                </a>
+                <a href="学科考试.html" class="menu-item">
+                    <i class="fa fa-th-large"></i>
+                    <span>真题案例</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa fa-user-o"></i>
+                    <span>个人中心</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="header">
+                <select class="exam-select">
+                    <option>雅思考试</option>
+                    <option>雅思模考</option>
+                </select>
+                <div class="user-info">Hi，王力宏</div>
+                <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            </header>
+
+            <div class="content-area">
+                <div class="top-bar">
+                    <a href="javascript:history.back()" class="btn-back">
+                        <i class="fa fa-angle-left"></i> 返回
+                    </a>
+                    <h1 class="page-title">考试记录</h1>
+                </div>
+
+                <section class="month-section">
+                    <h2 class="month-title">2025年12月</h2>
+                    <div class="record-grid">
+                        <article class="record-card">
+                            <div class="record-header">
+                                <div class="record-meta">
+                                    <div class="record-title-row">
+                                        <div class="record-subject">雅思</div>
+                                        <div class="record-level">ACADEMIC</div>
+                                    </div>
+                                    <div class="meta-list">
+                                        <div class="meta-item">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="meta-label">考试日期</span>
+                                            <span class="meta-value">2025-12-18</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="meta-label">考试耗时</span>
+                                            <span class="meta-value">02:43</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="score-wrap">
+                                    <div class="score-panel">
+                                        <div class="score-top">
+                                            <div class="score-value">7.5</div>
+                                        </div>
+                                        <div class="score-bottom">测试得分</div>
+                                    </div>
+                                    <div class="score-range">满分 9.0</div>
+                                </div>
+                            </div>
+                            <a href="雅思成绩分析.html" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>
+                        </article>
+
+                        <article class="record-card">
+                            <div class="record-header">
+                                <div class="record-meta">
+                                    <div class="record-title-row">
+                                        <div class="record-subject">雅思</div>
+                                        <div class="record-level">ACADEMIC</div>
+                                    </div>
+                                    <div class="meta-list">
+                                        <div class="meta-item">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="meta-label">考试日期</span>
+                                            <span class="meta-value">2025-12-12</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="meta-label">考试耗时</span>
+                                            <span class="meta-value">02:38</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="score-wrap">
+                                    <div class="score-panel">
+                                        <div class="score-top">
+                                            <div class="score-value">7.0</div>
+                                        </div>
+                                        <div class="score-bottom">测试得分</div>
+                                    </div>
+                                    <div class="score-range">满分 9.0</div>
+                                </div>
+                            </div>
+                            <a href="雅思成绩分析.html" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>
+                        </article>
+
+                        <article class="record-card">
+                            <div class="record-header">
+                                <div class="record-meta">
+                                    <div class="record-title-row">
+                                        <div class="record-subject">雅思</div>
+                                        <div class="record-level">GENERAL</div>
+                                    </div>
+                                    <div class="meta-list">
+                                        <div class="meta-item">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="meta-label">考试日期</span>
+                                            <span class="meta-value">2025-12-03</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="meta-label">考试耗时</span>
+                                            <span class="meta-value">02:35</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="score-wrap">
+                                    <div class="score-panel">
+                                        <div class="score-top">
+                                            <div class="score-value">6.5</div>
+                                        </div>
+                                        <div class="score-bottom">测试得分</div>
+                                    </div>
+                                    <div class="score-range">满分 9.0</div>
+                                </div>
+                            </div>
+                            <a href="雅思成绩分析.html" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="month-section">
+                    <h2 class="month-title">2025年11月</h2>
+                    <div class="record-grid">
+                        <article class="record-card">
+                            <div class="record-header">
+                                <div class="record-meta">
+                                    <div class="record-title-row">
+                                        <div class="record-subject">雅思</div>
+                                        <div class="record-level">ACADEMIC</div>
+                                    </div>
+                                    <div class="meta-list">
+                                        <div class="meta-item">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="meta-label">考试日期</span>
+                                            <span class="meta-value">2025-11-23</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="meta-label">考试耗时</span>
+                                            <span class="meta-value">02:29</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="score-wrap">
+                                    <div class="score-panel">
+                                        <div class="score-top">
+                                            <div class="score-value">6.5</div>
+                                        </div>
+                                        <div class="score-bottom">测试得分</div>
+                                    </div>
+                                    <div class="score-range">满分 9.0</div>
+                                </div>
+                            </div>
+                            <a href="成绩分析.html" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>
+                        </article>
+
+                        <article class="record-card">
+                            <div class="record-header">
+                                <div class="record-meta">
+                                    <div class="record-title-row">
+                                        <div class="record-subject">雅思</div>
+                                        <div class="record-level">GENERAL</div>
+                                    </div>
+                                    <div class="meta-list">
+                                        <div class="meta-item">
+                                            <i class="fa fa-calendar-o"></i>
+                                            <span class="meta-label">考试日期</span>
+                                            <span class="meta-value">2025-11-08</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <i class="fa fa-clock-o"></i>
+                                            <span class="meta-label">考试耗时</span>
+                                            <span class="meta-value">02:40</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="score-wrap">
+                                    <div class="score-panel">
+                                        <div class="score-top">
+                                            <div class="score-value">7.0</div>
+                                        </div>
+                                        <div class="score-bottom">测试得分</div>
+                                    </div>
+                                    <div class="score-range">满分 9.0</div>
+                                </div>
+                            </div>
+                            <a href="成绩分析.html" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
