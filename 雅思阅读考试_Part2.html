@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅思阅读考试 - Part 2 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; background-color: #fff; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; color: #333; }
+        .header { background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; z-index: 10; flex-shrink: 0; }
+        .header-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: bold; color: #165dff; }
+        .header-user { display: flex; align-items: center; gap: 15px; font-size: 14px; color: #666; }
+        .logout-btn { color: #165dff; text-decoration: none; display: flex; align-items: center; gap: 5px; background-color: #f0f5ff; padding: 5px 15px; border-radius: 15px; }
+        .progress-bar-top { height: 4px; background-color: #eee; width: 100%; }
+        .progress-bar-fill { height: 100%; background-color: #165dff; width: var(--progress-percent, 66%); transition: width 0.3s; }
+        .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 30px; height: 60px; background: rgba(0, 0, 0, 0.12); color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer; z-index: 6; transition: background 0.2s; }
+        .nav-arrow:hover { background: rgba(0, 0, 0, 0.22); }
+        .left-arrow { left: 0; }
+        .right-arrow { right: 320px; }
+        .article-section { flex: 1.2; padding: 40px; overflow-y: auto; border-right: 1px solid #eee; background-color: #fafafa; }
+        .article-title { text-align: center; font-weight: bold; font-size: 24px; margin-bottom: 10px; }
+        .article-subtitle { font-style: italic; font-size: 16px; margin-bottom: 30px; }
+        .article-text p { line-height: 1.85; margin-bottom: 20px; font-size: 15px; text-align: justify; position: relative; padding-left: 10px; }
+        .article-text p:hover .add-tag-btn { opacity: 1; }
+        .passage-label { font-weight: 700; color: #1f4fd6; margin-right: 6px; }
+        ::selection { background-color: rgba(22, 93, 255, 0.3); color: #333; }
+        .highlight-text { background-color: #ffeb3b; cursor: pointer; transition: background-color 0.2s; }
+        .highlight-text:hover { background-color: #fbc02d; }
+        .selection-toolbar { position: absolute; background: #333; color: #fff; border-radius: 4px; padding: 4px 8px; display: none; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transform: translateX(-50%); }
+        .selection-toolbar::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #333 transparent transparent transparent; }
+        .toolbar-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 4px 8px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .toolbar-btn:hover { color: #ffeb3b; }
+        .add-tag-btn { position: absolute; left: -20px; top: 5px; color: #ccc; cursor: pointer; opacity: 0; transition: opacity 0.2s, color 0.2s; font-size: 14px; }
+        .add-tag-btn:hover { color: #165dff; }
+        .paragraph-tag { background-color: #e6f7ff; border-left: 3px solid #165dff; padding: 5px 10px; font-size: 12px; color: #165dff; margin-bottom: 10px; display: inline-block; border-radius: 0 4px 4px 0; position: relative; cursor: pointer; }
+        .paragraph-tag .remove-tag { margin-left: 8px; color: #999; display: none; }
+        .paragraph-tag:hover .remove-tag { display: inline; color: #ff4d4f; }
+        #addTagModal .modal-header { cursor: move; user-select: none; }
+        #addTagModal .modal-dialog { margin: 0; }
+        body.dragging-modal { user-select: none; }
+        .question-section { flex: 1; padding: 40px; overflow-y: auto; background-color: #fff; position: relative; }
+        .part-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .part-intro { font-size: 16px; margin-bottom: 20px; color: #333; line-height: 1.7; }
+        .part-sub-instruction { font-size: 14px; color: #555; margin-bottom: 24px; line-height: 1.8; }
+        .question-group { margin-bottom: 50px; }
+        .question-group-title { font-weight: bold; font-size: 18px; margin-bottom: 10px; }
+        .instruction-text { font-style: italic; color: #666; margin-bottom: 20px; font-size: 14px; }
+        .tfng-item, .classification-item { margin-bottom: 24px; }
+        .mcq-q { font-weight: bold; margin-bottom: 15px; font-size: 15px; line-height: 1.7; }
+        .mcq-opts { padding-left: 5px; }
+        .mcq-radio-label { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; font-size: 15px; color: #444; }
+        .mcq-radio-label input[type="radio"] { margin-right: 10px; width: 16px; height: 16px; accent-color: #165dff; }
+        .classification-card, .diagram-card { background: #fcfcfc; border: 1px solid #eee; border-radius: 8px; padding: 20px; }
+        .classification-legend { margin-bottom: 18px; line-height: 1.9; font-size: 15px; }
+        .classification-list { display: flex; flex-direction: column; gap: 18px; }
+        .classification-item .answer-row, .diagram-answer-item { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .answer-no { min-width: 30px; font-weight: 700; color: #1f4fd6; }
+        .answer-text { flex: 1; min-width: 220px; line-height: 1.8; }
+        .inline-input { width: 140px; border: 1px solid #165dff; border-radius: 4px; padding: 4px 8px; text-align: center; outline: none; background-color: #e6f7ff; color: #165dff; font-weight: bold; }
+        .inline-input:focus { box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2); }
+        .inline-input::placeholder { color: #999; font-weight: normal; }
+        .diagram-wrapper { margin-bottom: 20px; border: 1px solid #d8ead7; background: #f8fff7; border-radius: 10px; padding: 16px; }
+        .diagram-svg { width: 100%; height: auto; display: block; }
+        .diagram-answer-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+        .sidebar-section { width: 320px; background-color: #f8f9fa; border-left: 1px solid #eee; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
+        .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; color: #666; }
+        .net-speed { color: #52c41a; }
+        .time-left { font-size: 18px; color: #165dff; display: flex; align-items: center; gap: 5px; }
+        .monitor-box { background-color: #000; height: 160px; border-radius: 8px; position: relative; margin-bottom: 20px; overflow: hidden; flex-shrink: 0; }
+        .monitor-icon { position: absolute; top: 10px; left: 10px; color: #fff; opacity: 0.5; }
+        .monitor-tag { position: absolute; top: 10px; right: 10px; background-color: rgba(255, 0, 0, 0.8); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; display: flex; align-items: center; gap: 5px; }
+        .monitor-tag .dot { width: 6px; height: 6px; background-color: #fff; border-radius: 50%; }
+        .monitor-status { position: absolute; bottom: 10px; left: 10px; color: #52c41a; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        .sidebar-panel { background-color: #fff; border-radius: 8px; flex: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eee; }
+        .panel-tabs { display: flex; border-bottom: 1px solid #eee; }
+        .panel-tab { flex: 1; text-align: center; padding: 12px 0; font-size: 14px; cursor: pointer; color: #666; }
+        .panel-tab.active { color: #165dff; border-bottom: 2px solid #165dff; font-weight: bold; }
+        .legend-area { display: flex; padding: 15px; gap: 20px; border-bottom: 1px solid #eee; font-size: 12px; color: #666; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .legend-dot.answered { background-color: #165dff; }
+        .legend-dot.unanswered { background-color: #ccc; }
+        .grid-area { padding: 0; display: flex; flex-wrap: wrap; gap: 12px; background-color: #fff; }
+        .grid-item { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; background-color: #f5f5f5; color: #666; transition: all 0.2s; border: 2px solid transparent; }
+        .grid-item.answered { background-color: #165dff; color: white; }
+        .grid-item.current { border: 2px solid #165dff; background-color: #fff; color: #165dff; font-weight: bold; }
+        .answer-card-body { padding: 0 15px 15px; overflow-y: auto; flex: 1; background-color: #fff; }
+        .part-question-title { font-size: 13px; font-weight: 700; color: #344054; margin: 8px 0 10px; }
+        .part-question-title.active { color: #1f4fd6; }
+        .part-question-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; justify-items: center; }
+        .bottom-actions { background-color: #fff; padding: 15px; border-top: 1px solid #eee; }
+        .btn-submit { width: 100%; background-color: #ff7d00; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; }
+        .btn-submit:hover { background-color: #e67000; color: white; }
+        .toolbox-area { padding: 15px; overflow-y: auto; flex: 1; display: none; background: #fff; }
+        .toolbox-card { border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 12px; background: #fafafa; }
+        .toolbox-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+        .toolbox-tip { font-size: 12px; color: #666; line-height: 1.6; }
+        .toolbox-note-list { max-height: 220px; overflow-y: auto; margin-top: 8px; }
+        .toolbox-note-item { border: 1px solid #e6f0ff; background: #f5f8ff; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 12px; color: #444; word-break: break-word; }
+        :root { --va-blue: #1f4fd6; --va-navy: #1b2f4b; --va-slate: #4e5969; --va-bg: #f5f7fb; --va-border: #e7ebf3; --va-ok: #27ae60; }
+        body { background-color: var(--va-bg); }
+        .header { background-color: #fff; border-bottom: 1px solid var(--va-border); box-shadow: none; padding: 10px 18px; }
+        .header-logo { color: var(--va-blue); font-size: 17px; font-weight: 700; }
+        .header-user { color: var(--va-slate); font-size: 14px; }
+        .logout-btn { color: var(--va-blue) !important; background-color: #edf3ff; border: 1px solid #d9e5ff; border-radius: 16px; padding: 4px 12px; font-weight: 600; }
+        .progress-bar-top { background-color: #edf1f7; height: 3px; }
+        .progress-bar-fill { background-color: var(--va-blue); }
+        .sidebar-section { width: 320px; background: #fff; border-left: 1px solid var(--va-border); box-shadow: none; padding: 14px 12px; }
+        .status-bar { margin-bottom: 10px; gap: 12px; font-size: 13px; }
+        .net-speed { color: var(--va-ok); font-weight: 600; }
+        .time-left { color: var(--va-blue); font-size: 20px; font-weight: 700; line-height: 1; }
+        .time-left i { color: #101828; font-size: 14px; }
+        .monitor-box { border-radius: 10px; border: 1px solid #111827; margin-bottom: 12px; }
+        .monitor-tag { background-color: rgba(255, 77, 79, .92); border-radius: 999px; font-size: 11px; font-weight: 600; }
+        .monitor-status { color: var(--va-ok); font-weight: 600; }
+        .sidebar-panel { border: 1px solid var(--va-border); border-radius: 10px; background: #fff; overflow: hidden; }
+        .panel-tabs { background: #fff; border-bottom: 1px solid var(--va-border); }
+        .panel-tab { color: #6b7280; font-weight: 600; padding: 11px 0; }
+        .panel-tab.active { color: var(--va-blue); border-bottom: 2px solid var(--va-blue); }
+        .legend-area { font-size: 12px; color: #667085; }
+        .legend-dot.answered { background-color: var(--va-blue); }
+        .legend-dot.unanswered { background-color: #cfd6e4; }
+        .grid-area { gap: 10px; }
+        .grid-item { width: 34px; height: 34px; border-radius: 50%; background-color: #f3f5f8; color: #667085; border: 1px solid transparent; font-weight: 600; }
+        .grid-item.answered { background-color: #1f324f; color: #fff; }
+        .grid-item.current { background-color: #fff; color: var(--va-blue); border-color: var(--va-blue); }
+        .btn-submit { background-color: var(--va-navy) !important; border: none; color: #fff !important; border-radius: 8px; font-weight: 700; height: 40px; }
+        .btn-submit:hover { background-color: #15263d !important; }
+        .nav-arrow { width: 34px; height: 56px; border-radius: 6px; background: rgba(27, 47, 75, .32); color: #fff; opacity: 1; }
+        .nav-arrow:hover { background: rgba(27, 47, 75, .52); }
+        @media (max-width: 1400px) {
+            .diagram-answer-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar-top">
+        <div class="progress-bar-fill"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-logo">
+            <i class="fa fa-graduation-cap"></i>
+            VISION ACADEMY 测评系统
+        </div>
+        <div class="header-user">
+            <span>Hi, 测试老师01</span>
+            <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="nav-arrow left-arrow"><i class="fa fa-angle-left"></i></div>
+
+        <div id="selectionToolbar" class="selection-toolbar">
+            <button class="toolbar-btn" id="btnHighlight">
+                <i class="fa fa-pencil"></i> 高亮
+            </button>
+        </div>
+
+        <div class="article-section">
+            <div class="article-title">Collecting Ant Specimens</div>
+            <div class="article-subtitle">A practical overview of why ants are collected and the main field methods used</div>
+
+            <div class="article-text">
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">A</span>Collecting ants can be as simple as picking up stray individuals and placing them in a glass jar, or as complicated as completing an exhaustive survey of all species present in an area and estimating their relative abundance. The exact method used will depend on the final purpose of the collection. For taxonomy, or classification, long series from a single nest are preferred because they contain the different castes and allow researchers to study variation within one species. For ecological studies, by contrast, the most important factor is obtaining identifiable samples of as many different species as possible. Unfortunately, those two goals are not always compatible.</p>
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">B</span>To collect as wide a range of species as possible, several methods must be used. These include hand collecting, using baits to attract ants, sampling ground litter, and the use of pitfall traps. Hand collecting consists of searching wherever ants are likely to occur: on the ground, under stones or logs, in rotting wood, in vegetation, on trunks and beneath bark. When possible, specimens should be taken from nests or foraging columns, and at least 20 to 25 individuals should be collected so that all members of the sample belong to the same species and can be used for detailed study.</p>
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">C</span>Since some species are largely nocturnal, collecting should not be confined to daytime. Ants can be gathered using an aspirator, forceps, a fine moistened paint brush, or even fingers if the species is harmless. Individual insects are usually placed in plastic or glass tubes containing 75% to 95% ethanol. Plastic tubes with secure tops are often preferred because they are lighter and less likely to break. The resulting material is especially useful for taxonomic investigations, where separate specimens may need to be compared in detail.</p>
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">D</span>Baits can also be used to attract ants. A small amount of food is placed on the ground, on a tree trunk, on low vegetation, or close to a nest entrance and then checked regularly. This method is particularly useful for species that are hard to find because a bait can draw workers out from hidden nests. However, baiting does not usually give a balanced picture of all the species living in an area, because only those attracted to the chosen food will be sampled.</p>
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">E</span>Many ants are small and forage primarily in the layer of leaves and other debris on the ground. Collecting these species by hand can be difficult. One of the most successful approaches is to gather the leaf litter in which they are foraging and extract the ants from it. This is commonly done by placing the litter on a screen above a large funnel, often under some heat. As the litter dries from above, ants and other small animals move downward and eventually fall through the funnel into alcohol placed below. This method works especially well in rain forests and marshy areas. The catch can be improved by sifting the litter through a coarse screen first, which removes larger leaves and twigs and allows more litter to be sampled with a limited number of funnels.</p>
+                <p><i class="fa fa-tag add-tag-btn" title="添加段落标签"></i><span class="passage-label">F</span>The pitfall trap is another commonly used tool. A pitfall trap can be any small container placed in the ground with the top level with the surrounding surface and filled with a preservative. Ants are collected when they fall into the trap while foraging. The diameter of traps can vary considerably, and the number used may range from a few to several hundred depending on the aims of the study and the time available. Larger traps are generally more effective, but the collector must balance efficiency against convenience. Preservatives such as ethylene glycol or alcohol are common, but formalin should be avoided if the material may later be used for taxonomic work.</p>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <div class="part-title">Part 2</div>
+            <div class="part-intro">You should spend about 20 minutes on Questions 14-27, which are based on Reading Passage 2 below.</div>
+
+            <div class="question-group">
+                <div class="question-group-title">Questions 14-17</div>
+                <div class="part-sub-instruction">
+                    Do the following statements agree with the information given in Reading Passage 2?<br>
+                    In boxes 14-17 on your answer sheet, write:<br><br>
+                    <b>TRUE</b> if the statement agrees with the information<br>
+                    <b>FALSE</b> if the statement contradicts the information<br>
+                    <b>NOT GIVEN</b> if there is no information on this
+                </div>
+
+                <div class="tfng-item">
+                    <div class="mcq-q">14 Taxonomic research involves comparing members of one group of ants.</div>
+                    <div class="mcq-opts" data-qnum="14">
+                        <label class="mcq-radio-label"><input type="radio" name="q14" value="TRUE"> TRUE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q14" value="FALSE"> FALSE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q14" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="tfng-item">
+                    <div class="mcq-q">15 New species of ant are frequently identified by taxonomists.</div>
+                    <div class="mcq-opts" data-qnum="15">
+                        <label class="mcq-radio-label"><input type="radio" name="q15" value="TRUE"> TRUE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q15" value="FALSE"> FALSE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q15" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="tfng-item">
+                    <div class="mcq-q">16 Range is the key criterion for ecological collections.</div>
+                    <div class="mcq-opts" data-qnum="16">
+                        <label class="mcq-radio-label"><input type="radio" name="q16" value="TRUE"> TRUE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q16" value="FALSE"> FALSE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q16" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="tfng-item">
+                    <div class="mcq-q">17 A single collection of ants can generally be used for both taxonomic and ecological purposes.</div>
+                    <div class="mcq-opts" data-qnum="17">
+                        <label class="mcq-radio-label"><input type="radio" name="q17" value="TRUE"> TRUE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q17" value="FALSE"> FALSE</label>
+                        <label class="mcq-radio-label"><input type="radio" name="q17" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border-top: 1px solid #eee;">
+
+            <div class="question-group">
+                <div class="question-group-title">Questions 18-23</div>
+                <div class="part-sub-instruction">
+                    Classify the following statements as referring to:<br><br>
+                    <b>A</b> Hand collecting<br>
+                    <b>B</b> Using bait<br>
+                    <b>C</b> Sampling ground litter<br>
+                    <b>D</b> Using a pitfall trap<br><br>
+                    Write the correct letter, <b>A</b>, <b>B</b>, <b>C</b> or <b>D</b>, in boxes 18-23 on your answer sheet.
+                </div>
+
+                <div class="classification-card">
+                    <div class="classification-list">
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">18</span>
+                                <span class="answer-text">It is preferable to take specimens from groups of ants.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="18" placeholder="18">
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">19</span>
+                                <span class="answer-text">It is particularly effective for wet habitats.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="19" placeholder="19">
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">20</span>
+                                <span class="answer-text">It is a good method for species which are hard to find.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="20" placeholder="20">
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">21</span>
+                                <span class="answer-text">Little time and effort is required.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="21" placeholder="21">
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">22</span>
+                                <span class="answer-text">Separate containers are used for individual specimens.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="22" placeholder="22">
+                            </div>
+                        </div>
+                        <div class="classification-item">
+                            <div class="answer-row">
+                                <span class="answer-no">23</span>
+                                <span class="answer-text">Non-alcoholic preservative should be used.</span>
+                                <input type="text" class="inline-input answer-input" data-qnum="23" placeholder="23">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border-top: 1px solid #eee;">
+
+            <div class="question-group">
+                <div class="question-group-title">Questions 24-27</div>
+                <div class="part-sub-instruction">
+                    Label the diagram below.<br>
+                    Choose <b>NO MORE THAN TWO WORDS</b> from the passage for each answer.<br>
+                    Write your answers in boxes 24-27 on your answer sheet.
+                </div>
+
+                <div class="diagram-card">
+                    <div class="diagram-wrapper">
+                        <svg class="diagram-svg" viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg" aria-label="One method of collecting ants">
+                            <rect x="14" y="14" width="732" height="432" fill="#ffffff" stroke="#cfe3cf" stroke-width="24"/>
+                            <text x="380" y="58" text-anchor="middle" font-size="30" font-weight="700" fill="#111">One method of collecting ants</text>
+
+                            <line x1="168" y1="160" x2="344" y2="100" stroke="#2f2f2f" stroke-width="2.6"/>
+                            <line x1="344" y1="100" x2="540" y2="158" stroke="#2f2f2f" stroke-width="2.6"/>
+
+                            <text x="470" y="108" font-size="16" fill="#111">some 25</text>
+                            <line x1="560" y1="105" x2="675" y2="105" stroke="#111" stroke-width="2" stroke-dasharray="3 4"/>
+                            <line x1="505" y1="114" x2="460" y2="136" stroke="#2f2f2f" stroke-width="2"/>
+
+                            <g transform="translate(300 175)">
+                                <path d="M0 28 L22 10 L50 14 L60 0 L76 12 L100 8 L116 24 L138 12 L164 20 L154 44 L124 46 L105 58 L82 48 L58 56 L34 46 L8 48 Z" fill="#f2f2f2" stroke="#111" stroke-width="2"/>
+                                <path d="M24 22 L44 10 L58 28 L40 42 Z" fill="#9b9b9b" stroke="#111" stroke-width="2"/>
+                                <path d="M72 16 L95 8 L110 26 L86 40 Z" fill="#7d7d7d" stroke="#111" stroke-width="2"/>
+                                <path d="M114 24 L136 14 L151 32 L128 44 Z" fill="#8b8b8b" stroke="#111" stroke-width="2"/>
+                                <circle cx="20" cy="22" r="12" fill="#f5f5f5" stroke="#aaa" stroke-width="1.5" stroke-dasharray="2 3"/>
+                                <circle cx="154" cy="20" r="12" fill="#f5f5f5" stroke="#aaa" stroke-width="1.5" stroke-dasharray="2 3"/>
+                            </g>
+
+                            <text x="48" y="214" font-size="16" fill="#111">26</text>
+                            <line x1="82" y1="210" x2="198" y2="210" stroke="#111" stroke-width="2" stroke-dasharray="3 4"/>
+                            <line x1="198" y1="210" x2="258" y2="226" stroke="#2f2f2f" stroke-width="2"/>
+
+                            <text x="510" y="233" font-size="16" fill="#111">a 27</text>
+                            <line x1="550" y1="230" x2="688" y2="230" stroke="#111" stroke-width="2" stroke-dasharray="3 4"/>
+                            <line x1="520" y1="222" x2="470" y2="222" stroke="#2f2f2f" stroke-width="2"/>
+
+                            <line x1="172" y1="220" x2="500" y2="220" stroke="#111" stroke-width="3" stroke-dasharray="3 4"/>
+                            <line x1="235" y1="268" x2="345" y2="220" stroke="#2f2f2f" stroke-width="2.8"/>
+                            <line x1="440" y1="268" x2="500" y2="220" stroke="#2f2f2f" stroke-width="2.8"/>
+                            <line x1="337" y1="268" x2="337" y2="360" stroke="#2f2f2f" stroke-width="2.8"/>
+                            <line x1="346" y1="268" x2="346" y2="360" stroke="#2f2f2f" stroke-width="2.8"/>
+
+                            <text x="116" y="292" font-size="18" fill="#111">funnel</text>
+                            <line x1="170" y1="285" x2="240" y2="254" stroke="#2f2f2f" stroke-width="2"/>
+
+                            <path d="M245 376 L274 404 L465 404 L485 376" fill="none" stroke="#2f2f2f" stroke-width="2.8"/>
+                            <path d="M260 390 C296 384, 330 394, 365 389 C398 385, 425 392, 470 389" fill="none" stroke="#2f2f2f" stroke-width="2"/>
+
+                            <text x="500" y="398" font-size="16" fill="#111">24</text>
+                            <line x1="532" y1="395" x2="685" y2="395" stroke="#111" stroke-width="2" stroke-dasharray="3 4"/>
+                            <line x1="500" y1="390" x2="452" y2="390" stroke="#2f2f2f" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="diagram-answer-list">
+                        <div class="diagram-answer-item">
+                            <span class="answer-no">24</span>
+                            <input type="text" class="inline-input answer-input" data-qnum="24" placeholder="24">
+                        </div>
+                        <div class="diagram-answer-item">
+                            <span class="answer-no">25</span>
+                            <input type="text" class="inline-input answer-input" data-qnum="25" placeholder="25">
+                        </div>
+                        <div class="diagram-answer-item">
+                            <span class="answer-no">26</span>
+                            <input type="text" class="inline-input answer-input" data-qnum="26" placeholder="26">
+                        </div>
+                        <div class="diagram-answer-item">
+                            <span class="answer-no">27</span>
+                            <input type="text" class="inline-input answer-input" data-qnum="27" placeholder="27">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-arrow right-arrow"><i class="fa fa-angle-right"></i></div>
+
+        <div class="sidebar-section">
+            <div class="status-bar">
+                <span class="net-speed">2.29MB/s</span>
+                <span class="time-left"><i class="fa fa-clock-o"></i> 剩余时间: 00:39:52</span>
+            </div>
+
+            <div class="monitor-box">
+                <i class="fa fa-video-camera monitor-icon"></i>
+                <div class="monitor-tag"><span class="dot"></span> 监控中</div>
+                <div class="monitor-status"><i class="fa fa-microphone"></i> 正常</div>
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="panel-tabs">
+                    <div class="panel-tab active" data-panel="answer-card">答题卡(14)</div>
+                    <div class="panel-tab" data-panel="toolbox">工具箱(1)</div>
+                </div>
+
+                <div class="legend-area answer-card-area">
+                    <div class="legend-item"><div class="legend-dot answered"></div> 已答</div>
+                    <div class="legend-item"><div class="legend-dot unanswered"></div> 未答</div>
+                </div>
+
+                <div class="answer-card-body answer-card-area">
+                    <div class="part-question-group">
+                        <div class="part-question-title active">Part 2</div>
+                        <div class="part-question-grid">
+                            <div class="grid-item" id="grid-14">14</div>
+                            <div class="grid-item" id="grid-15">15</div>
+                            <div class="grid-item" id="grid-16">16</div>
+                            <div class="grid-item" id="grid-17">17</div>
+                            <div class="grid-item" id="grid-18">18</div>
+                            <div class="grid-item" id="grid-19">19</div>
+                            <div class="grid-item" id="grid-20">20</div>
+                            <div class="grid-item" id="grid-21">21</div>
+                            <div class="grid-item" id="grid-22">22</div>
+                            <div class="grid-item" id="grid-23">23</div>
+                            <div class="grid-item" id="grid-24">24</div>
+                            <div class="grid-item" id="grid-25">25</div>
+                            <div class="grid-item" id="grid-26">26</div>
+                            <div class="grid-item" id="grid-27">27</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toolbox-area">
+                    <div class="toolbox-card">
+                        <div class="toolbox-title">段落标签/笔记</div>
+                        <button class="btn btn-sm btn-primary" id="openReadingNoteBtn">打开笔记弹窗</button>
+                        <div class="toolbox-tip">提示：也可点击左侧段落前的标签图标，给指定段落添加标签。</div>
+                    </div>
+                    <div class="toolbox-card">
+                        <div class="toolbox-title">工具箱笔记</div>
+                        <div id="toolboxNoteList" class="toolbox-note-list"></div>
+                    </div>
+                </div>
+
+                <div class="bottom-actions">
+                    <button class="btn btn-submit">提交试卷</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-labelledby="submitConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitConfirmModalLabel">提交试卷提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle"></i> 您还有 <strong id="unansweredCount" style="color: #ff4d4f; font-size: 18px;">0</strong> 道题目未作答！
+                    </div>
+                    <p>雅思考试评分规则：<strong>答对得分，答错不扣分</strong>。</p>
+                    <p>强烈建议您检查并完成所有题目，即使不确定也可以猜测一个答案。</p>
+                    <p>您确定要现在提交试卷吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">返回继续答题</button>
+                    <button type="button" class="btn btn-primary" id="confirmSubmitBtn" style="background-color: #ff7d00; border-color: #ff7d00;">确认提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addTagModal" tabindex="-1" aria-labelledby="addTagModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTagModalLabel">添加段落标签/笔记</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="tagInput" placeholder="请输入标签内容..." maxlength="50">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmAddTagBtn">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var $toolbar = $('#selectionToolbar');
+
+            $('.article-section').on('mouseup', function() {
+                var selection = window.getSelection();
+                if (selection.toString().trim().length > 0) {
+                    var range = selection.getRangeAt(0);
+                    var rect = range.getBoundingClientRect();
+                    $toolbar.css({
+                        display: 'block',
+                        top: rect.top + window.scrollY - 35 + 'px',
+                        left: rect.left + window.scrollX + (rect.width / 2) + 'px'
+                    });
+                } else {
+                    $toolbar.hide();
+                }
+            });
+
+            $(document).on('mousedown', function(e) {
+                if (!$(e.target).closest('#selectionToolbar').length) {
+                    $toolbar.hide();
+                }
+            });
+
+            $('#btnHighlight').on('click', function(e) {
+                e.preventDefault();
+                var selection = window.getSelection();
+                if (selection.toString().trim().length > 0) {
+                    var range = selection.getRangeAt(0);
+                    var span = document.createElement('span');
+                    span.className = 'highlight-text';
+                    span.title = '点击取消高亮';
+                    try {
+                        range.surroundContents(span);
+                    } catch (error) {
+                        alert('无法跨段落高亮，请在段落内划词！');
+                    }
+                    selection.removeAllRanges();
+                    $toolbar.hide();
+                }
+            });
+
+            $('.article-section').on('click', '.highlight-text', function() {
+                var text = $(this).text();
+                $(this).replaceWith(text);
+            });
+
+            var currentTagTarget = null;
+            var addTagModal = new bootstrap.Modal(document.getElementById('addTagModal'), { backdrop: false });
+            var $addTagDialog = $('#addTagModal .modal-dialog');
+            var isDraggingModal = false;
+            var modalDragOffsetX = 0;
+            var modalDragOffsetY = 0;
+
+            $('.article-section').on('click', '.add-tag-btn', function() {
+                currentTagTarget = $(this).parent();
+                $('#tagInput').val('');
+                addTagModal.show();
+            });
+
+            $('#addTagModal').on('shown.bs.modal', function () {
+                $addTagDialog.css({
+                    position: 'fixed',
+                    left: '50%',
+                    top: '180px',
+                    transform: 'translateX(-50%)'
+                });
+                $('#tagInput').focus();
+            });
+
+            $('#addTagModal .modal-header').on('mousedown', function(e) {
+                if ($(e.target).closest('.btn-close').length) {
+                    return;
+                }
+                var rect = $addTagDialog[0].getBoundingClientRect();
+                isDraggingModal = true;
+                modalDragOffsetX = e.clientX - rect.left;
+                modalDragOffsetY = e.clientY - rect.top;
+                $addTagDialog.css({
+                    position: 'fixed',
+                    left: rect.left + 'px',
+                    top: rect.top + 'px',
+                    transform: 'none'
+                });
+                $('body').addClass('dragging-modal');
+                e.preventDefault();
+            });
+
+            $(document).on('mousemove', function(e) {
+                if (!isDraggingModal) {
+                    return;
+                }
+                $addTagDialog.css({
+                    left: (e.clientX - modalDragOffsetX) + 'px',
+                    top: (e.clientY - modalDragOffsetY) + 'px'
+                });
+            });
+
+            $(document).on('mouseup', function() {
+                if (!isDraggingModal) {
+                    return;
+                }
+                isDraggingModal = false;
+                $('body').removeClass('dragging-modal');
+            });
+
+            $('#tagInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    $('#confirmAddTagBtn').click();
+                }
+            });
+
+            $('#confirmAddTagBtn').on('click', function() {
+                var labelText = $('#tagInput').val();
+                if (labelText && labelText.trim() !== '') {
+                    if (currentTagTarget) {
+                        var $p = currentTagTarget;
+                        var $tagsContainer = $p.prev('.tags-container');
+                        if ($tagsContainer.length === 0) {
+                            $tagsContainer = $('<div class="tags-container"></div>');
+                            $p.before($tagsContainer);
+                        }
+                        var $tag = $('<div class="paragraph-tag">' + labelText + '<i class="fa fa-times remove-tag" title="删除标签"></i></div>');
+                        $tagsContainer.append($tag);
+                    } else {
+                        $('#toolboxNoteList').prepend('<div class="toolbox-note-item">' + labelText + '</div>');
+                    }
+                }
+                addTagModal.hide();
+                currentTagTarget = null;
+            });
+
+            $('.article-section').on('click', '.remove-tag', function(e) {
+                e.stopPropagation();
+                var $tag = $(this).parent();
+                var $container = $tag.parent();
+                $tag.remove();
+                if ($container.children().length === 0) {
+                    $container.remove();
+                }
+            });
+
+            $('.panel-tab').on('click', function() {
+                var panel = $(this).data('panel');
+                $('.panel-tab').removeClass('active');
+                $(this).addClass('active');
+                if (panel === 'toolbox') {
+                    $('.answer-card-area').hide();
+                    $('.toolbox-area').show();
+                } else {
+                    $('.toolbox-area').hide();
+                    $('.answer-card-area').show();
+                }
+            });
+
+            $('#openReadingNoteBtn').on('click', function() {
+                currentTagTarget = null;
+                $('#tagInput').val('');
+                addTagModal.show();
+            });
+
+            $('.answer-input').on('input focus', function() {
+                var qnum = $(this).data('qnum');
+                var val = $(this).val().trim();
+                var $gridItem = $('#grid-' + qnum);
+                $('.grid-item').removeClass('current');
+                $gridItem.addClass('current');
+                if (val.length > 0) {
+                    $gridItem.addClass('answered');
+                } else {
+                    $gridItem.removeClass('answered');
+                }
+            });
+
+            $('input[type="radio"]').on('change', function() {
+                var qnum = $(this).closest('.mcq-opts').data('qnum');
+                var $gridItem = $('#grid-' + qnum);
+                $('.grid-item').removeClass('current');
+                $gridItem.addClass('current').addClass('answered');
+            });
+
+            $('.mcq-opts').on('click', function() {
+                var qnum = $(this).data('qnum');
+                $('.grid-item').removeClass('current');
+                $('#grid-' + qnum).addClass('current');
+            });
+
+            $('.answer-input').on('blur', function() {
+                $('.grid-item').removeClass('current');
+            });
+
+            $('.grid-item').on('click', function() {
+                var num = $(this).text();
+                var $input = $('.answer-input[data-qnum="' + num + '"]');
+                if ($input.length) {
+                    $input.focus();
+                    $('.question-section').animate({
+                        scrollTop: $input.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 120
+                    }, 300);
+                } else {
+                    var $radioGroup = $('.mcq-opts[data-qnum="' + num + '"]');
+                    if ($radioGroup.length) {
+                        $('.grid-item').removeClass('current');
+                        $(this).addClass('current');
+                        $('.question-section').animate({
+                            scrollTop: $radioGroup.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 120
+                        }, 300);
+                    }
+                }
+            });
+
+            $('.btn-submit').on('click', function() {
+                var unansweredCount = 0;
+                $('.grid-item').each(function() {
+                    if (!$(this).hasClass('answered')) {
+                        unansweredCount += 1;
+                    }
+                });
+                $('#unansweredCount').text(unansweredCount);
+                var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
+                submitModal.show();
+            });
+
+            $('#confirmSubmitBtn').on('click', function() {
+                window.location.href = '休息页.html';
+            });
+
+            $('.left-arrow').on('click', function() {
+                window.location.href = '雅思阅读考试_Part1.html';
+            });
+
+            $('.right-arrow').on('click', function() {
+                window.location.href = '雅思阅读考试_Part3.html';
+            });
+        });
+    </script>
+</body>
+</html>

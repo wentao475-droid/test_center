@@ -312,6 +312,13 @@
                 e.stopPropagation();
                 var target = $(this).data('target');
                 if (target) {
+                    if (target === '雅思听力考试_Part1.html') {
+                        sessionStorage.setItem('ieltsListeningReadCountdown', JSON.stringify({
+                            enabled: true,
+                            qCount: 10
+                        }));
+                        target += '?read=1&qcount=10&from=confirm';
+                    }
                     window.location.href = target;
                 } else {
                     var sectionName = $(this).text().replace('Start ', '');

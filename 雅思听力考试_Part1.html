@@ -838,15 +838,58 @@
     <script>
         $(document).ready(function() {
             var READ_SECONDS_PER_QUESTION = 4.5;
+            var READ_COUNTDOWN_STORAGE_KEY = 'ieltsListeningReadCountdown';
             var readTimer = null;
 
-            function startReadCountdownOnPage() {
+            function getReadCountdownState() {
                 var params = new URLSearchParams(window.location.search);
-                if (params.get('read') !== '1') {
+                if (params.get('read') === '1') {
+                    return {
+                        enabled: true,
+                        qCount: parseInt(params.get('qcount') || '10', 10)
+                    };
+                }
+
+                try {
+                    var storedState = sessionStorage.getItem(READ_COUNTDOWN_STORAGE_KEY);
+                    if (storedState) {
+                        var parsedState = JSON.parse(storedState);
+                        if (parsedState && parsedState.enabled) {
+                            return {
+                                enabled: true,
+                                qCount: parseInt(parsedState.qCount || '10', 10)
+                            };
+                        }
+                    }
+                } catch (error) {
+                }
+
+                return { enabled: false, qCount: 10 };
+            }
+
+            function setPendingReadCountdown(qCount) {
+                sessionStorage.setItem(READ_COUNTDOWN_STORAGE_KEY, JSON.stringify({
+                    enabled: true,
+                    qCount: qCount || 10
+                }));
+            }
+
+            function clearPendingReadCountdown() {
+                sessionStorage.removeItem(READ_COUNTDOWN_STORAGE_KEY);
+            }
+
+            function startReadCountdownOnPage() {
+                var state = getReadCountdownState();
+                if (!state.enabled) {
                     return;
                 }
 
-                var qCount = parseInt(params.get('qcount') || '10', 10);
+                if (readTimer) {
+                    clearInterval(readTimer);
+                    readTimer = null;
+                }
+
+                var qCount = Math.max(1, parseInt(state.qCount, 10) || 10);
                 var remainingSeconds = Math.max(5, Math.round(qCount * READ_SECONDS_PER_QUESTION));
 
                 $('#readCountdownSeconds').text(remainingSeconds.toString().padStart(2, '0'));
@@ -863,6 +906,7 @@
                         readTimer = null;
                         $('#readCountdownBanner').fadeOut(150);
                         $('.answer-input').prop('disabled', false);
+                        clearPendingReadCountdown();
                         window.history.replaceState({}, document.title, window.location.pathname);
                     }
                 }, 1000);
@@ -1084,10 +1128,13 @@
                 if (partNum === 1) {
                     return;
                 } else if (partNum === 2) {
+                    setPendingReadCountdown(10);
                     window.location.href = '雅思听力考试_Part2.html?read=1&qcount=10&from=part1';
                 } else if (partNum === 3) {
+                    setPendingReadCountdown(10);
                     window.location.href = '雅思听力考试_Part3.html?read=1&qcount=10&from=part1';
                 } else if (partNum === 4) {
+                    setPendingReadCountdown(10);
                     window.location.href = '雅思听力考试_Part4.html?read=1&qcount=10&from=part1';
                 }
             }
