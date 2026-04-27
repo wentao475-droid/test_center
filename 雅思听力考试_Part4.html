@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -678,7 +678,7 @@
             VISION ACADEMY 测评系统
         </div>
         <div class="header-user">
-            <span>Hi, 关天虹</span>
+            <span>Hi, 王一博</span>
             <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
         </div>
     </header>
@@ -736,39 +736,39 @@
                     <div class="q-row"><span class="q-num">31</span> The growth in interest in food fashions started with
                         <input type="text" class="answer-input inline-answer" data-qnum="31" placeholder="请输入"> of food being shared on social media.
                     </div>
-                    <div class="q-row">- Sales of
+                    <div class="q-row"><span class="q-num">32</span> - Sales of
                         <input type="text" class="answer-input inline-answer" data-qnum="32" placeholder="请输入"> food brands have grown rapidly this way.
                     </div>
-                    <div class="q-row">- Famous
+                    <div class="q-row"><span class="q-num">33</span> - Famous
                         <input type="text" class="answer-input inline-answer" data-qnum="33" placeholder="请输入"> are influential.
                     </div>
 
                     <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Marketing campaigns</div>
                     <div class="q-row">The avocado:</div>
-                    <div class="q-row">-
+                    <div class="q-row"><span class="q-num">34</span> -
                         <input type="text" class="answer-input inline-answer" data-qnum="34" placeholder="请输入"> were invited to visit growers in South Africa.
                     </div>
-                    <div class="q-row">- Advertising focused on its
+                    <div class="q-row"><span class="q-num">35</span> - Advertising focused on its
                         <input type="text" class="answer-input inline-answer" data-qnum="35" placeholder="请输入"> benefits.
                     </div>
-                    <div class="q-row">- Promotion in the USA through
+                    <div class="q-row"><span class="q-num">36</span> - Promotion in the USA through
                         <input type="text" class="answer-input inline-answer" data-qnum="36" placeholder="请输入"> shops reduced the need for advertising.
                     </div>
-                    <div class="q-row">- It appealed to consumers who are concerned about the
+                    <div class="q-row"><span class="q-num">37</span> - It appealed to consumers who are concerned about the
                         <input type="text" class="answer-input inline-answer" data-qnum="37" placeholder="请输入">.
                     </div>
 
                     <div class="q-row" style="margin-top:12px;">Norwegian skrei:</div>
-                    <div class="q-row">- has helped strengthen the
+                    <div class="q-row"><span class="q-num">38</span> - has helped strengthen the
                         <input type="text" class="answer-input inline-answer" data-qnum="38" placeholder="请输入"> of Norwegian seafood.
                     </div>
 
                     <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Ethical concerns</div>
                     <div class="q-row">Quinoa:</div>
-                    <div class="q-row">- its use led to an increase in its
+                    <div class="q-row"><span class="q-num">39</span> - its use led to an increase in its
                         <input type="text" class="answer-input inline-answer" data-qnum="39" placeholder="请输入">.
                     </div>
-                    <div class="q-row">- overuse of resources resulted in poor quality
+                    <div class="q-row"><span class="q-num">40</span> - overuse of resources resulted in poor quality
                         <input type="text" class="answer-input inline-answer" data-qnum="40" placeholder="请输入">.
                     </div>
                 </div>
@@ -1018,7 +1018,12 @@
                 }, 1000);
             }
 
-            startReadCountdownOnPage();
+            // Part 4 仅用于展示：进入页面后不执行读题倒计时（不影响其他 Part 全局逻辑）
+            clearPendingReadCountdown();
+            $('#readCountdownBanner').hide();
+            $('.answer-input').prop('disabled', false);
+            $('.mcq-option').css('pointer-events', 'auto');
+            window.history.replaceState({}, document.title, window.location.pathname);
 
 
             var $markToolbar = $('#markSelectionToolbar');
@@ -1340,4 +1345,5 @@
     </script>
 </body>
 </html>
+
 

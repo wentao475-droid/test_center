@@ -1,0 +1,73 @@
+stateDiagram-v2
+    [*] --> Draft : 创建考试
+    Draft --> Published : 发布考试(配置校验通过)
+    Published --> NotStarted : 考试未开始(考试筹备中)
+    NotStarted --> InProgress : 考试进行中(考生进入)
+    InProgress --> Submitted : 考生主动交卷(完成/超时)
+    InProgress --> AutoSubmitted : 系统自动交卷(超时/中断)
+    Submitted --> Marking : 进入阅卷(后台管理)
+    AutoSubmitted --> Marking : 进入阅卷(后台管理)
+    Marking --> Scored : 阅卷完成(成绩录入/生成)
+    Scored --> Completed : 考试结束(报告生成/展示)
+    Completed --> Archived : 归档(手动/定时)
+
+    Draft --> Draft : 编辑考试
+    Published --> Draft : 撤销发布
+    InProgress --> Paused : 暂停考试(配置/紧急)
+    Paused --> InProgress : 恢复考试
+
+    state Draft {
+        [*] --> BaseConfig
+        BaseConfig --> IELTSConfig : 选择考试类型=IELTS
+        IELTSConfig --> OrderConfig : 配置组合卷顺序
+        OrderConfig --> RuleValidation : 校验官方题量/时长/Part/提交规则
+        RuleValidation --> [*]
+    }
+
+    state InProgress {
+        [*] --> SubjectRouting
+        SubjectRouting --> Listening : 顺序命中听力
+        SubjectRouting --> Reading : 顺序命中阅读
+        SubjectRouting --> Writing : 顺序命中写作
+        SubjectRouting --> Speaking : 顺序命中口语
+
+        Listening --> SubjectRouting : 单科完成
+        Reading --> SubjectRouting : 单科完成
+        Writing --> SubjectRouting : 单科完成
+        Speaking --> SubjectRouting : 单科完成
+
+        state Listening {
+            [*] --> LPart1
+            LPart1 --> LPart2 : 进入下一Part
+            LPart2 --> LPart3 : 进入下一Part
+            LPart3 --> LPart4 : 进入下一Part
+            LPart4 --> [*] : 听力完成
+        }
+
+        state Reading {
+            [*] --> RPart1
+            RPart1 --> RPart2 : 进入下一Part
+            RPart2 --> RPart3 : 进入下一Part
+            RPart3 --> [*] : 阅读完成
+        }
+
+        state Writing {
+            [*] --> WTask1
+            WTask1 --> WTask2 : 进入下一任务
+            WTask2 --> [*] : 写作完成
+        }
+
+        state Speaking {
+            [*] --> SPart1
+            SPart1 --> SPart2 : 进入下一Part
+            SPart2 --> SPart3 : 进入下一Part
+            SPart3 --> [*] : 口语完成
+        }
+    }
+
+    state Marking {
+        [*] --> ObjectiveScoring
+        ObjectiveScoring --> SubjectiveMarking : 听力/阅读自动判分完成
+        SubjectiveMarking --> ScoreAggregation : 写作/口语人工或AI辅助阅卷完成
+        ScoreAggregation --> [*] : 汇总四科成绩
+    }
