@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -734,42 +734,42 @@
                     <div style="font-weight:bold; font-size:18px; margin-bottom:10px;">Developing food trends</div>
 
                     <div class="q-row"><span class="q-num">31</span> The growth in interest in food fashions started with
-                        <input type="text" class="answer-input inline-answer" data-qnum="31" placeholder="请输入"> of food being shared on social media.
+                        <input type="text" class="answer-input inline-answer" data-qnum="31" placeholder="Type your answer here"> of food being shared on social media.
                     </div>
                     <div class="q-row"><span class="q-num">32</span> - Sales of
-                        <input type="text" class="answer-input inline-answer" data-qnum="32" placeholder="请输入"> food brands have grown rapidly this way.
+                        <input type="text" class="answer-input inline-answer" data-qnum="32" placeholder="Type your answer here"> food brands have grown rapidly this way.
                     </div>
                     <div class="q-row"><span class="q-num">33</span> - Famous
-                        <input type="text" class="answer-input inline-answer" data-qnum="33" placeholder="请输入"> are influential.
+                        <input type="text" class="answer-input inline-answer" data-qnum="33" placeholder="Type your answer here"> are influential.
                     </div>
 
                     <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Marketing campaigns</div>
                     <div class="q-row">The avocado:</div>
                     <div class="q-row"><span class="q-num">34</span> -
-                        <input type="text" class="answer-input inline-answer" data-qnum="34" placeholder="请输入"> were invited to visit growers in South Africa.
+                        <input type="text" class="answer-input inline-answer" data-qnum="34" placeholder="Type your answer here"> were invited to visit growers in South Africa.
                     </div>
                     <div class="q-row"><span class="q-num">35</span> - Advertising focused on its
-                        <input type="text" class="answer-input inline-answer" data-qnum="35" placeholder="请输入"> benefits.
+                        <input type="text" class="answer-input inline-answer" data-qnum="35" placeholder="Type your answer here"> benefits.
                     </div>
                     <div class="q-row"><span class="q-num">36</span> - Promotion in the USA through
-                        <input type="text" class="answer-input inline-answer" data-qnum="36" placeholder="请输入"> shops reduced the need for advertising.
+                        <input type="text" class="answer-input inline-answer" data-qnum="36" placeholder="Type your answer here"> shops reduced the need for advertising.
                     </div>
                     <div class="q-row"><span class="q-num">37</span> - It appealed to consumers who are concerned about the
-                        <input type="text" class="answer-input inline-answer" data-qnum="37" placeholder="请输入">.
+                        <input type="text" class="answer-input inline-answer" data-qnum="37" placeholder="Type your answer here">.
                     </div>
 
                     <div class="q-row" style="margin-top:12px;">Norwegian skrei:</div>
                     <div class="q-row"><span class="q-num">38</span> - has helped strengthen the
-                        <input type="text" class="answer-input inline-answer" data-qnum="38" placeholder="请输入"> of Norwegian seafood.
+                        <input type="text" class="answer-input inline-answer" data-qnum="38" placeholder="Type your answer here"> of Norwegian seafood.
                     </div>
 
                     <div style="font-weight:bold; font-size:18px; margin:18px 0 10px;">Ethical concerns</div>
                     <div class="q-row">Quinoa:</div>
                     <div class="q-row"><span class="q-num">39</span> - its use led to an increase in its
-                        <input type="text" class="answer-input inline-answer" data-qnum="39" placeholder="请输入">.
+                        <input type="text" class="answer-input inline-answer" data-qnum="39" placeholder="Type your answer here">.
                     </div>
                     <div class="q-row"><span class="q-num">40</span> - overuse of resources resulted in poor quality
-                        <input type="text" class="answer-input inline-answer" data-qnum="40" placeholder="请输入">.
+                        <input type="text" class="answer-input inline-answer" data-qnum="40" placeholder="Type your answer here">.
                     </div>
                 </div>
             </div>
@@ -898,14 +898,14 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewNoteModalLabel">笔记内容</h5>
+                    <h5 class="modal-title" id="viewNoteModalLabel">Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="viewNoteContent" style="line-height: 1.7; word-break: break-word;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -1322,13 +1322,13 @@
                     submitModal.show();
                 } else {
                     // 全部答完，进入听力已完成页
-                    window.location.href = '雅思听力已完成.html';
+                    window.location.href = '雅思考前确认.html?completed=listening';
                 }
             });
             
             // 弹窗确认提交
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '雅思听力已完成.html';
+                window.location.href = '雅思考前确认.html?completed=listening';
             });
             
             // 左右箭头切换Part

@@ -631,43 +631,43 @@
         <div class="answer-section">
             <div class="answer-row">
                 <div class="answer-num">1</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="1">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="1">
             </div>
             <div class="answer-row">
                 <div class="answer-num">2</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="2">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="2">
             </div>
             <div class="answer-row">
                 <div class="answer-num">3</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="3">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="3">
             </div>
             <div class="answer-row">
                 <div class="answer-num">4</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="4">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="4">
             </div>
             <div class="answer-row">
                 <div class="answer-num">5</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="5">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="5">
             </div>
             <div class="answer-row">
                 <div class="answer-num">6</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="6">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="6">
             </div>
             <div class="answer-row">
                 <div class="answer-num">7</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="7">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="7">
             </div>
             <div class="answer-row">
                 <div class="answer-num">8</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="8">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="8">
             </div>
             <div class="answer-row">
                 <div class="answer-num">9</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="9">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="9">
             </div>
             <div class="answer-row">
                 <div class="answer-num">10</div>
-                <input type="text" class="answer-input" placeholder="请输入" data-qnum="10">
+                <input type="text" class="answer-input" placeholder="Type your answer here" data-qnum="10">
             </div>
         </div>
         
@@ -794,14 +794,14 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewNoteModalLabel">笔记内容</h5>
+                    <h5 class="modal-title" id="viewNoteModalLabel">Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="viewNoteContent" style="line-height: 1.7; word-break: break-word;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -1173,13 +1173,13 @@
                     submitModal.show();
                 } else {
                     // 全部答完，进入听力已完成页
-                    window.location.href = '雅思听力已完成.html';
+                    window.location.href = '雅思考前确认.html?completed=listening';
                 }
             });
             
             // 弹窗确认提交
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '雅思听力已完成.html';
+                window.location.href = '雅思考前确认.html?completed=listening';
             });
             
             // 左右箭头切换Part

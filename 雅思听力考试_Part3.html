@@ -732,11 +732,11 @@
 
                 <div class="matching-container">
                     <div class="matching-questions">
-                        <div class="q-row"><span class="q-num">21</span> Population <input type="text" class="answer-input inline-answer" data-qnum="21" placeholder="请输入"></div>
-                        <div class="q-row"><span class="q-num">22</span> Health <input type="text" class="answer-input inline-answer" data-qnum="22" placeholder="请输入"></div>
-                        <div class="q-row"><span class="q-num">23</span> Economics <input type="text" class="answer-input inline-answer" data-qnum="23" placeholder="请输入"></div>
-                        <div class="q-row"><span class="q-num">24</span> Culture <input type="text" class="answer-input inline-answer" data-qnum="24" placeholder="请输入"></div>
-                        <div class="q-row"><span class="q-num">25</span> Poverty <input type="text" class="answer-input inline-answer" data-qnum="25" placeholder="请输入"></div>
+                        <div class="q-row"><span class="q-num">21</span> Population <input type="text" class="answer-input inline-answer" data-qnum="21" placeholder="Type your answer here"></div>
+                        <div class="q-row"><span class="q-num">22</span> Health <input type="text" class="answer-input inline-answer" data-qnum="22" placeholder="Type your answer here"></div>
+                        <div class="q-row"><span class="q-num">23</span> Economics <input type="text" class="answer-input inline-answer" data-qnum="23" placeholder="Type your answer here"></div>
+                        <div class="q-row"><span class="q-num">24</span> Culture <input type="text" class="answer-input inline-answer" data-qnum="24" placeholder="Type your answer here"></div>
+                        <div class="q-row"><span class="q-num">25</span> Poverty <input type="text" class="answer-input inline-answer" data-qnum="25" placeholder="Type your answer here"></div>
                     </div>
                     <div class="matching-options">
                         <div class="opt-box"><span class="opt-letter">A</span> Information given about this was too vague.</div>
@@ -926,14 +926,14 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewNoteModalLabel">笔记内容</h5>
+                    <h5 class="modal-title" id="viewNoteModalLabel">Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="viewNoteContent" style="line-height: 1.7; word-break: break-word;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -1345,13 +1345,13 @@
                     submitModal.show();
                 } else {
                     // 全部答完，进入听力已完成页
-                    window.location.href = '雅思听力已完成.html';
+                    window.location.href = '雅思考前确认.html?completed=listening';
                 }
             });
             
             // 弹窗确认提交
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '雅思听力已完成.html';
+                window.location.href = '雅思考前确认.html?completed=listening';
             });
             
             // 左右箭头切换Part

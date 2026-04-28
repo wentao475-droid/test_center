@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -347,6 +347,40 @@
 
     </div>
 
+    <!-- 休息页弹窗 Modal -->
+    <div class="modal fade" id="breakModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); padding: 40px 20px; text-align: center;">
+                <!-- 顶部图标 -->
+                <div style="width: 80px; height: 80px; background-color: #e8f4f8; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fa fa-clock-o" style="font-size: 40px; color: #165dff;"></i>
+                </div>
+
+                <!-- 核心文案 -->
+                <h2 style="font-size: 24px; font-weight: 600; color: #333; margin-bottom: 10px;">当前科目考试已结束</h2>
+                <p style="font-size: 16px; color: #666; margin-bottom: 30px; line-height: 1.5;">请稍作休息，系统将为您自动跳转至下一门科目考试</p>
+
+                <!-- 倒计时区域 -->
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                    <p style="font-size: 14px; color: #999; margin-bottom: 10px;">距离下一门考试开始还有</p>
+                    <div id="countdown" style="font-size: 36px; font-weight: 700; color: #165dff;">02:00</div>
+                    <p style="font-size: 18px; color: #333; font-weight: 500; margin-top: 10px;">下一门科目：<span id="nextSubjectName"></span></p>
+                </div>
+
+                <!-- 立即进入考试按钮 -->
+                <button id="enterNextExamBtn" class="btn btn-primary" style="background-color: #165dff; color: #fff; border: none; border-radius: 8px; padding: 12px 24px; font-size: 18px; font-weight: 600; width: 100%; margin-bottom: 25px; transition: all 0.3s;">
+                    <i class="fa fa-play-circle me-1"></i> 立即进入考试
+                </button>
+
+                <!-- 提示信息 -->
+                <p style="font-size: 14px; color: #999; line-height: 1.6; margin-bottom: 0;">
+                    <i class="fa fa-info-circle text-primary"></i> 
+                    请勿刷新或关闭页面，系统将自动跳转；若未自动跳转，请联系监考老师
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- 引入jQuery和Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -384,6 +418,74 @@
                     // 实际项目中这里应跳转到对应考试页面
                 }
             });
+
+            // 解析URL参数，处理弹窗逻辑
+            const urlParams = new URLSearchParams(window.location.search);
+            const completed = urlParams.get('completed');
+            
+            if (completed) {
+                let nextSubject = '';
+                let nextUrl = '';
+                let currentIndex = -1;
+                
+                if (completed === 'listening') {
+                    currentIndex = 0;
+                    nextSubject = '雅思阅读';
+                    nextUrl = '雅思阅读考试_Part1.html';
+                } else if (completed === 'reading') {
+                    currentIndex = 1;
+                    nextSubject = '雅思写作';
+                    nextUrl = '雅思写作考试_Part1.html';
+                } else if (completed === 'writing') {
+                    currentIndex = 2;
+                    nextSubject = '雅思口语';
+                    nextUrl = '雅思口语考试_Part1.html';
+                } else if (completed === 'speaking') {
+                    // 全部考完，直接跳转成绩分析
+                    window.location.href = '雅思成绩分析.html';
+                    return;
+                }
+
+                // 标记当前及之前已完成的科目卡片
+                if (currentIndex >= 0) {
+                    for (let i = 0; i <= currentIndex; i++) {
+                        let $card = $('.exam-section-card').eq(i);
+                        $card.find('.status').removeClass('incomplete').addClass('completed').text('Completed');
+                        $card.find('.card-icon').removeClass('incomplete').addClass('completed').html('<i class="fa fa-check-circle"></i>');
+                        $card.find('.btn-enter-exam').prop('disabled', true).text('Completed');
+                    }
+                }
+
+                // 弹出休息页
+                if (nextSubject && nextUrl) {
+                    $('#nextSubjectName').text(nextSubject);
+                    var breakModal = new bootstrap.Modal(document.getElementById('breakModal'));
+                    breakModal.show();
+                    
+                    let remainingSeconds = 120; // 2分钟
+                    function updateCountdownDisplay() {
+                        const m = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+                        const s = (remainingSeconds % 60).toString().padStart(2, '0');
+                        $('#countdown').text(`${m}:${s}`);
+                    }
+                    
+                    updateCountdownDisplay();
+                    
+                    const timer = setInterval(() => {
+                        remainingSeconds--;
+                        updateCountdownDisplay();
+                        if (remainingSeconds <= 0) {
+                            clearInterval(timer);
+                            window.location.href = nextUrl;
+                        }
+                    }, 1000);
+                    
+                    $('#enterNextExamBtn').on('click', function() {
+                        clearInterval(timer);
+                        window.location.href = nextUrl;
+                    });
+                }
+            }
         });
     </script>
 </body>

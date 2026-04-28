@@ -582,10 +582,9 @@
             <div class="response-card">
                 <div class="response-header">
                     <div class="response-title">Writing Answer Sheet</div>
-                    <div class="response-tip">请在此区域完成机考作答，支持键盘输入与扫码上传同步</div>
                 </div>
                 <div class="editor-wrap">
-                    <textarea id="writingEditor" class="editor-box" placeholder="在此输入您的写作内容..."></textarea>
+                    <textarea id="writingEditor" class="editor-box" placeholder="Type your answer here..."></textarea>
                     <div class="editor-footer">
                         <div class="word-count">Words Count: <strong id="wordCount">0</strong></div>
                         <div class="editor-hint">Task 2 建议不少于 250 词</div>
@@ -724,7 +723,7 @@
             });
 
             $('#confirmSubmitBtn').on('click', function() {
-                window.location.href = '休息页.html';
+                window.location.href = '雅思考前确认.html?completed=writing';
             });
         });
     </script>
