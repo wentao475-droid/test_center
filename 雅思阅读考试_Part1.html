@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -64,115 +64,44 @@
             text-align: justify;
         }
 
-        /* 鼠标划词高亮样式 */
-        ::selection {
+                ::selection {
             background-color: rgba(22, 93, 255, 0.3);
             color: #333;
         }
-        .highlight-text {
-            background-color: #ffeb3b;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .highlight-text:hover {
-            background-color: #fbc02d;
-        }
-        
-        /* 划词工具�?*/
-        .selection-toolbar {
-            position: absolute;
-            background: #333;
-            color: white;
-            border-radius: 4px;
-            padding: 4px 8px;
+        .mark-selection-toolbar {
+            position: fixed;
+            z-index: 40;
             display: none;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transform: translateX(-50%);
+            gap: 8px;
+            background: #1f2329;
+            padding: 6px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+            transform: translate(-50%, -120%);
         }
-        .selection-toolbar::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #333 transparent transparent transparent;
-        }
-        .toolbar-btn {
-            background: none;
+        .mark-selection-toolbar .btn {
             border: none;
-            color: white;
-            cursor: pointer;
-            padding: 4px 8px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            padding: 4px 10px;
+            font-size: 12px;
+            line-height: 1.4;
         }
-        .toolbar-btn:hover {
-            color: #ffeb3b;
+        .mark-highlight {
+            background-color: #fff3a3;
+            border-radius: 2px;
+            padding: 0 2px;
+            cursor: pointer;
+        }
+        .mark-note {
+            background-color: #e8f3ff;
+            border-bottom: 2px solid #165dff;
+            border-radius: 2px;
+            padding: 0 2px;
+            cursor: pointer;
+        }
+        #viewNoteModal .modal-header {
+            cursor: move;
         }
         
-        /* 娈佃惤鏍囩样式 */
-        .article-text p {
-            line-height: 1.8;
-            margin-bottom: 20px;
-            font-size: 15px;
-            text-align: justify;
-            position: relative;
-            padding-left: 10px;
-        }
-        .article-text p:hover .add-tag-btn {
-            opacity: 1;
-        }
-        .add-tag-btn {
-            position: absolute;
-            left: -20px;
-            top: 5px;
-            color: #ccc;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s, color 0.2s;
-            font-size: 14px;
-        }
-        .add-tag-btn:hover {
-            color: #165dff;
-        }
-        .paragraph-tag {
-            background-color: #e6f7ff;
-            border-left: 3px solid #165dff;
-            padding: 5px 10px;
-            font-size: 12px;
-            color: #165dff;
-            margin-bottom: 10px;
-            display: inline-block;
-            border-radius: 0 4px 4px 0;
-            position: relative;
-            cursor: pointer;
-        }
-        .paragraph-tag .remove-tag {
-            margin-left: 8px;
-            color: #999;
-            display: none;
-        }
-        .paragraph-tag:hover .remove-tag {
-            display: inline;
-            color: #ff4d4f;
-        }
-        #addTagModal .modal-header {
-            cursor: move;
-            user-select: none;
-        }
-        #addTagModal .modal-dialog {
-            margin: 0;
-        }
-        body.dragging-modal {
-            user-select: none;
-        }
-
-        /* 中间题目�?*/
         .question-section {
             flex: 1;
             padding: 40px;
@@ -448,24 +377,26 @@
         <div class="nav-arrow left-arrow"><i class="fa fa-angle-left"></i></div>
         
         <!-- 划词工具栏 -->
-        <div id="selectionToolbar" class="selection-toolbar">
-            <button class="toolbar-btn" id="btnHighlight">
-                <i class="fa fa-pencil"></i> 高亮
-            </button>
-        </div>
+        
 
         <!-- 左侧文章区 -->
+        
+        <!-- 划词工具栏 -->
+        <div id="markSelectionToolbar" class="mark-selection-toolbar">
+            <button type="button" class="btn btn-warning btn-sm" id="btnTextHighlight">Highlight</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btnAddNote">Add Note</button>
+        </div>
         <div class="article-section">
             <div class="article-title">Frozen Food</div>
             <div class="article-subtitle">A US perspective on the development of the frozen food industry</div>
             
             <div class="article-text">
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>At some point in history, humans discovered that ice preserved food. There is evidence that winter ice was stored to preserve food in the summer as far back as 10,000 years ago. Two thousand years ago, the inhabitants of South America's Andean mountains had a unique means of conserving potatoes for later consumption. They froze them overnight, then trampled them to squeeze out the moisture, then dried them in the sun. This preserved their nutritional value—if not their aesthetic appeal.</p>
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>Natural ice remained the main form of refrigeration until late in the 19th century. In the early 1800s, ship owners from Boston, USA, had enormous blocks of Arctic ice towed all over the Atlantic for the purpose of food preservation. In 1851, railroads first began putting blocks of ice in insulated rail cars to send butter from Ogdensburg, New York, to Boston.</p>
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>Finally, in 1870, Australian inventors found a way to make 'mechanical ice'. They used a compressor to force a gas—ammonia at first and later Freon—through a condenser. The compressed gas gave up some of its heat as it moved through the condenser. Then the gas was released quickly into a low-pressure evaporator coil where it became liquid and cold. Air was blown over the evaporator coil and then this cooled air passed into an insulated compartment, lowering its temperature to freezing point.</p>
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>Initially, this process was invented to keep Australian beer cool even in hot weather. But Australian cattlemen were quick to realize that, if they could put this new invention on a ship, they could export meat across the oceans. In 1880, a shipment of Australian beef and mutton was sent, frozen, to England. While the food frozen this way was still palatable, there was some deterioration. During the freezing process, crystals formed within the cells of the food, and when the ice expanded and the cells burst, this spoilt the flavor and texture of the food.</p>
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>The modern frozen food industry began with the indigenous Inuit people of Canada. In 1912, a biology student in Massachusetts, USA, named Clarence Birdseye, ran out of money and went to Labrador in Canada to trap and trade furs. While he was there, he became fascinated with how the Inuit would quickly freeze fish in the Arctic air. The fish looked and tasted fresh even months later.</p>
-                <p><i class="fa fa-tag add-tag-btn" title="Add Note"></i>Birdseye returned to the USA in 1917 and began developing mechanical freezers capable of quick-freezing food. Birdseye methodically kept inventing better freezers and gradually built a business selling frozen fish from Gloucester, Massachusetts. In 1929, his business was sold and became General Foods, but he stayed with the company as director of research, and his division continued to innovate.</p>
+                <p>At some point in history, humans discovered that ice preserved food. There is evidence that winter ice was stored to preserve food in the summer as far back as 10,000 years ago. Two thousand years ago, the inhabitants of South America's Andean mountains had a unique means of conserving potatoes for later consumption. They froze them overnight, then trampled them to squeeze out the moisture, then dried them in the sun. This preserved their nutritional value—if not their aesthetic appeal.</p>
+                <p>Natural ice remained the main form of refrigeration until late in the 19th century. In the early 1800s, ship owners from Boston, USA, had enormous blocks of Arctic ice towed all over the Atlantic for the purpose of food preservation. In 1851, railroads first began putting blocks of ice in insulated rail cars to send butter from Ogdensburg, New York, to Boston.</p>
+                <p>Finally, in 1870, Australian inventors found a way to make 'mechanical ice'. They used a compressor to force a gas—ammonia at first and later Freon—through a condenser. The compressed gas gave up some of its heat as it moved through the condenser. Then the gas was released quickly into a low-pressure evaporator coil where it became liquid and cold. Air was blown over the evaporator coil and then this cooled air passed into an insulated compartment, lowering its temperature to freezing point.</p>
+                <p>Initially, this process was invented to keep Australian beer cool even in hot weather. But Australian cattlemen were quick to realize that, if they could put this new invention on a ship, they could export meat across the oceans. In 1880, a shipment of Australian beef and mutton was sent, frozen, to England. While the food frozen this way was still palatable, there was some deterioration. During the freezing process, crystals formed within the cells of the food, and when the ice expanded and the cells burst, this spoilt the flavor and texture of the food.</p>
+                <p>The modern frozen food industry began with the indigenous Inuit people of Canada. In 1912, a biology student in Massachusetts, USA, named Clarence Birdseye, ran out of money and went to Labrador in Canada to trap and trade furs. While he was there, he became fascinated with how the Inuit would quickly freeze fish in the Arctic air. The fish looked and tasted fresh even months later.</p>
+                <p>Birdseye returned to the USA in 1917 and began developing mechanical freezers capable of quick-freezing food. Birdseye methodically kept inventing better freezers and gradually built a business selling frozen fish from Gloucester, Massachusetts. In 1929, his business was sold and became General Foods, but he stayed with the company as director of research, and his division continued to innovate.</p>
             </div>
         </div>
 
@@ -621,25 +552,13 @@
                     </div>
                 </div>
 
-                <div class="toolbox-area">
-                    <div class="toolbox-card">
-                        <div class="toolbox-title">Note</div>
-                        <button class="btn btn-sm btn-primary" id="openReadingNoteBtn">打开笔记弹窗</button>
-                        <div class="toolbox-tip">提示：也可点击左侧段落前的标签图标，给指定段落添加标签。</div>
-                    </div>
-                    <div class="toolbox-card">
-                        <div class="toolbox-title">工具箱笔记</div>
-                        <div id="toolboxNoteList" class="toolbox-note-list"></div>
-                    </div>
-                </div>
-                
+                <div class="toolbox-area" style="display: none;"></div>
                 <div class="bottom-actions">
-                    <button class="btn btn-submit">提交试卷</button>
+                    <button type="button" class="btn-submit">提交试卷</button>
+                </div>
                 </div>
             </div>
         </div>
-        
-    </div>
 
     <!-- 提交确认弹窗 -->
     <div class="modal fade" id="submitConfirmModal" tabindex="-1" aria-labelledby="submitConfirmModalLabel" aria-hidden="true">
@@ -664,210 +583,227 @@
         </div>
     </div>
 
-    <!-- Add Note弹窗 -->
-    <div class="modal fade" id="addTagModal" tabindex="-1" aria-labelledby="addTagModalLabel" aria-hidden="true">
+    
+    </div>
+
+    
+    </div>
+
+    
+    
+    </div>
+
+    
+    <div class="modal fade" id="markNoteModal" tabindex="-1" aria-labelledby="markNoteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addTagModalLabel">Add Note</h5>
+                    <h5 class="modal-title" id="markNoteModalLabel">Add Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="tagInput" placeholder="Please enter..." maxlength="50">
-                    </div>
+                    <textarea id="markNoteInput" class="form-control" rows="3" maxlength="80" placeholder="Enter note..."></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmAddTagBtn">Save</button>
+                    <button type="button" class="btn btn-primary" id="confirmMarkNoteBtn">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="viewNoteModal" tabindex="-1" aria-labelledby="viewNoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewNoteModalLabel">Note</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="viewNoteContent" style="line-height: 1.7; word-break: break-word;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            // ================= 划词高亮功能 =================
-            var $toolbar = $('#selectionToolbar');
-            
-            // 监听文章区域的鼠标抬起事件，显示工具栏
-            $('.article-section').on('mouseup', function(e) {
-                var selection = window.getSelection();
-                if (selection.toString().trim().length > 0) {
-                    // 获取选区位置
-                    var range = selection.getRangeAt(0);
-                    var rect = range.getBoundingClientRect();
-                    
-                    // 显示工具栏并定位在选区正上方
-                    $toolbar.css({
-                        display: 'block',
-                        top: rect.top + window.scrollY - 35 + 'px',
-                        left: rect.left + window.scrollX + (rect.width / 2) + 'px'
-                    });
-                } else {
-                    $toolbar.hide();
-                }
-            });
+            // ================= 划词高亮与笔记功能 =================
+            var $markToolbar = $('#markSelectionToolbar');
+            var markNoteModal = new bootstrap.Modal(document.getElementById('markNoteModal'));
+            var viewNoteModal = new bootstrap.Modal(document.getElementById('viewNoteModal'), { backdrop: false });
+            var pendingMarkRange = null;
 
-            // 点击其他区域隐藏工具栏
-            $(document).on('mousedown', function(e) {
-                if (!$(e.target).closest('#selectionToolbar').length) {
-                    $toolbar.hide();
-                }
-            });
+            var $viewNoteDialog = $('#viewNoteModal .modal-dialog');
+            var isDraggingViewNote = false;
+            var viewNoteOffsetX = 0;
+            var viewNoteOffsetY = 0;
 
-            // 点击高亮按钮
-            $('#btnHighlight').on('click', function(e) {
-                e.preventDefault();
-                var selection = window.getSelection();
-                if (selection.toString().trim().length > 0) {
-                    var range = selection.getRangeAt(0);
-                    
-                    // 创建高亮包裹元素
-                    var span = document.createElement('span');
-                    span.className = 'highlight-text';
-                    span.title = '点击取消高亮';
-                    
-                    try {
-                        range.surroundContents(span);
-                    } catch (e) {
-                        alert('无法跨段落高亮，请在段落内划词！');
-                    }
-                    
-                    selection.removeAllRanges();
-                    $toolbar.hide();
-                }
-            });
-
-            // 点击已高亮的文本取消高亮
-            $('.article-section').on('click', '.highlight-text', function() {
-                var text = $(this).text();
-                $(this).replaceWith(text);
-            });
-
-
-            // ================= 段落标签功能 =================
-            var currentTagTarget = null;
-            var addTagModal = new bootstrap.Modal(document.getElementById('addTagModal'), {
-                backdrop: false
-            });
-            var $addTagDialog = $('#addTagModal .modal-dialog');
-            var isDraggingModal = false;
-            var modalDragOffsetX = 0;
-            var modalDragOffsetY = 0;
-            
-            // 点击图标打开弹窗
-            $('.article-section').on('click', '.add-tag-btn', function() {
-                currentTagTarget = $(this).parent();
-                $('#tagInput').val(''); // 清空输入框
-                addTagModal.show();
-            });
-
-            // 弹窗显示后自动聚焦输入框
-            $('#addTagModal').on('shown.bs.modal', function () {
-                $addTagDialog.css({
+            $('#viewNoteModal').on('shown.bs.modal', function() {
+                $viewNoteDialog.css({
                     position: 'fixed',
                     left: '50%',
                     top: '180px',
                     transform: 'translateX(-50%)'
                 });
-                $('#tagInput').focus();
             });
 
-            // 拖动弹窗
-            $('#addTagModal .modal-header').on('mousedown', function(e) {
+            $('#viewNoteModal .modal-header').on('mousedown', function(e) {
                 if ($(e.target).closest('.btn-close').length) {
                     return;
                 }
 
-                var rect = $addTagDialog[0].getBoundingClientRect();
-                isDraggingModal = true;
-                modalDragOffsetX = e.clientX - rect.left;
-                modalDragOffsetY = e.clientY - rect.top;
+                var rect = $viewNoteDialog[0].getBoundingClientRect();
+                isDraggingViewNote = true;
+                viewNoteOffsetX = e.clientX - rect.left;
+                viewNoteOffsetY = e.clientY - rect.top;
 
-                $addTagDialog.css({
+                $viewNoteDialog.css({
                     position: 'fixed',
                     left: rect.left + 'px',
                     top: rect.top + 'px',
                     transform: 'none'
                 });
 
-                $('body').addClass('dragging-modal');
                 e.preventDefault();
             });
 
             $(document).on('mousemove', function(e) {
-                if (!isDraggingModal) {
+                if (!isDraggingViewNote) {
                     return;
                 }
 
-                $addTagDialog.css({
-                    left: (e.clientX - modalDragOffsetX) + 'px',
-                    top: (e.clientY - modalDragOffsetY) + 'px'
+                $viewNoteDialog.css({
+                    left: (e.clientX - viewNoteOffsetX) + 'px',
+                    top: (e.clientY - viewNoteOffsetY) + 'px'
                 });
             });
 
             $(document).on('mouseup', function() {
-                if (!isDraggingModal) {
+                if (isDraggingViewNote) {
+                    isDraggingViewNote = false;
+                }
+            });
+
+            function isRangeInReadingContent(range) {
+                if (!range) return false;
+                var container = range.commonAncestorContainer.nodeType === 1
+                    ? range.commonAncestorContainer
+                    : range.commonAncestorContainer.parentElement;
+                return !!$(container).closest('.article-section, .question-section').length;
+            }
+
+            function getSelectionRange() {
+                var selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+                    return null;
+                }
+                var range = selection.getRangeAt(0);
+                if (!isRangeInReadingContent(range)) {
+                    return null;
+                }
+                return range.cloneRange();
+            }
+
+            function wrapSelectionRange(range, className, noteText) {
+                if (!range) return false;
+                var span = document.createElement('span');
+                span.className = className;
+                if (noteText) {
+                    span.setAttribute('data-note', noteText);
+                    span.setAttribute('title', 'Note: ' + noteText);
+                }
+
+                try {
+                    range.surroundContents(span);
+                } catch (err) {
+                    var fragment = range.extractContents();
+                    span.appendChild(fragment);
+                    range.insertNode(span);
+                }
+                return true;
+            }
+
+            $('.article-section, .question-section').on('mouseup keyup', function() {
+                setTimeout(function() {
+                    var range = getSelectionRange();
+                    if (!range) {
+                        $markToolbar.hide();
+                        pendingMarkRange = null;
+                        return;
+                    }
+
+                    pendingMarkRange = range;
+                    var rect = range.getBoundingClientRect();
+                    $markToolbar.css({
+                        left: (rect.left + rect.width / 2 + window.scrollX) + 'px',
+                        top: (rect.top + window.scrollY - 8) + 'px'
+                    }).show();
+                }, 0);
+            });
+
+            $(document).on('mousedown', function(e) {
+                if (!$(e.target).closest('#markSelectionToolbar, #markNoteModal, #viewNoteModal').length) {
+                    $markToolbar.hide();
+                }
+            });
+
+            $('#btnTextHighlight').on('click', function() {
+                if (!pendingMarkRange) {
+                    pendingMarkRange = getSelectionRange();
+                }
+                if (!pendingMarkRange) {
                     return;
                 }
-
-                isDraggingModal = false;
-                $('body').removeClass('dragging-modal');
+                wrapSelectionRange(pendingMarkRange, 'mark-highlight');
+                window.getSelection().removeAllRanges();
+                pendingMarkRange = null;
+                $markToolbar.hide();
             });
 
-            // 按回车键触发确认
-            $('#tagInput').on('keypress', function(e) {
-                if (e.which === 13) {
-                    $('#confirmAddTagBtn').click();
+            $('#btnAddNote').on('click', function() {
+                if (!pendingMarkRange) {
+                    pendingMarkRange = getSelectionRange();
+                }
+                if (!pendingMarkRange) {
+                    return;
+                }
+                $('#markNoteInput').val('');
+                markNoteModal.show();
+                setTimeout(function() { $('#markNoteInput').focus(); }, 150);
+            });
+
+            $('#confirmMarkNoteBtn').on('click', function() {
+                var noteText = $('#markNoteInput').val().trim();
+                if (!noteText || !pendingMarkRange) {
+                    markNoteModal.hide();
+                    return;
+                }
+                wrapSelectionRange(pendingMarkRange, 'mark-note', noteText);
+                window.getSelection().removeAllRanges();
+                pendingMarkRange = null;
+                markNoteModal.hide();
+                $markToolbar.hide();
+            });
+
+            $('.article-section, .question-section').on('click', '.mark-note', function() {
+                var note = $(this).attr('data-note');
+                if (note) {
+                    $('#viewNoteContent').text(note);
+                    viewNoteModal.show();
                 }
             });
 
-            // 确认添加标签
-            $('#confirmAddTagBtn').on('click', function() {
-                var labelText = $('#tagInput').val();
-                
-                if (labelText && labelText.trim() !== '') {
-                    if (currentTagTarget) {
-                        var $p = currentTagTarget;
-                        // 检查是否已经有标签容器
-                        var $tagsContainer = $p.prev('.tags-container');
-                        if ($tagsContainer.length === 0) {
-                            $tagsContainer = $('<div class="tags-container"></div>');
-                            $p.before($tagsContainer);
-                        }
-                        
-                        // 添加新标签
-                        var $tag = $('<div class="paragraph-tag">' + labelText + '<i class="fa fa-times remove-tag" title="删除标签"></i></div>');
-                        $tagsContainer.append($tag);
-                    } else {
-                        // 从工具箱打开时，保存成工具箱笔记
-                        $('#toolboxNoteList').prepend('<div class="toolbox-note-item">' + labelText + '</div>');
-                    }
-                }
-                
-                addTagModal.hide();
-                currentTagTarget = null;
+            $('.article-section, .question-section').on('dblclick', '.mark-highlight', function() {
+                $(this).replaceWith($(this).text());
             });
-
-            // 删除段落标签
-            $('.article-section').on('click', '.remove-tag', function(e) {
-                e.stopPropagation(); // 阻止冒泡
-                var $tag = $(this).parent();
-                var $container = $tag.parent();
-                $tag.remove();
-                
-                // 如果容器空了，也移除容器
-                if ($container.children().length === 0) {
-                    $container.remove();
-                }
-            });
-
 
             // ================= 答题卡联动功能 =================
-            // 答题卡/工具箱切换
             $('.panel-tab').on('click', function() {
                 var panel = $(this).data('panel');
                 $('.panel-tab').removeClass('active');
@@ -882,85 +818,75 @@
                 }
             });
 
-            // 工具箱打开笔记弹窗
-            $('#openReadingNoteBtn').on('click', function() {
-                currentTagTarget = null;
-                $('#tagInput').val('');
-                addTagModal.show();
-            });
-
-            // 填空题联动
             $('.answer-input').on('input focus', function() {
                 var qnum = $(this).data('qnum');
                 var val = $(this).val().trim();
                 var $gridItem = $('#grid-' + qnum);
-                
                 $('.grid-item').removeClass('current');
                 $gridItem.addClass('current');
-                
-                if(val.length > 0) {
+                if (val.length > 0) {
                     $gridItem.addClass('answered');
                 } else {
                     $gridItem.removeClass('answered');
                 }
             });
-            
-            // 单选题联动
+
             $('input[type="radio"]').on('change', function() {
                 var qnum = $(this).closest('.mcq-opts').data('qnum');
                 var $gridItem = $('#grid-' + qnum);
-                
                 $('.grid-item').removeClass('current');
                 $gridItem.addClass('current').addClass('answered');
             });
-            
-            // 单选题点击文字区域高亮
+
             $('.mcq-opts').on('click', function() {
                 var qnum = $(this).data('qnum');
                 $('.grid-item').removeClass('current');
                 $('#grid-' + qnum).addClass('current');
             });
-            
-            // 失去焦点移除当前高亮
+
             $('.answer-input').on('blur', function() {
                 $('.grid-item').removeClass('current');
             });
 
-            // 点击答题卡定位
             $('.grid-item').on('click', function() {
                 var num = $(this).text();
-                // 优先找填空题
                 var $input = $('.answer-input[data-qnum="' + num + '"]');
-                if($input.length) {
+                if ($input.length) {
                     $input.focus();
                     $('.question-section').animate({
-                        scrollTop: $input.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 50
+                        scrollTop: $input.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 120
                     }, 300);
                 } else {
-                    // 找单选题
                     var $radioGroup = $('.mcq-opts[data-qnum="' + num + '"]');
-                    if($radioGroup.length) {
+                    if ($radioGroup.length) {
                         $('.grid-item').removeClass('current');
                         $(this).addClass('current');
                         $('.question-section').animate({
-                            scrollTop: $radioGroup.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 100
+                            scrollTop: $radioGroup.offset().top - $('.question-section').offset().top + $('.question-section').scrollTop() - 120
                         }, 300);
                     }
                 }
             });
-            
-            // 提交试卷
+
             $('.btn-submit').on('click', function() {
+                var unansweredCount = 0;
+                $('.grid-item').each(function() {
+                    if (!$(this).hasClass('answered')) {
+                        unansweredCount += 1;
+                    }
+                });
+                $('#unansweredCount').text(unansweredCount);
+                var submitModal = new bootstrap.Modal(document.getElementById('submitConfirmModal'));
+                submitModal.show();
+            });
+
+            $('#confirmSubmitBtn').on('click', function() {
                 window.location.href = '雅思考前确认.html?completed=reading';
             });
-
-            $('.left-arrow').on('click', function() {
-                return false;
-            });
-
-            $('.right-arrow').on('click', function() {
-                window.location.href = '雅思阅读考试_Part2.html';
-            });
+            
+            $('.left-arrow').on('click', function() { return false; });
+            $('.right-arrow').on('click', function() { window.location.href = '雅思阅读考试_Part2.html'; });
+        
         });
     </script>
 </body>
