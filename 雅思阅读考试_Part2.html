@@ -122,6 +122,10 @@
         .toolbox-tip { font-size: 12px; color: #666; line-height: 1.6; }
         .toolbox-note-list { max-height: 220px; overflow-y: auto; margin-top: 8px; }
         .toolbox-note-item { border: 1px solid #e6f0ff; background: #f5f8ff; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 12px; color: #444; word-break: break-word; }
+        .toolbox-note-text { font-weight: 600; color: #1f2937; margin-bottom: 6px; }
+        .toolbox-selected-text { color: #667085; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .toolbox-note-item.expanded .toolbox-selected-text { display: block; -webkit-line-clamp: unset; overflow: visible; }
+        .toolbox-expand-btn { margin-top: 6px; padding: 0; border: none; background: transparent; color: #165dff; font-size: 12px; cursor: pointer; }
         :root { --va-blue: #1f4fd6; --va-navy: #1b2f4b; --va-slate: #4e5969; --va-bg: #f5f7fb; --va-border: #e7ebf3; --va-ok: #27ae60; }
         body { background-color: var(--va-bg); }
         .header { background-color: #fff; border-bottom: 1px solid var(--va-border); box-shadow: none; padding: 10px 18px; }
@@ -404,7 +408,7 @@
             <div class="sidebar-panel">
                 <div class="panel-tabs">
                     <div class="panel-tab active" data-panel="answer-card">答题卡(14)</div>
-                    <div class="panel-tab" data-panel="toolbox">工具箱(1)</div>
+                    <div class="panel-tab" data-panel="toolbox">工具箱(0)</div>
                 </div>
 
                 <div class="legend-area answer-card-area">
@@ -434,7 +438,14 @@
                     </div>
                 </div>
 
-                <div class="toolbox-area" style="display: none;"></div>
+                <div class="toolbox-area" style="display: none;">
+                    <div class="toolbox-card">
+                        <div class="toolbox-title">工具箱笔记</div>
+                        <div class="toolbox-note-list" id="toolboxNoteList">
+                            <div class="toolbox-tip">暂无笔记</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="bottom-actions">
                     <button type="button" class="btn-submit">提交试卷</button>
                 </div>
@@ -598,6 +609,7 @@
                 if (noteText) {
                     span.setAttribute('data-note', noteText);
                     span.setAttribute('title', 'Note: ' + noteText);
+                    span.setAttribute('data-selected-text', span.textContent || range.toString());
                 }
 
                 try {
@@ -608,6 +620,38 @@
                     range.insertNode(span);
                 }
                 return true;
+            }
+
+            function refreshToolboxNotes() {
+                var notes = [];
+                $('.article-section .mark-note, .question-section .mark-note').each(function() {
+                    var note = $(this).attr('data-note');
+                    var selectedText = $(this).attr('data-selected-text') || $(this).text();
+                    if (note) {
+                        notes.push({
+                            note: note,
+                            selectedText: selectedText
+                        });
+                    }
+                });
+
+                var $noteList = $('#toolboxNoteList');
+                var $toolboxTab = $('.panel-tab[data-panel="toolbox"]');
+                $toolboxTab.text('工具箱(' + notes.length + ')');
+
+                if (!notes.length) {
+                    $noteList.html('<div class="toolbox-tip">暂无笔记</div>');
+                    return;
+                }
+
+                $noteList.html(notes.map(function(item, index) {
+                    var safeNote = $('<div>').text(item.note).html();
+                    var safeSelectedText = $('<div>').text(item.selectedText).html();
+                    var expandButton = item.selectedText.length > 24
+                        ? '<button type="button" class="toolbox-expand-btn" data-note-index="' + index + '">展开</button>'
+                        : '';
+                    return '<div class="toolbox-note-item" data-note-index="' + index + '"><div class="toolbox-note-text">' + safeNote + '</div><div class="toolbox-selected-text">' + safeSelectedText + '</div>' + expandButton + '</div>';
+                }).join(''));
             }
 
             $('.article-section, .question-section').on('mouseup keyup', function() {
@@ -670,6 +714,7 @@
                 pendingMarkRange = null;
                 markNoteModal.hide();
                 $markToolbar.hide();
+                refreshToolboxNotes();
             });
 
             $('.article-section, .question-section').on('click', '.mark-note', function() {
@@ -698,6 +743,15 @@
                     $('.answer-card-area').show();
                 }
             });
+
+            $('.toolbox-area').on('click', '.toolbox-expand-btn', function() {
+                var $btn = $(this);
+                var $item = $btn.closest('.toolbox-note-item');
+                $item.toggleClass('expanded');
+                $btn.text($item.hasClass('expanded') ? '收起' : '展开');
+            });
+
+            refreshToolboxNotes();
 
             $('.answer-input').on('input focus', function() {
                 var qnum = $(this).data('qnum');
