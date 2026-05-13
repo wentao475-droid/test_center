@@ -513,10 +513,15 @@
     $(document).ready(function() {
         var correctUsername = 'WXYF';
         var correctPassword = 'wxyf888666@';
+        var loginSessionKey = 'ieltsIndexLoginVerified';
 
         function unlockPage() {
             $('#loginOverlay').fadeOut(180);
             $('body').removeClass('page-locked');
+        }
+
+        if (sessionStorage.getItem(loginSessionKey) === 'true') {
+            unlockPage();
         }
 
         $('#loginForm').on('submit', function(e) {
@@ -525,6 +530,7 @@
             var password = $('#passwordInput').val();
 
             if (username === correctUsername && password === correctPassword) {
+                sessionStorage.setItem(loginSessionKey, 'true');
                 $('#loginError').text('');
                 unlockPage();
                 return;
