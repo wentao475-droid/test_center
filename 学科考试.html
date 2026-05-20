@@ -119,12 +119,54 @@
             margin-bottom: 40px;
         }
 
+        .task-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .task-time {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .task-question {
+            font-size: 14px;
+            line-height: 1.9;
+            color: #333;
+            margin-bottom: 18px;
+        }
+
+        .task-question strong {
+            display: block;
+            font-size: 17px;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .task-note {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+        }
+
         /* 中间作答区（选项） */
         .answer-section {
             flex: 1;
             padding: 40px 60px;
             overflow-y: auto;
             padding-right: 80px;
+        }
+
+        .question-panel,
+        .answer-panel {
+            display: none;
+        }
+
+        .question-panel.active,
+        .answer-panel.active {
+            display: block;
         }
         
         .option-item {
@@ -182,6 +224,95 @@
         .option-text {
             font-size: 18px;
             color: #333;
+        }
+
+        .response-card {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border: 1px solid #e8ebf0;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(15, 35, 95, 0.04);
+            overflow: hidden;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eef1f5;
+            background-color: #fbfcfe;
+            flex-shrink: 0;
+        }
+
+        .response-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2329;
+        }
+
+        .response-tip {
+            font-size: 13px;
+            color: #86909c;
+        }
+
+        .editor-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            padding: 0 20px 20px;
+        }
+
+        .editor-box {
+            flex: 1;
+            width: 100%;
+            resize: none;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            font-size: 15px;
+            line-height: 1.9;
+            color: #333;
+            outline: none;
+            box-shadow: none;
+            background-color: #fff;
+            min-height: 420px;
+        }
+
+        .editor-box:focus {
+            border-color: #165dff;
+            box-shadow: inset 0 0 0 1px rgba(22, 93, 255, 0.16);
+        }
+
+        .editor-footer {
+            border: 1px solid #dcdfe6;
+            border-top: none;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fbfcfe;
+            border-radius: 0 0 8px 8px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .word-count {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .word-count strong {
+            color: #333;
+        }
+
+        .editor-hint {
+            font-size: 13px;
+            color: #86909c;
         }
 
         /* 右侧侧边栏 */
@@ -439,43 +570,76 @@
         
         <!-- 左侧题目区 -->
         <div class="question-section">
-            <div class="question-type">1. 单选题 (共18题)</div>
-            
-            <div class="question-content">
-                Let \( f(x) = 4x^2 - 20x + 33 \). What are the coordinates of the minimum of \( y = \frac{1}{2}f\left(\frac{1}{2}x - 3\right) \)?
+            <div class="question-panel active" data-question="1">
+                <div class="question-type">1. 单选题 (共2题)</div>
+                <div class="question-content">
+                    Let \( f(x) = 4x^2 - 20x + 33 \). What are the coordinates of the minimum of \( y = \frac{1}{2}f\left(\frac{1}{2}x - 3\right) \)?
+                </div>
+            </div>
+
+            <div class="question-panel" data-question="2">
+                <div class="task-title">Writing Task 2</div>
+                <div class="task-time">You should spend about 40 minutes on this task.</div>
+                <div class="task-question">
+                    <strong>People are often motivated to deny the existence of problems if they disagree with the solutions to those problems.</strong>
+                    Explain what you think is meant by the statement.<br>
+                    Give a reasoned argument against the statement.<br>
+                    To what extent do you agree with the statement?
+                </div>
+                <div class="task-note">
+                    Write at least 750 words.
+                </div>
             </div>
         </div>
         
         <!-- 中间答题区（选项） -->
         <div class="answer-section">
-            <div class="option-item" data-value="A">
-                <div class="option-radio"></div>
-                <div class="option-label">A</div>
-                <div class="option-text">(11, 4)</div>
+            <div class="answer-panel active" data-question="1">
+                <div class="option-item" data-value="A">
+                    <div class="option-radio"></div>
+                    <div class="option-label">A</div>
+                    <div class="option-text">(11, 4)</div>
+                </div>
+                
+                <div class="option-item" data-value="B">
+                    <div class="option-radio"></div>
+                    <div class="option-label">B</div>
+                    <div class="option-text">(8, 4)</div>
+                </div>
+                
+                <div class="option-item" data-value="C">
+                    <div class="option-radio"></div>
+                    <div class="option-label">C</div>
+                    <div class="option-text">(5/2, 4)</div>
+                </div>
+                
+                <div class="option-item" data-value="D">
+                    <div class="option-radio"></div>
+                    <div class="option-label">D</div>
+                    <div class="option-text">(-1/4, 4)</div>
+                </div>
+                
+                <div class="option-item" data-value="E">
+                    <div class="option-radio"></div>
+                    <div class="option-label">E</div>
+                    <div class="option-text">(-7/4, 4)</div>
+                </div>
             </div>
-            
-            <div class="option-item" data-value="B">
-                <div class="option-radio"></div>
-                <div class="option-label">B</div>
-                <div class="option-text">(8, 4)</div>
-            </div>
-            
-            <div class="option-item" data-value="C">
-                <div class="option-radio"></div>
-                <div class="option-label">C</div>
-                <div class="option-text">(5/2, 4)</div>
-            </div>
-            
-            <div class="option-item" data-value="D">
-                <div class="option-radio"></div>
-                <div class="option-label">D</div>
-                <div class="option-text">(-1/4, 4)</div>
-            </div>
-            
-            <div class="option-item" data-value="E">
-                <div class="option-radio"></div>
-                <div class="option-label">E</div>
-                <div class="option-text">(-7/4, 4)</div>
+
+            <div class="answer-panel" data-question="2">
+                <div class="response-card">
+                    <div class="response-header">
+                        <div class="response-title">Write your answer here</div>
+                        <div class="response-tip">请使用英文完成作答</div>
+                    </div>
+                    <div class="editor-wrap">
+                        <textarea id="writingEditor" class="editor-box" placeholder="Start writing your response..."></textarea>
+                        <div class="editor-footer">
+                            <div class="word-count">Words: <strong id="wordCount">0</strong></div>
+                            <div class="editor-hint">建议先完成结构，再检查语法与用词。</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -496,7 +660,7 @@
             
             <div class="sidebar-panel">
                 <div class="panel-tabs">
-                    <div class="panel-tab active">答题卡(18)</div>
+                    <div class="panel-tab active">答题卡(2)</div>
                     <div class="panel-tab">工具箱(1)</div>
                 </div>
                 
@@ -509,9 +673,7 @@
                     </div>
                 </div>
                 
-                <div class="grid-area" id="answerGrid">
-                    <!-- JS 动态生成题号 -->
-                </div>
+                <div class="grid-area" id="answerGrid"></div>
                 
                 <div class="bottom-actions">
                     <button class="btn-submit">提交试卷</button>
@@ -525,10 +687,10 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            // 初始化答题卡 (1-18)
-            var totalQuestions = 18;
+            // 初始化答题卡 (1-2)
+            var totalQuestions = 2;
             var currentQuestion = 1;
-            var answers = {}; // 存储作答情况 {1: 'A', 2: 'B'}
+            var answers = {}; // 存储作答情况 {1: 'A', 2: 'text'}
             
             for (let i = 1; i <= totalQuestions; i++) {
                 $('#answerGrid').append('<div class="grid-item ' + (i === 1 ? 'current' : '') + '" data-num="' + i + '">' + i + '</div>');
@@ -536,6 +698,8 @@
             
             // 点击选项进行作答
             $('.option-item').on('click', function() {
+                if (currentQuestion !== 1) return;
+
                 // 移除其他选项的选中状态
                 $('.option-item').removeClass('selected');
                 // 给当前点击的选项添加选中状态
@@ -546,6 +710,20 @@
                 
                 // 更新答题卡状态
                 $('.grid-item[data-num="' + currentQuestion + '"]').addClass('answered');
+            });
+
+            $('#writingEditor').on('input', function() {
+                var text = $(this).val();
+                var trimmed = text.trim();
+                var count = trimmed ? trimmed.split(/\s+/).length : 0;
+                $('#wordCount').text(count);
+                answers[2] = text;
+
+                if (trimmed) {
+                    $('.grid-item[data-num="2"]').addClass('answered');
+                } else {
+                    $('.grid-item[data-num="2"]').removeClass('answered');
+                }
             });
             
             // 点击答题卡切换题目
@@ -582,12 +760,19 @@
                 $('.grid-item[data-num="' + currentQuestion + '"]').addClass('current');
                 
                 // 2. 更新题目序号显示
-                $('.question-type').text(currentQuestion + '. 单选题 (共18题)');
+                $('.question-panel').removeClass('active');
+                $('.answer-panel').removeClass('active');
+                $('.question-panel[data-question="' + currentQuestion + '"]').addClass('active');
+                $('.answer-panel[data-question="' + currentQuestion + '"]').addClass('active');
                 
-                // 3. 恢复当前题目的选中状态
-                $('.option-item').removeClass('selected');
-                if (answers[currentQuestion]) {
-                    $('.option-item[data-value="' + answers[currentQuestion] + '"]').addClass('selected');
+                // 3. 恢复当前题目的作答状态
+                if (currentQuestion === 1) {
+                    $('.option-item').removeClass('selected');
+                    if (answers[currentQuestion]) {
+                        $('.option-item[data-value="' + answers[currentQuestion] + '"]').addClass('selected');
+                    }
+                } else if (currentQuestion === 2) {
+                    $('#writingEditor').val(answers[2] || '');
                 }
                 
                 // 4. 更新左右箭头显示状态
