@@ -210,7 +210,7 @@
         </div>
         <div class="header-user">
             <span>Hi, 王一博</span>
-            <a href="index.html" class="logout-btn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            <a href="index.html" class="logout-btn" id="logoutBtn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
         </div>
     </header>
 
@@ -387,6 +387,13 @@
     
     <script>
         $(document).ready(function() {
+            $('#logoutBtn').on('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('examPlatformLoggedIn');
+                sessionStorage.removeItem('examPlatformUserName');
+                window.location.href = 'index.html';
+            });
+
             // 卡片展开收起交互
             $('.toggle-details').on('click', function() {
                 var $card = $(this).closest('.exam-section-card');
