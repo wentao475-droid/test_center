@@ -521,6 +521,7 @@
         .header-logo { color: var(--va-blue); font-size: 17px; font-weight: 700; }
         .header-user { color: var(--va-slate); font-size: 14px; }
         .logout-btn { color: var(--va-blue) !important; background-color: #edf3ff; border: 1px solid #d9e5ff; border-radius: 16px; padding: 4px 12px; font-weight: 600; }
+        .exam-context-pill { display: none; align-items: center; gap: 8px; margin-left: 12px; padding: 5px 12px; border-radius: 999px; background: #edf4ff; color: var(--va-blue); font-size: 13px; font-weight: 700; }
         .right-sidebar, .sidebar-section { width: 320px; background: #fff; border-left: 1px solid var(--va-border); box-shadow: none; padding: 14px 12px; }
         .status-bar, .status-row { margin-bottom: 10px; gap: 12px; font-size: 13px; }
         .net-speed { color: var(--va-ok); font-weight: 600; }
@@ -557,6 +558,7 @@
         <div class="header-logo">
             <i class="fa fa-graduation-cap" style="font-size: 24px;"></i>
             VISION ACADEMY 测评系统
+            <span class="exam-context-pill" id="examContextPill"></span>
         </div>
         <div class="header-user">
             <span>Hi, 王一博</span>
@@ -687,6 +689,22 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
+            var g5SessionKey = 'g5ExamSession';
+            var g5RecordKey = 'g5ExamRecord';
+            var urlParams = new URLSearchParams(window.location.search);
+            var isG5Flow = urlParams.get('flow') === 'g5' && !!sessionStorage.getItem(g5SessionKey);
+            var g5Session = isG5Flow ? JSON.parse(sessionStorage.getItem(g5SessionKey)) : null;
+
+            if (g5Session) {
+                var currentSubPaper = g5Session.subPapers[g5Session.currentIndex] || g5Session.subPapers[0];
+                $('#examContextPill')
+                    .text(g5Session.examName + ' / ' + currentSubPaper)
+                    .css('display', 'inline-flex');
+                $('.question-type').first().text('1. 单选题 (' + currentSubPaper + '子卷)');
+                $('.task-title').text(currentSubPaper + ' Writing Task');
+                $('.time-left').html('<i class="fa fa-clock-o"></i> 剩余时间: ' + (g5Session.duration || '120分钟'));
+            }
+
             // 初始化答题卡 (1-2)
             var totalQuestions = 2;
             var currentQuestion = 1;
@@ -747,6 +765,38 @@
             
             // 提交试卷
             $('.btn-submit').on('click', function() {
+                if (g5Session) {
+                    var currentName = g5Session.subPapers[g5Session.currentIndex];
+                    if (g5Session.completed.indexOf(currentName) === -1) {
+                        g5Session.completed.push(currentName);
+                    }
+
+                    if (g5Session.completed.length < g5Session.subPapers.length) {
+                        g5Session.currentIndex = g5Session.completed.length;
+                        sessionStorage.setItem(g5SessionKey, JSON.stringify(g5Session));
+                        alert(currentName + '子卷提交成功，即将进入子卷过渡页。');
+                        window.location.href = '休息页.html?flow=g5';
+                        return;
+                    }
+
+                    var record = {
+                        flow: 'g5',
+                        examName: g5Session.examName,
+                        round: g5Session.round,
+                        subjects: g5Session.subjects,
+                        subPapers: g5Session.subPapers,
+                        completedAt: new Date().toISOString(),
+                        durationText: g5Session.duration || '120分钟',
+                        score: '86',
+                        maxScore: '100'
+                    };
+                    sessionStorage.setItem(g5RecordKey, JSON.stringify(record));
+                    sessionStorage.removeItem(g5SessionKey);
+                    alert('全部子卷已提交，正在进入考试记录。');
+                    window.location.href = '考试记录.html?type=g5';
+                    return;
+                }
+
                 alert('试卷提交成功！');
                 window.location.href = '休息页.html';
             });

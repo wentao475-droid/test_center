@@ -122,6 +122,51 @@
             margin-top: 10px;
         }
 
+        .subpaper-status {
+            display: none;
+            margin: 0 0 20px;
+            padding: 16px;
+            border: 1px solid #e6ebf2;
+            border-radius: 10px;
+            background-color: #fff;
+            text-align: left;
+        }
+
+        .status-title {
+            margin-bottom: 12px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background-color: #f2f4f7;
+            color: #667085;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-chip.done {
+            background-color: #e9f8ef;
+            color: #2e9b55;
+        }
+
+        .status-chip.current {
+            background-color: #edf4ff;
+            color: #165dff;
+        }
+
         /* 立即进入考试按钮 */
         .btn-enter-exam {
             background-color: #165dff;
@@ -196,6 +241,11 @@
             <p class="next-subject">下一门科目：<span id="nextSubjectName">数学</span></p>
         </div>
 
+        <div class="subpaper-status" id="subpaperStatus">
+            <div class="status-title">子卷完成状态</div>
+            <div class="status-list" id="statusList"></div>
+        </div>
+
         <!-- 立即进入考试按钮 -->
         <button id="enterExamBtn" class="btn btn-enter-exam">
             <i class="fa fa-play-circle me-1"></i> 立即进入考试
@@ -218,13 +268,34 @@
             const NEXT_SUBJECT_NAME = "雅思阅读"; // 下一门科目名称
             const NEXT_EXAM_URL = "雅思考前确认.html"; // 下一门考试页面链接
             // =====================================================================
+            const urlParams = new URLSearchParams(window.location.search);
+            const isG5Flow = urlParams.get('flow') === 'g5';
+            const g5SessionRaw = sessionStorage.getItem('g5ExamSession');
+            const g5Session = isG5Flow && g5SessionRaw ? JSON.parse(g5SessionRaw) : null;
+            const nextSubjectName = g5Session ? g5Session.subPapers[g5Session.currentIndex] : NEXT_SUBJECT_NAME;
+            const nextExamUrl = g5Session ? '学科考试.html?flow=g5' : NEXT_EXAM_URL;
 
             // 初始化下一门科目名称
-            $('#nextSubjectName').text(NEXT_SUBJECT_NAME);
+            $('#nextSubjectName').text(nextSubjectName);
+
+            if (g5Session) {
+                $('.main-title').text('当前子卷考试已结束');
+                $('.sub-title').text(g5Session.examName + ' 正在进行中，请确认下一子卷状态后继续考试。');
+                $('.countdown-title').text('距离下一子卷考试开始还有');
+                $('#enterExamBtn').html('<i class="fa fa-play-circle me-1"></i> 进入下一子卷');
+                $('#subpaperStatus').show();
+                $('#statusList').html(g5Session.subPapers.map(function(item, index) {
+                    var isDone = g5Session.completed.indexOf(item) > -1;
+                    var isCurrent = index === g5Session.currentIndex;
+                    var cls = isDone ? 'done' : (isCurrent ? 'current' : '');
+                    var icon = isDone ? 'fa-check' : (isCurrent ? 'fa-play' : 'fa-clock-o');
+                    return '<span class="status-chip ' + cls + '"><i class="fa ' + icon + '"></i>' + item + '</span>';
+                }).join(''));
+            }
 
             // 点击“立即进入考试”按钮
             $('#enterExamBtn').on('click', function() {
-                window.location.href = NEXT_EXAM_URL;
+                window.location.href = nextExamUrl;
             });
 
             // 初始化倒计时
@@ -239,7 +310,7 @@
                 // 倒计时结束，跳转下一门考试
                 if (remainingSeconds <= 0) {
                     clearInterval(countdownTimer);
-                    window.location.href = NEXT_EXAM_URL;
+                    window.location.href = nextExamUrl;
                 }
             }, 1000);
 

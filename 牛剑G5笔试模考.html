@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牛剑G5笔试模考 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f3f5f9;
+            color: #344054;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #fff;
+            border-right: 1px solid #e9edf3;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #eef1f5;
+            color: #165dff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #165dff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-menu {
+            padding: 18px 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            margin-bottom: 6px;
+            color: #667085;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #edf4ff;
+            color: #165dff;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 18px;
+            padding: 0 28px;
+            background-color: #fff;
+            border-bottom: 1px solid #e9edf3;
+        }
+
+        .exam-select {
+            padding: 7px 34px 7px 14px;
+            border: 1px solid #d7ddea;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #344054;
+            outline: none;
+            appearance: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="%23667085" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        }
+
+        .user-info {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            color: #165dff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f0f5ff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .content-area {
+            padding: 30px 38px 48px;
+        }
+
+        .hero-card {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 28px 30px 24px;
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+            margin-bottom: 22px;
+        }
+
+        .hero-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            color: #f5aa28;
+            background-color: #fff8e8;
+            font-size: 42px;
+        }
+
+        .hero-title {
+            margin: 0 0 8px;
+            color: #2f3a56;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .hero-desc {
+            margin: 0;
+            color: #7b8498;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .round-tabs {
+            display: flex;
+            gap: 38px;
+            padding: 0 18px;
+            border-bottom: 1px solid #dfe6f0;
+            margin-bottom: 28px;
+        }
+
+        .round-tab {
+            position: relative;
+            padding: 16px 0;
+            color: #667085;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .round-tab.active {
+            color: #165dff;
+        }
+
+        .round-tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 3px;
+            background-color: #165dff;
+            border-radius: 3px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 24px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            margin: 0;
+            color: #2f3a56;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .section-time {
+            color: #475467;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .subject-filters {
+            display: inline-flex;
+            gap: 6px;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #e3e8f0;
+            border-radius: 999px;
+            margin-bottom: 26px;
+        }
+
+        .filter-btn {
+            min-width: 84px;
+            height: 38px;
+            border: none;
+            border-radius: 999px;
+            background-color: transparent;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background-color: #293b59;
+            color: #fff;
+        }
+
+        .paper-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1120px;
+        }
+
+        .paper-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 210px;
+            padding: 44px 36px 30px;
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 18px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+        }
+
+        .paper-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 6px;
+            background: var(--accent, #66b7ff);
+        }
+
+        .paper-title {
+            margin: 0 0 26px;
+            color: #30384f;
+            font-size: 24px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .paper-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8a94ab;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .subject-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 26px;
+        }
+
+        .subject-tag {
+            padding: 5px 10px;
+            border-radius: 999px;
+            background-color: #f1f5fb;
+            color: #667085;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .start-btn {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: 999px;
+            background-color: #293b59;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .start-btn:hover {
+            background-color: #1f2d45;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            display: none;
+            max-width: 1120px;
+            padding: 42px;
+            text-align: center;
+            color: #98a2b3;
+            background-color: #fff;
+            border: 1px dashed #d9e1ec;
+            border-radius: 16px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                padding: 22px;
+            }
+            .paper-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 0 16px;
+            }
+            .hero-card,
+            .section-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .round-tabs,
+            .subject-filters {
+                width: 100%;
+                overflow-x: auto;
+            }
+            .filter-btn {
+                min-width: 72px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fa fa-graduation-cap"></i></div>
+                <div>VISION ACADEMY</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="牛剑G5笔试模考.html" class="menu-item active"><i class="fa fa-home"></i><span>考试首页</span></a>
+                <a href="考试记录.html?type=g5" class="menu-item"><i class="fa fa-file-text-o"></i><span>考试记录</span></a>
+                <a href="学科考试.html" class="menu-item"><i class="fa fa-th-large"></i><span>真题案例</span></a>
+                <a href="#" class="menu-item"><i class="fa fa-user-o"></i><span>个人中心</span></a>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="header">
+                <select class="exam-select">
+                    <option>牛剑G5模考</option>
+                    <option>雅思考试</option>
+                </select>
+                <div class="user-info">Hi, 王一博</div>
+                <a href="index.html" class="logout-btn" id="logoutBtn"><i class="fa fa-user-circle-o"></i> 退出登录</a>
+            </header>
+
+            <div class="content-area">
+                <section class="hero-card">
+                    <div class="hero-icon"><i class="fa fa-trophy"></i></div>
+                    <div>
+                        <h1 class="hero-title">牛剑G5笔试模考</h1>
+                        <p class="hero-desc">按子卷组合完成全真模拟，系统会在每个子卷之间展示进度状态。</p>
+                    </div>
+                </section>
+
+                <nav class="round-tabs" aria-label="考试轮次">
+                    <div class="round-tab active" data-round="Round1">Round1</div>
+                    <div class="round-tab" data-round="Round2">Round2</div>
+                    <div class="round-tab" data-round="Round3">Round3</div>
+                    <div class="round-tab" data-round="Round4">Round4</div>
+                    <div class="round-tab" data-round="Round5">Round5</div>
+                    <div class="round-tab" data-round="Round6">Round6</div>
+                </nav>
+
+                <section>
+                    <div class="section-head">
+                        <h2 class="section-title" id="roundTitle">Round1</h2>
+                        <div class="section-time">考试开放时间：2026年6月12日</div>
+                    </div>
+
+                    <div class="subject-filters" aria-label="子卷科目筛选">
+                        <button class="filter-btn active" type="button" data-subject="全部">全部</button>
+                        <button class="filter-btn" type="button" data-subject="数学">数学</button>
+                        <button class="filter-btn" type="button" data-subject="物理">物理</button>
+                        <button class="filter-btn" type="button" data-subject="化学">化学</button>
+                        <button class="filter-btn" type="button" data-subject="生物">生物</button>
+                    </div>
+
+                    <div class="paper-grid" id="paperGrid"></div>
+                    <div class="empty-state" id="emptyState">当前筛选下暂无可参加的组合卷</div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        (function() {
+            var loginKey = 'examPlatformLoggedIn';
+            if (sessionStorage.getItem(loginKey) !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            var papers = [
+                { name: 'TMUA', duration: '150分钟', round: 'Round1', subjects: ['数学'], subPapers: ['数学1', '数学2'], accent: '#66b7ff' },
+                { name: 'ESAT 数学1+数学2+物理', duration: '120分钟', round: 'Round1', subjects: ['数学', '物理'], subPapers: ['数学1', '数学2', '物理'], accent: '#7467ff' },
+                { name: 'TARA', duration: '120分钟', round: 'Round1', subjects: ['数学'], subPapers: ['数学', '逻辑推理'], accent: '#4fd3d8' },
+                { name: 'ESAT 数学1+数学2+化学', duration: '120分钟', round: 'Round1', subjects: ['数学', '化学'], subPapers: ['数学1', '数学2', '化学'], accent: '#48d19b' },
+                { name: 'ESAT 数学1+物理+化学', duration: '120分钟', round: 'Round1', subjects: ['数学', '物理', '化学'], subPapers: ['数学1', '物理', '化学'], accent: '#ffb34f' },
+                { name: 'ESAT 数学1+生物+化学', duration: '120分钟', round: 'Round1', subjects: ['数学', '生物', '化学'], subPapers: ['数学1', '生物', '化学'], accent: '#ff7b7b' }
+            ];
+
+            var activeRound = 'Round1';
+            var activeSubject = '全部';
+            var grid = document.getElementById('paperGrid');
+            var emptyState = document.getElementById('emptyState');
+
+            function renderPapers() {
+                var visible = papers.filter(function(paper) {
+                    var roundMatched = paper.round === activeRound;
+                    var subjectMatched = activeSubject === '全部' || paper.subjects.indexOf(activeSubject) > -1;
+                    return roundMatched && subjectMatched;
+                });
+
+                grid.innerHTML = visible.map(function(paper, index) {
+                    return [
+                        '<article class="paper-card" style="--accent:' + paper.accent + '">',
+                        '<h3 class="paper-title">' + paper.name + '</h3>',
+                        '<div class="paper-meta"><i class="fa fa-clock-o"></i> 考试时长：' + paper.duration + '</div>',
+                        '<div class="subject-tags">' + paper.subPapers.map(function(item) {
+                            return '<span class="subject-tag">' + item + '</span>';
+                        }).join('') + '</div>',
+                        '<button class="start-btn" type="button" data-index="' + index + '">开始考试 <i class="fa fa-arrow-right"></i></button>',
+                        '</article>'
+                    ].join('');
+                }).join('');
+
+                emptyState.style.display = visible.length ? 'none' : 'block';
+
+                Array.prototype.forEach.call(document.querySelectorAll('.start-btn'), function(btn) {
+                    btn.addEventListener('click', function() {
+                        startPaper(visible[Number(btn.dataset.index)]);
+                    });
+                });
+            }
+
+            function startPaper(paper) {
+                var session = {
+                    flow: 'g5',
+                    examName: paper.name,
+                    round: paper.round,
+                    duration: paper.duration,
+                    subjects: paper.subjects,
+                    subPapers: paper.subPapers,
+                    currentIndex: 0,
+                    completed: [],
+                    startedAt: new Date().toISOString()
+                };
+
+                sessionStorage.setItem('g5ExamSession', JSON.stringify(session));
+                sessionStorage.removeItem('g5ExamRecord');
+                window.location.href = '学科考试.html?flow=g5';
+            }
+
+            Array.prototype.forEach.call(document.querySelectorAll('.round-tab'), function(tab) {
+                tab.addEventListener('click', function() {
+                    activeRound = tab.dataset.round;
+                    document.getElementById('roundTitle').textContent = activeRound;
+                    document.querySelectorAll('.round-tab').forEach(function(item) {
+                        item.classList.toggle('active', item === tab);
+                    });
+                    renderPapers();
+                });
+            });
+
+            Array.prototype.forEach.call(document.querySelectorAll('.filter-btn'), function(btn) {
+                btn.addEventListener('click', function() {
+                    activeSubject = btn.dataset.subject;
+                    document.querySelectorAll('.filter-btn').forEach(function(item) {
+                        item.classList.toggle('active', item === btn);
+                    });
+                    renderPapers();
+                });
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem(loginKey);
+                sessionStorage.removeItem('examPlatformUserName');
+                window.location.href = 'index.html';
+            });
+
+            renderPapers();
+        })();
+    </script>
+</body>
+</html>
