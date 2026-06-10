@@ -192,6 +192,88 @@
             display: block;
         }
 
+        .overall-card {
+            display: grid;
+            grid-template-columns: minmax(160px, 220px) 1fr;
+            gap: 18px;
+            align-items: stretch;
+            background-color: #fff;
+            border: 1px solid #e7ecf3;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+            padding: 18px 22px;
+            margin-bottom: 14px;
+        }
+
+        .overall-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background-color: #edf7fb;
+            border: 1px solid #d7eaf2;
+            padding: 16px 12px;
+        }
+
+        .overall-value {
+            color: #3594c6;
+            font-size: 42px;
+            line-height: 1;
+            font-weight: 800;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .overall-label {
+            color: #4f9fc4;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .overall-detail {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .overall-title {
+            color: #344054;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .overall-subjects {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .overall-subject {
+            border: 1px solid #e7ecf3;
+            border-radius: 12px;
+            background-color: #fbfcfe;
+            padding: 12px 10px;
+            text-align: center;
+        }
+
+        .overall-subject-score {
+            display: block;
+            color: #344054;
+            font-size: 20px;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .overall-subject-name {
+            color: #98a2b3;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
         .summary-card,
         .analysis-card {
             background-color: #fff;
@@ -478,6 +560,148 @@
             line-height: 1.8;
         }
 
+        .objective-card {
+            background-color: #fff;
+            border: 1px solid #dfe5ee;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+            margin-bottom: 12px;
+            padding: 24px 26px;
+            overflow: hidden;
+        }
+
+        .objective-title {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            color: #1f2a44;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .objective-count {
+            color: #344054;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .objective-source {
+            color: #344054;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .objective-prompt {
+            color: #475467;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 22px;
+        }
+
+        .student-answer-title {
+            color: #1f2a44;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .option-card {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #dfe5ee;
+            border-radius: 10px;
+            padding: 16px 18px;
+            color: #101828;
+            background-color: #fff;
+        }
+
+        .option-card.wrong {
+            border-color: #ff8d8d;
+            background-color: #fff3f3;
+            color: #ef4444;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #d0d5dd;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .option-card.wrong .option-radio {
+            border-color: #ff6b6b;
+        }
+
+        .option-card.wrong .option-radio::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background-color: #ff6b6b;
+        }
+
+        .option-key {
+            min-width: 18px;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .option-content {
+            flex: 1;
+            min-width: 0;
+            font-size: 15px;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        .your-answer {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            color: #ff4d4f;
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .wrong-x {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .correct-block {
+            background-color: #f3f5fa;
+            border-radius: 10px;
+            padding: 18px 22px;
+        }
+
+        .correct-title {
+            color: #1f2a44;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .correct-value {
+            color: #1f2a44;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
         .score-tags {
             display: flex;
             gap: 10px;
@@ -591,12 +815,27 @@
             .header {
                 padding: 0 16px;
             }
+            .overall-card {
+                grid-template-columns: 1fr;
+            }
+            .overall-subjects {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
             .stats-row {
                 gap: 18px;
                 flex-wrap: wrap;
             }
             .question-grid {
                 grid-template-columns: repeat(4, 44px);
+            }
+            .option-card {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+            .your-answer {
+                width: 100%;
+                justify-content: flex-end;
+                margin-left: 0;
             }
         }
 
@@ -614,6 +853,15 @@
             .writing-metrics,
             .speaking-metrics {
                 grid-template-columns: 1fr;
+            }
+            .overall-subjects {
+                grid-template-columns: 1fr;
+            }
+            .objective-card {
+                padding: 20px 16px;
+            }
+            .option-card {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -662,6 +910,34 @@
                     </a>
                 </div>
 
+                <section class="overall-card" aria-label="雅思总分">
+                    <div class="overall-main">
+                        <div class="overall-value">7.0</div>
+                        <div class="overall-label">Overall Band</div>
+                    </div>
+                    <div class="overall-detail">
+                        <div class="overall-title">雅思总分与四科小分</div>
+                        <div class="overall-subjects">
+                            <div class="overall-subject">
+                                <span class="overall-subject-score">7.5</span>
+                                <span class="overall-subject-name">Listening</span>
+                            </div>
+                            <div class="overall-subject">
+                                <span class="overall-subject-score">7.0</span>
+                                <span class="overall-subject-name">Reading</span>
+                            </div>
+                            <div class="overall-subject">
+                                <span class="overall-subject-score">6.5</span>
+                                <span class="overall-subject-name">Writing</span>
+                            </div>
+                            <div class="overall-subject">
+                                <span class="overall-subject-score">7.0</span>
+                                <span class="overall-subject-name">Speaking</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <div class="paper-tabs">
                     <div class="paper-tab active" data-target="listening-panel">听力</div>
                     <div class="paper-tab" data-target="reading-panel">阅读</div>
@@ -706,70 +982,60 @@
                         </div>
                     </div>
 
-                    <div class="analysis-card">
-                        <div class="analysis-inner">
-                            <div class="question-title">1. 填空题（Part 1）</div>
-                            <div class="question-text">
-                                Complete the notes below. Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.
+                    <div class="objective-card">
+                        <div class="objective-title">
+                            <span>1. 填空题</span>
+                            <span class="objective-count">（Part 1）</span>
+                        </div>
+                        <div class="objective-source">IELTS Listening Practice - Section 1</div>
+                        <div class="objective-prompt">
+                            Complete the notes below. Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.<br>
+                            题目：Postcode
+                        </div>
+                        <div class="student-answer-title">学生作答：</div>
+                        <div class="option-list">
+                            <div class="option-card wrong">
+                                <span class="option-radio"></span>
+                                <span class="option-key">1</span>
+                                <span class="option-content">1910</span>
+                                <span class="your-answer">你的答案 <span class="wrong-x">×</span></span>
                             </div>
-                            <div class="answer-caption">题目：Postcode</div>
-                            <div class="answer-option wrong">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">1</span>
-                                <span class="answer-text">学生答案：1910</span>
-                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
-                            </div>
-                            <div class="answer-option correct">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">1</span>
-                                <span class="answer-text">正确答案：1190</span>
-                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
-                            </div>
-                            <div class="analysis-actions">
-                                <button class="toggle-btn" data-target="#listening-analysis-1" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-up"></i> 收起解析</button>
-                            </div>
-                            <div class="answer-analysis-wrapper show" id="listening-analysis-1">
-                                <div class="analysis-section-title">解析</div>
-                                <div class="analysis-text">
-                                    本题考查数字辨音。录音中先提到一个干扰数字，随后说出最终的 postcode，正确答案应为 `1190`。做听力填空时需特别注意说话人更正信息。
-                                </div>
-                            </div>
+                        </div>
+                        <div class="correct-block">
+                            <div class="correct-title">正确答案：</div>
+                            <div class="correct-value">1190</div>
                         </div>
                     </div>
 
-                    <div class="analysis-card">
-                        <div class="analysis-inner">
-                            <div class="question-title">6. 单选题（Part 2）</div>
-                            <div class="question-text">
-                                What is the main reason the museum changed its opening hours?
+                    <div class="objective-card">
+                        <div class="objective-title">
+                            <span>6. 单选题</span>
+                            <span class="objective-count">（Part 2）</span>
+                        </div>
+                        <div class="objective-source">IELTS Listening Practice - Museum Opening Hours</div>
+                        <div class="objective-prompt">What is the main reason the museum changed its opening hours?</div>
+                        <div class="student-answer-title">学生作答：</div>
+                        <div class="option-list">
+                            <div class="option-card wrong">
+                                <span class="option-radio"></span>
+                                <span class="option-key">A</span>
+                                <span class="option-content">To reduce staff costs</span>
+                                <span class="your-answer">你的答案 <span class="wrong-x">×</span></span>
                             </div>
-                            <div class="choice-list">
-                                <div class="choice-line"><span class="choice-key">A</span><span>To reduce staff costs</span></div>
-                                <div class="choice-line"><span class="choice-key">B</span><span>To meet visitor demand</span></div>
-                                <div class="choice-line"><span class="choice-key">C</span><span>To prepare for renovation</span></div>
+                            <div class="option-card">
+                                <span class="option-radio"></span>
+                                <span class="option-key">B</span>
+                                <span class="option-content">To meet visitor demand</span>
                             </div>
-                            <div class="answer-caption">学生作答：</div>
-                            <div class="answer-option wrong">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">A</span>
-                                <span class="answer-text">To reduce staff costs</span>
-                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                            <div class="option-card">
+                                <span class="option-radio"></span>
+                                <span class="option-key">C</span>
+                                <span class="option-content">To prepare for renovation</span>
                             </div>
-                            <div class="answer-option correct">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">B</span>
-                                <span class="answer-text">To meet visitor demand</span>
-                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
-                            </div>
-                            <div class="analysis-actions">
-                                <button class="toggle-btn" data-target="#listening-analysis-2" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-down"></i> 展开解析</button>
-                            </div>
-                            <div class="answer-analysis-wrapper" id="listening-analysis-2">
-                                <div class="analysis-section-title">解析</div>
-                                <div class="analysis-text">
-                                    题干问的是“主要原因”，录音先提到了人员安排问题，但随后明确说明调整开放时间是为了适应更多访客需求，因此答案选 B。
-                                </div>
-                            </div>
+                        </div>
+                        <div class="correct-block">
+                            <div class="correct-title">正确答案：</div>
+                            <div class="correct-value">B</div>
                         </div>
                     </div>
                 </section>
@@ -811,59 +1077,61 @@
                         </div>
                     </div>
 
-                    <div class="analysis-card">
-                        <div class="analysis-inner">
-                            <div class="question-title">4. 判断题（Passage 1）</div>
-                            <div class="question-text">
-                                The writer believes that frozen food was first commercially successful in Australia.
+                    <div class="objective-card">
+                        <div class="objective-title">
+                            <span>4. 判断题</span>
+                            <span class="objective-count">（Passage 1）</span>
+                        </div>
+                        <div class="objective-source">IELTS Reading Passage - Frozen Food</div>
+                        <div class="objective-prompt">
+                            The writer believes that frozen food was first commercially successful in Australia.
+                        </div>
+                        <div class="student-answer-title">学生作答：</div>
+                        <div class="option-list">
+                            <div class="option-card wrong">
+                                <span class="option-radio"></span>
+                                <span class="option-key">T</span>
+                                <span class="option-content">TRUE</span>
+                                <span class="your-answer">你的答案 <span class="wrong-x">×</span></span>
                             </div>
-                            <div class="answer-caption">学生作答：</div>
-                            <div class="answer-option wrong">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">T</span>
-                                <span class="answer-text">TRUE</span>
-                                <span class="answer-status">你的答案 <i class="fa fa-close"></i></span>
+                            <div class="option-card">
+                                <span class="option-radio"></span>
+                                <span class="option-key">F</span>
+                                <span class="option-content">FALSE</span>
                             </div>
-                            <div class="answer-option correct">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">N</span>
-                                <span class="answer-text">NOT GIVEN</span>
-                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
+                            <div class="option-card">
+                                <span class="option-radio"></span>
+                                <span class="option-key">N</span>
+                                <span class="option-content">NOT GIVEN</span>
                             </div>
-                            <div class="analysis-actions">
-                                <button class="toggle-btn" data-target="#reading-analysis-1" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-up"></i> 收起解析</button>
-                            </div>
-                            <div class="answer-analysis-wrapper show" id="reading-analysis-1">
-                                <div class="analysis-section-title">解析</div>
-                                <div class="analysis-text">
-                                    文章只说澳大利亚人发明了机械制冷并运输了冷冻肉类，但没有明确说明“首次商业成功”发生在澳大利亚，因此应选 `NOT GIVEN`。
-                                </div>
-                            </div>
+                        </div>
+                        <div class="correct-block">
+                            <div class="correct-title">正确答案：</div>
+                            <div class="correct-value">N</div>
                         </div>
                     </div>
 
-                    <div class="analysis-card">
-                        <div class="analysis-inner">
-                            <div class="question-title">10. 填空题（Passage 2）</div>
-                            <div class="question-text">
-                                Complete the summary. Choose <strong>ONE WORD ONLY</strong> from the passage.
+                    <div class="objective-card">
+                        <div class="objective-title">
+                            <span>10. 填空题</span>
+                            <span class="objective-count">（Passage 2）</span>
+                        </div>
+                        <div class="objective-source">IELTS Reading Passage - Domestic Freezing</div>
+                        <div class="objective-prompt">
+                            Complete the summary. Choose <strong>ONE WORD ONLY</strong> from the passage.<br>
+                            题目：A large number of homes now had a ____.
+                        </div>
+                        <div class="student-answer-title">学生作答：</div>
+                        <div class="option-list">
+                            <div class="option-card">
+                                <span class="option-radio"></span>
+                                <span class="option-key">10</span>
+                                <span class="option-content">freezer</span>
                             </div>
-                            <div class="answer-caption">题目：A large number of homes now had a ____.</div>
-                            <div class="answer-option correct">
-                                <span class="answer-bullet"></span>
-                                <span class="answer-key">10</span>
-                                <span class="answer-text">学生答案：freezer</span>
-                                <span class="answer-status">正确答案 <i class="fa fa-check"></i></span>
-                            </div>
-                            <div class="analysis-actions">
-                                <button class="toggle-btn" data-target="#reading-analysis-2" data-expand-label="展开解析" data-collapse-label="收起解析"><i class="fa fa-angle-down"></i> 展开解析</button>
-                            </div>
-                            <div class="answer-analysis-wrapper" id="reading-analysis-2">
-                                <div class="analysis-section-title">解析</div>
-                                <div class="analysis-text">
-                                    回到原文定位到 1950s 的信息，可见 “a large number of homes now had a freezer”，因此答案直接为 `freezer`。
-                                </div>
-                            </div>
+                        </div>
+                        <div class="correct-block">
+                            <div class="correct-title">正确答案：</div>
+                            <div class="correct-value">freezer</div>
                         </div>
                     </div>
                 </section>

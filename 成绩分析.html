@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -711,36 +711,12 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            var params = new URLSearchParams(window.location.search);
-            var recordRaw = sessionStorage.getItem('g5ExamRecord');
-            var record = recordRaw ? JSON.parse(recordRaw) : null;
-            var isG5Context = params.get('type') === 'g5' || !!record;
-            var homeMenuLink = document.getElementById('homeMenuLink');
-
-            if (isG5Context && homeMenuLink) {
-                homeMenuLink.href = '牛剑G5笔试模考.html';
-            }
-
             $('#logoutBtn').on('click', function(e) {
                 e.preventDefault();
                 sessionStorage.removeItem('examPlatformLoggedIn');
                 sessionStorage.removeItem('examPlatformUserName');
                 window.location.href = 'index.html';
             });
-
-            if (record && params.get('type') === 'g5') {
-                $('.exam-select').html('<option>牛剑G5模考</option><option>雅思考试</option>');
-                $('.paper-tab').eq(0).text(record.examName).addClass('active');
-                $('.paper-tab').eq(1).text(record.round || 'Round1');
-                $('.paper-tab').eq(2).text((record.subPapers || []).join(' / '));
-                $('.summary-title').text(record.examName + ' 成绩分析');
-                $('.stat-item').eq(0).find('.stat-value').text(record.score + '%');
-                $('.stat-item').eq(0).find('.stat-label').text('综合正确率');
-                $('.stat-item').eq(1).find('.stat-value').text(record.durationText);
-                $('.stat-item').eq(1).find('.stat-label').text('组合卷时长');
-                $('.stat-item').eq(2).find('.stat-value').text(record.score + '/' + record.maxScore);
-                $('.stat-item').eq(2).find('.stat-label').text('组合卷分数');
-            }
 
             function setToggleState($btn, expanded) {
                 if (expanded) {

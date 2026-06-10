@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -572,70 +572,17 @@
     </div>
     <script>
         (function() {
-            var params = new URLSearchParams(window.location.search);
-            var recordRaw = sessionStorage.getItem('g5ExamRecord');
-            var record = recordRaw ? JSON.parse(recordRaw) : null;
-            var isG5Context = params.get('type') === 'g5' || !!record;
-            var homeMenuLink = document.getElementById('homeMenuLink');
-
-            if (isG5Context && homeMenuLink) {
-                homeMenuLink.href = '牛剑G5笔试模考.html';
-            }
-
             var logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    sessionStorage.removeItem('examPlatformLoggedIn');
-                    sessionStorage.removeItem('examPlatformUserName');
-                    window.location.href = 'index.html';
-                });
-            }
-
-            if (!record || params.get('type') !== 'g5') {
+            if (!logoutBtn) {
                 return;
             }
 
-            var completedDate = new Date(record.completedAt);
-            var dateText = completedDate.getFullYear() + '-' +
-                String(completedDate.getMonth() + 1).padStart(2, '0') + '-' +
-                String(completedDate.getDate()).padStart(2, '0');
-            var subjects = (record.subPapers || []).join(' / ');
-            var content = document.querySelector('.content-area');
-            var topBar = document.querySelector('.top-bar');
-            var section = document.createElement('section');
-            section.className = 'month-section';
-            section.innerHTML = [
-                '<h2 class="month-title">刚刚完成</h2>',
-                '<div class="record-grid">',
-                '<article class="record-card">',
-                '<div class="record-header">',
-                '<div class="record-meta">',
-                '<div class="record-title-row">',
-                '<div class="record-subject">牛剑G5</div>',
-                '<div class="record-level">' + record.examName + '</div>',
-                '</div>',
-                '<div class="meta-list">',
-                '<div class="meta-item"><i class="fa fa-calendar-o"></i><span class="meta-label">考试日期</span><span class="meta-value">' + dateText + '</span></div>',
-                '<div class="meta-item"><i class="fa fa-clock-o"></i><span class="meta-label">考试耗时</span><span class="meta-value">' + record.durationText + '</span></div>',
-                '<div class="meta-item"><i class="fa fa-list-ul"></i><span class="meta-label">子卷组合</span><span class="meta-value">' + subjects + '</span></div>',
-                '</div>',
-                '</div>',
-                '<div class="score-wrap">',
-                '<div class="score-panel"><div class="score-top"><div class="score-value">' + record.score + '</div></div><div class="score-bottom">测试得分</div></div>',
-                '<div class="score-range">满分 ' + record.maxScore + '</div>',
-                '</div>',
-                '</div>',
-                '<a href="成绩分析.html?type=g5" class="detail-btn">查看详情 <i class="fa fa-angle-right"></i></a>',
-                '</article>',
-                '</div>'
-            ].join('');
-
-            content.insertBefore(section, topBar.nextElementSibling);
-            var select = document.querySelector('.exam-select');
-            if (select) {
-                select.innerHTML = '<option>牛剑G5模考</option><option>雅思考试</option>';
-            }
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('examPlatformLoggedIn');
+                sessionStorage.removeItem('examPlatformUserName');
+                window.location.href = 'index.html';
+            });
         })();
     </script>
 </body>

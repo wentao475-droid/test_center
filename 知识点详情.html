@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识点详情 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #eff1f5;
+            color: #344054;
+        }
+
+        .page-wrap {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 28px 18px 40px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 36px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid #d4dae8;
+            color: #667085;
+            background: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 68px;
+            height: 36px;
+            border-radius: 999px;
+            background: #2f4269;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 0 16px;
+        }
+
+        .detail-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e7ecf3;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(16, 24, 40, 0.05);
+            padding: 24px;
+        }
+
+        .detail-title {
+            font-size: 28px;
+            line-height: 1.3;
+            font-weight: 900;
+            color: #2c3a53;
+            margin-bottom: 14px;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: #eef2f8;
+            color: #536684;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .section-block {
+            border-top: 1px solid #edf1f5;
+            padding-top: 18px;
+            margin-top: 18px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .section-text {
+            font-size: 14px;
+            line-height: 1.95;
+            color: #667085;
+            font-weight: 700;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: #f1f5fb;
+            color: #536684;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .tip-card {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 1px solid #e7ecf3;
+            background: #fbfcfe;
+        }
+
+        .tip-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #344054;
+            font-size: 14px;
+        }
+
+        .tip-card p {
+            margin: 0;
+            color: #667085;
+            line-height: 1.9;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .page-wrap {
+                padding: 18px 14px 30px;
+            }
+
+            .detail-card {
+                padding: 18px;
+            }
+
+            .detail-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="top-bar">
+            <a href="javascript:history.back()" class="btn-back"><i class="fa fa-angle-left"></i> 返回</a>
+            <div class="score-pill" id="topicScore">--%</div>
+        </div>
+
+        <section class="detail-card">
+            <div class="detail-title" id="topicTitle">知识点详情</div>
+            <div class="meta-row" id="topicMetaRow"></div>
+
+            <div class="section-block">
+                <div class="section-title">核心内容摘要</div>
+                <div class="section-text" id="topicSummary">暂无知识点摘要。</div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">关联知识点标签</div>
+                <div class="tag-list" id="topicTags"></div>
+            </div>
+
+            <div class="tip-card">
+                <strong>学习建议</strong>
+                <p id="topicTip">建议结合当前知识点在图表中的掌握率，优先复盘对应错题，并与关联知识点一起做成组训练。</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        (function() {
+            var loginKey = 'examPlatformLoggedIn';
+            if (sessionStorage.getItem(loginKey) !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            var params = new URLSearchParams(window.location.search);
+            var topic = params.get('topic') || '知识点详情';
+            var score = params.get('score') || '--';
+            var summary = params.get('summary') || '暂无知识点摘要。';
+            var tagsText = params.get('tags') || '';
+            var exam = params.get('exam') || '';
+            var subject = params.get('subject') || '';
+            var paper = params.get('paper') || '';
+            var tags = tagsText ? tagsText.split('|').filter(Boolean) : ['Knowledge', 'Practice', 'Review'];
+
+            document.title = topic + ' - 知识点详情';
+            document.getElementById('topicTitle').textContent = topic;
+            document.getElementById('topicScore').textContent = score + '%';
+            document.getElementById('topicSummary').textContent = summary;
+
+            var metaItems = [];
+            if (exam) metaItems.push('考试：' + exam);
+            if (subject) metaItems.push('科目：' + subject);
+            if (paper) metaItems.push('试卷：' + paper);
+            metaItems.push('掌握率：' + score + '%');
+
+            document.getElementById('topicMetaRow').innerHTML = metaItems.map(function(item) {
+                return '<span class="meta-chip">' + item + '</span>';
+            }).join('');
+
+            document.getElementById('topicTags').innerHTML = tags.map(function(tag) {
+                return '<span class="tag-item">' + tag + '</span>';
+            }).join('');
+
+            document.getElementById('topicTip').textContent = '建议先围绕“' + topic + '”完成定向复盘，再结合 ' + tags.join(' / ') + ' 做关联巩固，以提升该模块的稳定得分能力。';
+        })();
+    </script>
+</body>
+</html>
