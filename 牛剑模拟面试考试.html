@@ -133,7 +133,7 @@
     <script>
         (function() {
             var loginKey = 'examPlatformLoggedIn';
-            if (sessionStorage.getItem(loginKey) !== 'true') { window.location.href = 'index.html'; return; }
+            if (localStorage.getItem(loginKey) !== 'true') { window.location.href = 'index.html'; return; }
             var setup;
             try { setup = JSON.parse(sessionStorage.getItem('oxbridgeInterviewSetup') || 'null'); } catch (e) { setup = null; }
             if (!setup || sessionStorage.getItem('oxbridgeInterviewConfirmed') !== 'true') { window.location.href = '牛剑模拟面试首页.html'; return; }
@@ -178,7 +178,7 @@
             document.getElementById('submitBtn').onclick = function() { showModal('submitModal'); };
             document.getElementById('cancelSubmitBtn').onclick = function() { hideModal('submitModal'); };
             document.getElementById('confirmSubmitBtn').onclick = function() { writeBoards(); var record = { examName:setup.examName || '牛剑模拟面试', date:new Date().toLocaleDateString('zh-CN'), duration:document.getElementById('audioTimer').textContent, university:setup.university || 'University of Cambridge', major:setup.major || 'Economics (L100)', status:'已完成', completedAt:new Date().toISOString() }; sessionStorage.setItem(keys.record, JSON.stringify(record)); sessionStorage.removeItem(keys.session); sessionStorage.removeItem('oxbridgeInterviewConfirmed'); window.location.href = '牛剑模拟面试考试记录.html?new=1'; };
-            document.getElementById('logoutBtn').onclick = function(event) { event.preventDefault(); sessionStorage.removeItem(loginKey); sessionStorage.removeItem('examPlatformUserName'); window.location.href = 'index.html'; };
+            document.getElementById('logoutBtn').onclick = function(event) { event.preventDefault(); localStorage.removeItem(loginKey); localStorage.removeItem('examPlatformUserName'); window.location.href = 'index.html'; };
             function updateTimers() { var elapsed = Math.floor((Date.now() - startedAt) / 1000); var minutes = String(Math.floor(elapsed / 60)).padStart(2, '0'), seconds = String(elapsed % 60).padStart(2, '0'); document.getElementById('audioTimer').textContent = minutes + ':' + seconds; var remain = Math.max(0, durationSeconds - elapsed); document.getElementById('examTimer').textContent = String(Math.floor(remain / 60)).padStart(2, '0') + ':' + String(remain % 60).padStart(2, '0'); }
             window.addEventListener('storage', function(event) { if (event.key === keys.uploads) { renderUpload(); renderNav(); } });
             window.addEventListener('resize', function() { setTimeout(resizeCanvas, 50); });

@@ -44,7 +44,7 @@
     <script>
         (function() {
             var loginKey='examPlatformLoggedIn';
-            if (sessionStorage.getItem(loginKey)!=='true') { window.location.href='index.html'; return; }
+            if (localStorage.getItem(loginKey)!=='true') { window.location.href='index.html'; return; }
 
             // This static list mirrors the shared backend card contract used by written exams.
             var papers = [
@@ -98,7 +98,7 @@
                 window.location.href='考前确认.html?flow=interview';
             }
 
-            document.getElementById('logoutBtn').onclick=function(event) { event.preventDefault(); sessionStorage.removeItem(loginKey); sessionStorage.removeItem('examPlatformUserName'); window.location.href='index.html'; };
+            document.getElementById('logoutBtn').onclick=function(event) { event.preventDefault(); localStorage.removeItem(loginKey); localStorage.removeItem('examPlatformUserName'); window.location.href='index.html'; };
             render();
         })();
     </script>

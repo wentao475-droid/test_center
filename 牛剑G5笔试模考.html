@@ -433,7 +433,7 @@
     <script>
         (function() {
             var loginKey = 'examPlatformLoggedIn';
-            if (sessionStorage.getItem(loginKey) !== 'true') {
+            if (localStorage.getItem(loginKey) !== 'true') {
                 window.location.href = 'index.html';
                 return;
             }
@@ -522,8 +522,8 @@
 
             document.getElementById('logoutBtn').addEventListener('click', function(e) {
                 e.preventDefault();
-                sessionStorage.removeItem(loginKey);
-                sessionStorage.removeItem('examPlatformUserName');
+                localStorage.removeItem(loginKey);
+                localStorage.removeItem('examPlatformUserName');
                 window.location.href = 'index.html';
             });
 

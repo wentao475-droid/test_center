@@ -403,7 +403,7 @@
     $(document).ready(function() {
         var loginSessionKey = 'examPlatformLoggedIn';
 
-        if (sessionStorage.getItem(loginSessionKey) !== 'true') {
+        if (localStorage.getItem(loginSessionKey) !== 'true') {
             window.location.href = 'index.html';
             return;
         }
@@ -422,8 +422,8 @@
 
         $('#logoutBtn').on('click', function(e) {
             e.preventDefault();
-            sessionStorage.removeItem(loginSessionKey);
-            sessionStorage.removeItem('examPlatformUserName');
+            localStorage.removeItem(loginSessionKey);
+            localStorage.removeItem('examPlatformUserName');
             window.location.href = 'index.html';
         });
     });

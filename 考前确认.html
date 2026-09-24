@@ -1454,7 +1454,7 @@
 
     $(document).ready(function() {
         // 获取并显示登录考生姓名
-        const storedUser = sessionStorage.getItem('examPlatformUserName');
+        const storedUser = localStorage.getItem('examPlatformUserName');
         if (storedUser) {
             $('#userNameGreeting').text('Hi, ' + storedUser);
             $('#cardStudentName').text(storedUser);
@@ -1477,8 +1477,8 @@
         // 退出登录
         $('#logoutBtn').on('click', function(e) {
             e.preventDefault();
-            sessionStorage.removeItem('examPlatformLoggedIn');
-            sessionStorage.removeItem('examPlatformUserName');
+            localStorage.removeItem('examPlatformLoggedIn');
+            localStorage.removeItem('examPlatformUserName');
             window.location.href = 'index.html';
         });
     });

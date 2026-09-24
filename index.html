@@ -338,6 +338,87 @@
             font-size: 12px;
         }
 
+        .registration-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(220px, 1.08fr);
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .registration-list {
+            display: grid;
+            align-content: start;
+            gap: 9px;
+        }
+
+        .registration-exam {
+            min-height: 48px;
+            padding: 0 15px;
+            border: 1px solid var(--line);
+            border-left: 4px solid transparent;
+            border-radius: 8px;
+            background: #fff;
+            color: #596780;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        .registration-exam:hover,
+        .registration-exam:focus-visible {
+            border-color: #b7cfea;
+            color: var(--primary-dark);
+            outline: none;
+        }
+
+        .registration-exam.active {
+            border-color: #b7cfea;
+            border-left-color: var(--accent, var(--primary));
+            background: #f4f8fe;
+            color: #244d82;
+        }
+
+        .registration-qr-panel {
+            display: flex;
+            min-height: 240px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fbfcfe;
+        }
+
+        .registration-qr-title {
+            margin: 0 0 5px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .registration-qr-copy {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .registration-qr-panel .registration-qrcode {
+            width: 154px;
+            height: 154px;
+            margin: 16px auto 0;
+        }
+
+        .registration-qr-panel .registration-qrcode img,
+        .registration-qr-panel .registration-qrcode canvas {
+            max-width: 132px;
+            max-height: 132px;
+        }
+
         .welcome {
             margin: 0 0 12px;
             text-align: center;
@@ -454,6 +535,10 @@
                 gap: 10px;
             }
 
+            .registration-layout {
+                grid-template-columns: 1fr;
+            }
+
             .title {
                 font-size: 32px;
                 margin-bottom: 34px;
@@ -534,27 +619,28 @@
                     <section class="registration-view" id="registrationView" hidden aria-label="考试报名">
                         <h1 class="registration-heading">考试报名</h1>
                         <p class="registration-copy">选择考试类型，扫码完成报名。</p>
-                        <div class="registration-grid" id="registrationGrid"></div>
+                        <div class="registration-layout"><div class="registration-list" id="registrationGrid" aria-label="考试类型"></div><div class="registration-qr-panel"><h2 class="registration-qr-title" id="registrationQrTitle">牛剑G5笔试模考</h2><p class="registration-qr-copy">请使用微信扫描二维码完成报名</p><div class="registration-qrcode" id="registrationQrcode" aria-label="报名二维码"></div></div></div>
                     </section>
                 </div>
             </div>
         </section>
     </main>
 
-    <div class="registration-modal" id="registrationModal" hidden role="dialog" aria-modal="true" aria-labelledby="registrationModalTitle">
-        <div class="registration-dialog">
-            <button class="modal-close" id="modalCloseBtn" type="button" aria-label="关闭报名二维码"><i class="fa fa-times"></i></button>
-            <h2 id="registrationModalTitle">考试报名</h2>
-            <p>请使用微信扫描二维码，进入对应考试的报名页面。</p>
-            <div class="registration-qrcode" id="registrationQrcode" aria-label="报名二维码"></div>
-            <div class="registration-note"><i class="fa fa-mobile"></i> 报名信息以扫码页面为准</div>
-        </div>
-    </div>
-
     <script>
         (function() {
             var loginKey = 'examPlatformLoggedIn';
             var userKey = 'examPlatformUserName';
+
+            // Keep an existing temporary login valid after the persistence upgrade.
+            if (localStorage.getItem(loginKey) !== 'true' && sessionStorage.getItem(loginKey) === 'true') {
+                localStorage.setItem(loginKey, 'true');
+                localStorage.setItem(userKey, sessionStorage.getItem(userKey) || '王一博');
+            }
+            if (localStorage.getItem(loginKey) === 'true') {
+                window.location.href = '考试入口.html';
+                return;
+            }
+
             var modeConfig = {
                 ticket: {
                     primary: '请输入报考人姓名',
@@ -582,10 +668,9 @@
             var loginView = document.getElementById('loginView');
             var registrationView = document.getElementById('registrationView');
             var portalButtons = document.querySelectorAll('.portal-switch-btn');
-            var registrationModal = document.getElementById('registrationModal');
             var registrationQrcode = document.getElementById('registrationQrcode');
-            var registrationModalTitle = document.getElementById('registrationModalTitle');
-            var lastFocusedElement = null;
+            var registrationQrTitle = document.getElementById('registrationQrTitle');
+            var selectedRegistrationExam = null;
             var registrationExams = [
                 { id:'g5-written', name:'牛剑G5笔试模考', description:'牛剑G5笔试全真模拟', icon:'fa-graduation-cap', accent:'#4b8ff0', registrationUrl:'vision-exam://registration?exam=g5-written' },
                 { id:'g5-interview', name:'牛剑模拟面试', description:'牛津剑桥申请面试全真模拟', icon:'fa-comments-o', accent:'#6c68e9', registrationUrl:'vision-exam://registration?exam=g5-interview' },
@@ -615,13 +700,14 @@
 
             function renderRegistrationExams() {
                 document.getElementById('registrationGrid').innerHTML = registrationExams.map(function(exam) {
-                    return '<button class="registration-card" type="button" data-exam-id="' + exam.id + '" style="--accent:' + exam.accent + '"><i class="fa ' + exam.icon + '"></i><strong>' + exam.name + '</strong><span>' + exam.description + '</span></button>';
+                    return '<button class="registration-exam" type="button" data-exam-id="' + exam.id + '" style="--accent:' + exam.accent + '">' + exam.name + '</button>';
                 }).join('');
-                document.querySelectorAll('.registration-card').forEach(function(card) {
+                document.querySelectorAll('.registration-exam').forEach(function(card) {
                     card.addEventListener('click', function() {
-                        openRegistrationModal(registrationExams.filter(function(exam) { return exam.id === card.dataset.examId; })[0]);
+                        selectRegistrationExam(registrationExams.filter(function(exam) { return exam.id === card.dataset.examId; })[0]);
                     });
                 });
+                selectRegistrationExam(registrationExams[0]);
             }
 
             function setView(view) {
@@ -637,42 +723,29 @@
                 if (isLogin) {
                     primaryInput.focus();
                 } else {
-                    registrationView.querySelector('.registration-card').focus();
+                    registrationView.querySelector('.registration-exam').focus();
                 }
             }
 
-            function openRegistrationModal(exam) {
+            function selectRegistrationExam(exam) {
                 if (!exam) return;
-                lastFocusedElement = document.activeElement;
-                registrationModalTitle.textContent = exam.name + '报名';
+                selectedRegistrationExam = exam;
+                registrationQrTitle.textContent = exam.name;
                 registrationQrcode.innerHTML = '';
                 if (window.QRCode) {
-                    new QRCode(registrationQrcode, { text:exam.registrationUrl, width:172, height:172, colorDark:'#233b61', colorLight:'#ffffff' });
+                    new QRCode(registrationQrcode, { text:exam.registrationUrl, width:132, height:132, colorDark:'#233b61', colorLight:'#ffffff' });
                 } else {
                     registrationQrcode.textContent = '报名二维码暂不可用';
                 }
-                registrationModal.hidden = false;
-                document.getElementById('modalCloseBtn').focus();
-            }
-
-            function closeRegistrationModal() {
-                registrationModal.hidden = true;
-                registrationQrcode.innerHTML = '';
-                if (lastFocusedElement) lastFocusedElement.focus();
+                document.querySelectorAll('.registration-exam').forEach(function(card) {
+                    card.classList.toggle('active', card.dataset.examId === selectedRegistrationExam.id);
+                });
             }
 
             portalButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
                     setView(button.dataset.view);
                 });
-            });
-
-            document.getElementById('modalCloseBtn').addEventListener('click', closeRegistrationModal);
-            registrationModal.addEventListener('click', function(event) {
-                if (event.target === registrationModal) closeRegistrationModal();
-            });
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && !registrationModal.hidden) closeRegistrationModal();
             });
 
             document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -687,8 +760,8 @@
                     return;
                 }
 
-                sessionStorage.setItem(loginKey, 'true');
-                sessionStorage.setItem(userKey, activeMode === 'ticket' ? primary : '王一博');
+                localStorage.setItem(loginKey, 'true');
+                localStorage.setItem(userKey, activeMode === 'ticket' ? primary : '王一博');
                 window.location.href = '考试入口.html';
             });
 

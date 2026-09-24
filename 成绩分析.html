@@ -713,8 +713,8 @@
         $(document).ready(function() {
             $('#logoutBtn').on('click', function(e) {
                 e.preventDefault();
-                sessionStorage.removeItem('examPlatformLoggedIn');
-                sessionStorage.removeItem('examPlatformUserName');
+                localStorage.removeItem('examPlatformLoggedIn');
+                localStorage.removeItem('examPlatformUserName');
                 window.location.href = 'index.html';
             });
 
