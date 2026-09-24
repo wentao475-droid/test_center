@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -269,24 +269,35 @@
             const NEXT_EXAM_URL = "雅思考前确认.html"; // 下一门考试页面链接
             // =====================================================================
             const urlParams = new URLSearchParams(window.location.search);
-            const isG5Flow = urlParams.get('flow') === 'g5';
-            const g5SessionRaw = sessionStorage.getItem('g5ExamSession');
-            const g5Session = isG5Flow && g5SessionRaw ? JSON.parse(g5SessionRaw) : null;
-            const nextSubjectName = g5Session ? g5Session.subPapers[g5Session.currentIndex] : NEXT_SUBJECT_NAME;
-            const nextExamUrl = g5Session ? '学科考试.html?flow=g5' : NEXT_EXAM_URL;
+            const flowConfigs = {
+                g5: {
+                    sessionKey: 'g5ExamSession',
+                    nextExamUrl: '学科考试.html?flow=g5'
+                },
+                amc: {
+                    sessionKey: 'amcExamSession',
+                    nextExamUrl: '学科考试.html?flow=amc'
+                }
+            };
+            const activeFlow = urlParams.get('flow');
+            const flowConfig = flowConfigs[activeFlow] || null;
+            const groupedSessionRaw = flowConfig ? sessionStorage.getItem(flowConfig.sessionKey) : null;
+            const groupedSession = flowConfig && groupedSessionRaw ? JSON.parse(groupedSessionRaw) : null;
+            const nextSubjectName = groupedSession ? groupedSession.subPapers[groupedSession.currentIndex] : NEXT_SUBJECT_NAME;
+            const nextExamUrl = groupedSession ? flowConfig.nextExamUrl : NEXT_EXAM_URL;
 
             // 初始化下一门科目名称
             $('#nextSubjectName').text(nextSubjectName);
 
-            if (g5Session) {
+            if (groupedSession) {
                 $('.main-title').text('当前子卷考试已结束');
-                $('.sub-title').text(g5Session.examName + ' 正在进行中，请确认下一子卷状态后继续考试。');
+                $('.sub-title').text(groupedSession.examName + ' 正在进行中，请确认下一子卷状态后继续考试。');
                 $('.countdown-title').text('距离下一子卷考试开始还有');
                 $('#enterExamBtn').html('<i class="fa fa-play-circle me-1"></i> 进入下一子卷');
                 $('#subpaperStatus').show();
-                $('#statusList').html(g5Session.subPapers.map(function(item, index) {
-                    var isDone = g5Session.completed.indexOf(item) > -1;
-                    var isCurrent = index === g5Session.currentIndex;
+                $('#statusList').html(groupedSession.subPapers.map(function(item, index) {
+                    var isDone = groupedSession.completed.indexOf(item) > -1;
+                    var isCurrent = index === groupedSession.currentIndex;
                     var cls = isDone ? 'done' : (isCurrent ? 'current' : '');
                     var icon = isDone ? 'fa-check' : (isCurrent ? 'fa-play' : 'fa-clock-o');
                     return '<span class="status-chip ' + cls + '"><i class="fa ' + icon + '"></i>' + item + '</span>';

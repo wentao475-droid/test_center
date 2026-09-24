@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -689,20 +689,35 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            var g5SessionKey = 'g5ExamSession';
-            var g5RecordKey = 'g5ExamRecord';
             var urlParams = new URLSearchParams(window.location.search);
-            var isG5Flow = urlParams.get('flow') === 'g5' && !!sessionStorage.getItem(g5SessionKey);
-            var g5Session = isG5Flow ? JSON.parse(sessionStorage.getItem(g5SessionKey)) : null;
+            var flowConfigs = {
+                g5: {
+                    sessionKey: 'g5ExamSession',
+                    recordKey: 'g5ExamRecord',
+                    breakUrl: '休息页.html?flow=g5',
+                    recordUrl: '牛剑G5考试记录.html'
+                },
+                amc: {
+                    sessionKey: 'amcExamSession',
+                    recordKey: 'amcExamRecord',
+                    breakUrl: '休息页.html?flow=amc',
+                    recordUrl: 'AMC竞赛模考考试记录.html'
+                }
+            };
+            var activeFlow = urlParams.get('flow');
+            var flowConfig = flowConfigs[activeFlow] || null;
+            var groupSession = flowConfig && sessionStorage.getItem(flowConfig.sessionKey)
+                ? JSON.parse(sessionStorage.getItem(flowConfig.sessionKey))
+                : null;
 
-            if (g5Session) {
-                var currentSubPaper = g5Session.subPapers[g5Session.currentIndex] || g5Session.subPapers[0];
+            if (groupSession) {
+                var currentSubPaper = groupSession.subPapers[groupSession.currentIndex] || groupSession.subPapers[0];
                 $('#examContextPill')
-                    .text(g5Session.examName + ' / ' + currentSubPaper)
+                    .text(groupSession.examName + ' / ' + currentSubPaper)
                     .css('display', 'inline-flex');
                 $('.question-type').first().text('1. 单选题 (' + currentSubPaper + '子卷)');
                 $('.task-title').text(currentSubPaper + ' Writing Task');
-                $('.time-left').html('<i class="fa fa-clock-o"></i> 剩余时间: ' + (g5Session.duration || '120分钟'));
+                $('.time-left').html('<i class="fa fa-clock-o"></i> 剩余时间: ' + (groupSession.duration || '120分钟'));
             }
 
             // 初始化答题卡 (1-2)
@@ -765,35 +780,35 @@
             
             // 提交试卷
             $('.btn-submit').on('click', function() {
-                if (g5Session) {
-                    var currentName = g5Session.subPapers[g5Session.currentIndex];
-                    if (g5Session.completed.indexOf(currentName) === -1) {
-                        g5Session.completed.push(currentName);
+                if (groupSession && flowConfig) {
+                    var currentName = groupSession.subPapers[groupSession.currentIndex];
+                    if (groupSession.completed.indexOf(currentName) === -1) {
+                        groupSession.completed.push(currentName);
                     }
 
-                    if (g5Session.completed.length < g5Session.subPapers.length) {
-                        g5Session.currentIndex = g5Session.completed.length;
-                        sessionStorage.setItem(g5SessionKey, JSON.stringify(g5Session));
+                    if (groupSession.completed.length < groupSession.subPapers.length) {
+                        groupSession.currentIndex = groupSession.completed.length;
+                        sessionStorage.setItem(flowConfig.sessionKey, JSON.stringify(groupSession));
                         alert(currentName + '子卷提交成功，即将进入子卷过渡页。');
-                        window.location.href = '休息页.html?flow=g5';
+                        window.location.href = flowConfig.breakUrl;
                         return;
                     }
 
                     var record = {
-                        flow: 'g5',
-                        examName: g5Session.examName,
-                        round: g5Session.round,
-                        subjects: g5Session.subjects,
-                        subPapers: g5Session.subPapers,
+                        flow: activeFlow,
+                        examName: groupSession.examName,
+                        round: groupSession.round,
+                        subjects: groupSession.subjects,
+                        subPapers: groupSession.subPapers,
                         completedAt: new Date().toISOString(),
-                        durationText: g5Session.duration || '120分钟',
+                        durationText: groupSession.duration || '120分钟',
                         score: '86',
                         maxScore: '100'
                     };
-                    sessionStorage.setItem(g5RecordKey, JSON.stringify(record));
-                    sessionStorage.removeItem(g5SessionKey);
+                    sessionStorage.setItem(flowConfig.recordKey, JSON.stringify(record));
+                    sessionStorage.removeItem(flowConfig.sessionKey);
                     alert('全部子卷已提交，正在进入考试记录。');
-                    window.location.href = '牛剑G5考试记录.html';
+                    window.location.href = flowConfig.recordUrl;
                     return;
                 }
 

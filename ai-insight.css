@@ -1,0 +1,115 @@
+.ai-insight-card {
+    margin: 22px 0;
+    padding: 20px 22px;
+    background: #ffffff;
+    border: 1px solid #dce2ec;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+}
+
+.ai-insight-head {
+    margin-bottom: 16px;
+}
+
+.ai-insight-title {
+    color: #253858;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.ai-insight-subtitle {
+    margin-top: 6px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ai-insight-overview {
+    padding: 16px 18px;
+    border: 1px solid #e9eef6;
+    border-radius: 10px;
+    background: #f7fbff;
+}
+
+.ai-insight-overview-title,
+.ai-insight-block-title,
+.ai-insight-advice-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #344d79;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.ai-insight-overview-title i,
+.ai-insight-block-title i,
+.ai-insight-advice-title i {
+    color: #4f84e8;
+    font-size: 14px;
+}
+
+.ai-insight-overview-text {
+    margin-top: 10px;
+    color: #475467;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.ai-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.ai-insight-block,
+.ai-insight-advice {
+    min-width: 0;
+    padding: 16px 18px;
+    border: 1px solid #e9eef6;
+    border-radius: 10px;
+    background: #fbfdff;
+}
+
+.ai-insight-block-text {
+    margin-top: 11px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.ai-insight-advice {
+    margin: 0;
+}
+
+.ai-insight-advice-list {
+    margin: 10px 0 0;
+    padding-left: 20px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.ai-insight-advice-list li + li {
+    margin-top: 5px;
+}
+
+@media (max-width: 760px) {
+    .ai-insight-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .ai-insight-card {
+        padding: 16px;
+    }
+
+    .ai-insight-overview,
+    .ai-insight-block,
+    .ai-insight-advice {
+        padding: 14px;
+    }
+}

@@ -1,0 +1,192 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: 
+      - generic [ref=e7]: VISION ACADEMY
+    - generic [ref=e8]:
+      - link " 考试首页" [ref=e9] [cursor=pointer]:
+        - /url: index.html
+        - generic [ref=e10]: 
+        - generic [ref=e11]: 考试首页
+      - link " 考试记录" [ref=e12] [cursor=pointer]:
+        - /url: 考试记录.html
+        - generic [ref=e13]: 
+        - generic [ref=e14]: 考试记录
+      - link " 真题案例" [ref=e15] [cursor=pointer]:
+        - /url: 学科考试.html
+        - generic [ref=e16]: 
+        - generic [ref=e17]: 真题案例
+      - link " 个人中心" [ref=e18] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e19]: 
+        - generic [ref=e20]: 个人中心
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - combobox [ref=e23]:
+        - option "雅思成绩分析" [selected]
+        - option "雅思模考"
+      - generic [ref=e24]: Hi, 王一博
+      - link " 退出登录" [ref=e25] [cursor=pointer]:
+        - /url: index.html
+        - generic [ref=e26]: 
+        - text: 退出登录
+    - generic [ref=e27]:
+      - link " 返回" [ref=e29] [cursor=pointer]:
+        - /url: javascript:history.back()
+        - generic [ref=e30]: 
+        - text: 返回
+      - region "雅思总分" [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]: "7.0"
+          - generic [ref=e34]: Overall Band
+        - generic [ref=e35]:
+          - generic [ref=e36]: 雅思总分与四科小分
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - generic [ref=e39]: "7.5"
+              - text: Listening
+            - generic [ref=e40]:
+              - generic [ref=e41]: "7.0"
+              - text: Reading
+            - generic [ref=e42]:
+              - generic [ref=e43]: "6.5"
+              - text: Writing
+            - generic [ref=e44]:
+              - generic [ref=e45]: "7.0"
+              - text: Speaking
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - generic [ref=e206]:
+            - generic [ref=e207]: 
+            - text: 雅思目标进度
+          - button "修改目标" [ref=e208] [cursor=pointer]
+        - generic [ref=e209]:
+          - text: 目标总分
+          - strong [ref=e210]: "7.5"
+          - generic [ref=e211]: "|"
+          - text: 距计划考试还有
+          - strong [ref=e212]: 21 天
+          - generic [ref=e213]: "|"
+          - text: 本次总分
+          - strong [ref=e214]: "7.0"
+        - generic [ref=e215]:
+          - generic [ref=e216]:
+            - text: 听力
+            - strong [ref=e217]: 7.5 → 8.0
+          - generic [ref=e218]:
+            - text: 阅读
+            - strong [ref=e219]: 7.0 → 7.5
+          - generic [ref=e220]:
+            - text: 写作
+            - strong [ref=e221]: 6.5 → 7.5
+          - generic [ref=e222]:
+            - text: 口语
+            - strong [ref=e223]: 7.0 → 7.5
+        - generic [ref=e224]: 当前最需关注：写作，目标差距 +1.0。目标会随之后的模考持续校准。
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: AI综合评价
+          - generic [ref=e49]: 基于本次成绩、作答过程与能力表现生成
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: 
+            - text: 整体表现
+          - generic [ref=e53]: 本次雅思成绩呈现“输入项领先、输出项仍有提升空间”的结构。听力稳定拉高总分，写作是目前最需要优先补强的科目。
+        - generic [ref=e54]:
+          - article [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: 
+              - text: 主要优势
+            - generic [ref=e58]: Overall Band 为 7.0，听力 7.5 是优势项；阅读和口语保持稳定，写作低于整体表现。
+          - article [ref=e59]:
+            - generic [ref=e60]:
+              - generic [ref=e61]: 
+              - text: 主要问题
+            - generic [ref=e62]: 客观题输入项的完成质量较好，主观输出项在表达展开与语言准确度上仍有拉分空间。
+          - article [ref=e63]:
+            - generic [ref=e64]:
+              - generic [ref=e65]: 
+              - text: 错题建议
+            - generic [ref=e66]: 信息理解和提取能力较强，输出型能力需要通过结构化表达与针对性反馈继续拉齐。
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: 
+              - text: 学习建议
+            - list [ref=e70]:
+              - listitem [ref=e71]: 写作优先完成高频论证结构与语法准确度训练，每周至少复盘两篇限时作文。
+              - listitem [ref=e72]: 保持听力和阅读的限时套题节奏，把优势项稳定转化为 Overall 的保障。
+      - generic [ref=e73]:
+        - generic [ref=e74] [cursor=pointer]: 听力
+        - generic [ref=e75] [cursor=pointer]: 阅读
+        - generic [ref=e76] [cursor=pointer]: 写作
+        - generic [ref=e77] [cursor=pointer]: 口语
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]: Listening Analysis
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: "7.5"
+              - text: Band 分
+            - generic [ref=e84]:
+              - generic [ref=e85]: 31/40
+              - text: 正确题数
+            - generic [ref=e86]:
+              - generic [ref=e87]: 00:28
+              - text: 用时
+          - generic [ref=e89]:
+            - generic [ref=e90]: 未答题
+            - generic [ref=e92]: 错误题
+            - generic [ref=e94]: 答对题
+          - generic [ref=e96]:
+            - generic [ref=e97] [cursor=pointer]: "1"
+            - generic [ref=e98] [cursor=pointer]: "2"
+            - generic [ref=e99] [cursor=pointer]: "3"
+            - generic [ref=e100] [cursor=pointer]: "4"
+            - generic [ref=e101] [cursor=pointer]: "5"
+            - generic [ref=e102] [cursor=pointer]: "6"
+            - generic [ref=e103] [cursor=pointer]: "7"
+            - generic [ref=e104] [cursor=pointer]: "8"
+            - generic [ref=e105] [cursor=pointer]: "9"
+            - generic [ref=e106] [cursor=pointer]: "10"
+        - generic [ref=e107]:
+          - generic [ref=e108]:
+            - generic [ref=e109]: 1. 填空题
+            - generic [ref=e110]: （Part 1）
+          - generic [ref=e111]: IELTS Listening Practice - Section 1
+          - generic [ref=e112]:
+            - text: Complete the notes below. Write
+            - strong [ref=e113]: ONE WORD AND/OR A NUMBER
+            - text: for each answer. 题目：Postcode
+          - generic [ref=e114]: 学生作答：
+          - generic [ref=e116]:
+            - generic [ref=e118]: "1"
+            - generic [ref=e119]: "1910"
+            - generic [ref=e120]:
+              - text: 你的答案
+              - generic [ref=e121]: ×
+          - generic [ref=e122]:
+            - generic [ref=e123]: 正确答案：
+            - generic [ref=e124]: "1190"
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: 6. 单选题
+            - generic [ref=e128]: （Part 2）
+          - generic [ref=e129]: IELTS Listening Practice - Museum Opening Hours
+          - generic [ref=e130]: What is the main reason the museum changed its opening hours?
+          - generic [ref=e131]: 学生作答：
+          - generic [ref=e132]:
+            - generic [ref=e133]:
+              - generic [ref=e135]: A
+              - generic [ref=e136]: To reduce staff costs
+              - generic [ref=e137]:
+                - text: 你的答案
+                - generic [ref=e138]: ×
+            - generic [ref=e139]:
+              - generic [ref=e141]: B
+              - generic [ref=e142]: To meet visitor demand
+            - generic [ref=e143]:
+              - generic [ref=e145]: C
+              - generic [ref=e146]: To prepare for renovation
+          - generic [ref=e147]:
+            - generic [ref=e148]: 正确答案：
+            - generic [ref=e149]: B

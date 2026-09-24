@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMC竞赛模考成绩分析 - VISION ACADEMY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="ai-insight.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #eff1f5;
+            color: #344054;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 230px;
+            background: #fff;
+            border-right: 1px solid #dce1eb;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            height: 104px;
+            padding: 22px 28px;
+            border-bottom: 1px solid #eef1f5;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 2px solid #2159b7;
+            color: #2159b7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: #2159b7;
+            font-weight: 800;
+            line-height: 1.2;
+            font-size: 14px;
+        }
+
+        .sidebar-menu {
+            padding: 42px 12px 18px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #7c8598;
+            text-decoration: none;
+            border-radius: 12px;
+            padding: 16px 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .menu-item.active {
+            background: #e8edf6;
+            color: #3466d6;
+        }
+
+        .menu-item:hover {
+            background: #f6f8fc;
+            color: #344054;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            height: 56px;
+            background: #fff;
+            border-bottom: 1px solid #dce1eb;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 18px;
+            padding: 0 28px;
+            flex-shrink: 0;
+        }
+
+        .exam-select {
+            min-width: 124px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid #cfd7e6;
+            padding: 0 38px 0 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #344054;
+            appearance: none;
+            outline: none;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path fill="%23667085" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+        }
+
+        .user-info {
+            font-size: 14px;
+            color: #344054;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            color: #3466d6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 22px 28px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid #d4dae8;
+            color: #667085;
+            background: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .section-card {
+            background: #fff;
+            border: 1px solid #dce2ec;
+            border-radius: 16px;
+            box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
+            margin-bottom: 14px;
+            padding: 18px 20px;
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #2c3a53;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .base-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+            max-width: 620px;
+            margin: 0 auto;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-value {
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 8px;
+        }
+
+        .info-value.emphasis {
+            font-size: 18px;
+            font-weight: 900;
+            color: #2c3a53;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #98a2b3;
+            font-weight: 700;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 12px;
+        }
+
+        .section-text {
+            font-size: 14px;
+            line-height: 1.95;
+            color: #667085;
+        }
+
+        .section-text strong {
+            color: #344054;
+        }
+
+        .analysis-card {
+            padding: 18px 24px 26px;
+        }
+
+        .analysis-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .subject-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .subject-tabs-bar {
+            display: flex;
+            justify-content: center;
+            margin: 0 0 14px;
+        }
+
+        .paper-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .paper-tabs.hidden {
+            display: none;
+        }
+
+        .detail-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 8px 6px 16px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #e3e8f0;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .detail-switch {
+            position: relative;
+            width: 46px;
+            height: 28px;
+            border-radius: 999px;
+            background: #2f4269;
+            border: none;
+            transition: background 0.2s ease;
+        }
+
+        .detail-switch::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 22px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            transition: left 0.2s ease;
+        }
+
+        .detail-switch.off {
+            background: #d7dde7;
+        }
+
+        .detail-switch.off::after {
+            left: 4px;
+        }
+
+        .subject-tab {
+            min-width: 74px;
+            height: 38px;
+            border: none;
+            border-radius: 999px;
+            background: #f3f5f8;
+            color: #98a2b3;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 0 18px;
+            transition: all 0.2s ease;
+        }
+
+        .subject-tab.active,
+        .paper-tab.active {
+            background: #2f4269;
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(47, 66, 105, 0.14);
+        }
+
+        .paper-tab {
+            min-width: 96px;
+            height: 38px;
+            border: 1px solid #e3e8f0;
+            border-radius: 999px;
+            background: #fff;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 0 22px;
+            transition: all 0.2s ease;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 72px;
+            margin: 8px 0 18px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 84px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 24px;
+            font-weight: 900;
+            color: #3a4260;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .stat-value small {
+            font-size: 0.68em;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #98a2b3;
+            font-weight: 700;
+        }
+
+        .analysis-divider {
+            border-top: 1px solid #edf1f5;
+            margin: 0 0 16px;
+        }
+
+        .legend-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #98a2b3;
+            font-weight: 700;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .legend-dot.empty {
+            background: #d8dce4;
+        }
+
+        .legend-dot.wrong {
+            background: #f4c5c5;
+        }
+
+        .legend-dot.correct {
+            background: #cfeedd;
+        }
+
+        .question-map {
+            display: grid;
+            grid-template-columns: repeat(10, 52px);
+            justify-content: center;
+            gap: 10px 12px;
+            margin-bottom: 18px;
+        }
+
+        .question-chip {
+            width: 52px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .question-chip.correct {
+            background: #dff5e3;
+            color: #2ea85b;
+        }
+
+        .question-chip.wrong {
+            background: #ffe4e4;
+            color: #ef6666;
+        }
+
+        .question-chip.empty {
+            background: #f3f5f8;
+            color: #98a2b3;
+        }
+
+        .time-efficiency-section {
+            margin-top: 26px;
+            padding: 20px 22px 6px;
+            border-radius: 20px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 250, 255, 0.92) 100%);
+            border: 1px solid rgba(197, 207, 222, 0.72);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 16px 32px rgba(47, 66, 105, 0.06);
+        }
+
+        .time-efficiency-head {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 22px;
+            margin-bottom: 14px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(47, 66, 105, 0.1);
+        }
+
+        .time-efficiency-copy {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .time-efficiency-title {
+            font-size: 22px;
+            line-height: 1.1;
+            font-weight: 900;
+            color: #233655;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .time-efficiency-desc {
+            max-width: 720px;
+            font-size: 13px;
+            line-height: 1.75;
+            color: #52627f;
+            font-weight: 700;
+        }
+
+        .time-efficiency-summary {
+            min-width: 280px;
+            max-width: 320px;
+            padding: 18px 18px 16px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 247, 252, 0.92) 100%);
+            border: 1px solid rgba(206, 216, 229, 0.86);
+            box-shadow: 0 14px 28px rgba(47, 66, 105, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-efficiency-summary::after {
+            content: '';
+            position: absolute;
+            inset: auto -32px -42px auto;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79, 111, 168, 0.14) 0%, rgba(79, 111, 168, 0) 72%);
+        }
+
+        .time-efficiency-summary-label {
+            font-size: 12px;
+            color: #667085;
+            font-weight: 800;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-efficiency-summary-value {
+            font-size: 34px;
+            line-height: 1;
+            color: #233655;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-efficiency-summary-note {
+            font-size: 12px;
+            line-height: 1.75;
+            color: #98a2b3;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-efficiency-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .time-efficiency-panel {
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(226, 233, 243, 0.92);
+            padding: 18px 18px 16px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        }
+
+        .time-panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .time-panel-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #233655;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .time-panel-desc {
+            font-size: 12px;
+            line-height: 1.75;
+            color: #61708c;
+            font-weight: 700;
+        }
+
+        .time-panel-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0 10px;
+            min-height: 28px;
+            background: #f2f5fa;
+            color: #475467;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .time-table-wrap {
+            overflow-x: auto;
+        }
+
+        .time-efficiency-table {
+            width: 100%;
+            min-width: 760px;
+            border-collapse: collapse;
+        }
+
+        .time-efficiency-table th,
+        .time-efficiency-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #edf1f6;
+            font-size: 12px;
+            line-height: 1.6;
+            vertical-align: top;
+        }
+
+        .time-efficiency-table th {
+            color: #667085;
+            font-weight: 800;
+            background: #f8fafc;
+        }
+
+        .time-efficiency-table td {
+            color: #344054;
+            font-weight: 700;
+        }
+
+        .time-efficiency-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .time-row-weak {
+            background: rgba(255, 236, 236, 0.55);
+        }
+
+        .time-row-strong {
+            background: rgba(235, 248, 240, 0.6);
+        }
+
+        .time-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .time-type-badge.gold {
+            background: #ecfdf3;
+            color: #027a48;
+        }
+
+        .time-type-badge.trap {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .time-type-badge.blackhole {
+            background: #fef2f2;
+            color: #b42318;
+        }
+
+        .time-type-badge.leak {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .time-persona-card {
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #dce2ec;
+            background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+        }
+
+        .time-persona-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: #2f4269;
+            margin-bottom: 10px;
+        }
+
+        .time-persona-desc {
+            margin-bottom: 10px;
+            color: #667085;
+            font-size: 13px;
+            line-height: 1.8;
+            font-weight: 700;
+        }
+
+        .time-persona-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #475467;
+            font-size: 13px;
+            line-height: 1.9;
+            font-weight: 700;
+        }
+
+        .time-persona-list li + li {
+            margin-top: 4px;
+        }
+
+        .time-legend-copy {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 10px;
+            margin-bottom: 16px;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(248, 250, 252, 0.84);
+            border: 1px solid rgba(225, 231, 240, 0.96);
+        }
+
+        .time-legend-text {
+            font-size: 12px;
+            line-height: 1.7;
+            color: #667085;
+            font-weight: 700;
+            margin-right: 2px;
+        }
+
+        .time-persona-notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-persona-note {
+            margin-top: 10px;
+            padding: 0;
+            border-radius: 999px;
+            background: rgba(248, 250, 252, 0.86);
+            border: 1px solid rgba(225, 231, 240, 0.96);
+        }
+
+        .time-persona-notes .time-persona-note {
+            margin-top: 0;
+        }
+
+        .time-persona-note.active {
+            background: #eef4ff;
+            border-color: #cdddff;
+            box-shadow: 0 6px 16px rgba(47, 111, 237, 0.08);
+        }
+
+        .time-persona-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: transparent;
+            color: #475467;
+            font-size: 12px;
+            font-weight: 800;
+            margin-right: 0;
+        }
+
+        .time-persona-note.active .time-persona-chip {
+            background: #dbe8ff;
+            color: #1d4ed8;
+        }
+
+        .detail-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .detail-section-card.hidden {
+            display: none;
+        }
+
+        .detail-section-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 18px;
+        }
+
+        .detail-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .knowledge-chart-card {
+            border: 1px solid #e7ecf3;
+            border-radius: 16px;
+            background: linear-gradient(180deg, #fbfcfe 0%, #f5f7fb 100%);
+            padding: 24px 24px 18px;
+            margin-top: 22px;
+            margin-bottom: 18px;
+        }
+
+        .knowledge-chart-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-top: 4px;
+        }
+
+        .knowledge-chart-copy {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .knowledge-chart-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 8px;
+        }
+
+        .knowledge-chart-comment {
+            font-size: 13px;
+            line-height: 1.9;
+            color: #667085;
+            font-weight: 700;
+        }
+
+        .chart-view-toggle {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 38px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid #dce2ec;
+            background: #fff;
+            color: #344054;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .chart-view-toggle:hover {
+            border-color: #b8c4d9;
+            box-shadow: 0 8px 18px rgba(47, 66, 105, 0.1);
+        }
+
+        .chart-view-toggle-label {
+            color: #667085;
+        }
+
+        .chart-view-toggle-state {
+            color: #2f4269;
+        }
+
+        .knowledge-chart-stage {
+            position: relative;
+            min-height: 680px;
+        }
+
+        .knowledge-chart-panel {
+            transition: opacity 0.24s ease, transform 0.24s ease;
+        }
+
+        .knowledge-chart-panel.hidden {
+            display: none;
+        }
+
+        .knowledge-chart-wrap {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 8px 0 4px;
+        }
+
+        .knowledge-chart-svg {
+            width: min(100%, 900px);
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .knowledge-chart-empty {
+            padding: 42px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #98a2b3;
+        }
+
+        .knowledge-chart-tooltip {
+            position: absolute;
+            z-index: 2;
+            min-width: 132px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(47, 66, 105, 0.96);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(47, 66, 105, 0.24);
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -110%);
+            transition: opacity 0.15s ease;
+        }
+
+        .knowledge-chart-tooltip.visible {
+            opacity: 1;
+        }
+
+        .knowledge-chart-tooltip strong {
+            display: block;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .knowledge-chart-tooltip span {
+            font-size: 12px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.88);
+            font-weight: 700;
+        }
+
+        .knowledge-bar-chart {
+            width: 100%;
+            max-width: 900px;
+            height: 720px;
+            margin: 0 auto;
+            border-radius: 16px;
+            background: #fff;
+            border: 1px solid #e7ecf3;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .knowledge-card-divider {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(47, 66, 105, 0) 0%, rgba(47, 66, 105, 0.12) 18%, rgba(47, 66, 105, 0.12) 82%, rgba(47, 66, 105, 0) 100%);
+            margin: 26px 0 22px;
+        }
+
+        .knowledge-card-section {
+            padding-top: 2px;
+        }
+
+        .knowledge-card-section-head {
+            margin-bottom: 16px;
+        }
+
+        .knowledge-card-section-title {
+            font-size: 15px;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 6px;
+        }
+
+        .knowledge-card-section-text {
+            font-size: 12px;
+            line-height: 1.8;
+            color: #667085;
+            font-weight: 700;
+        }
+
+        .knowledge-card-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .knowledge-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 188px;
+            border-radius: 16px;
+            background: linear-gradient(180deg, var(--knowledge-card-bg, #ffffff) 0%, var(--knowledge-card-bg-soft, #f8fafc) 100%);
+            border: 1px solid var(--knowledge-card-border, #e7ecf3);
+            box-shadow: 0 6px 18px var(--knowledge-card-shadow, rgba(16, 24, 40, 0.04));
+            color: inherit;
+            padding: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--knowledge-card-hover-border, #cfd8ea);
+            box-shadow: 0 12px 28px var(--knowledge-card-hover-shadow, rgba(47, 66, 105, 0.12));
+        }
+
+        .knowledge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--knowledge-card-accent, #2f4269);
+        }
+
+        .knowledge-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .knowledge-card-title {
+            font-size: 15px;
+            line-height: 1.55;
+            font-weight: 900;
+            color: var(--knowledge-card-title, #344054);
+        }
+
+        .knowledge-card-score {
+            flex-shrink: 0;
+            min-width: 56px;
+            height: 32px;
+            border-radius: 999px;
+            background: var(--knowledge-card-pill-bg, #eef2f8);
+            color: var(--knowledge-card-pill-text, #2f4269);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            padding: 0 12px;
+        }
+
+        .knowledge-card-summary {
+            font-size: 12px;
+            line-height: 1.85;
+            color: #667085;
+            font-weight: 700;
+            margin-bottom: 14px;
+            flex: 1;
+        }
+
+        .knowledge-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .knowledge-card-tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: var(--knowledge-card-pill-bg, #f1f5fb);
+            color: var(--knowledge-card-pill-text, #536684);
+            border: 1px solid var(--knowledge-card-pill-border, transparent);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .knowledge-card-empty {
+            grid-column: 1 / -1;
+            min-height: 160px;
+            border-radius: 16px;
+            border: 1px dashed #d7dde7;
+            background: #fbfcfe;
+            color: #98a2b3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .detail-item {
+            border-radius: 14px;
+            background: #fff;
+        }
+
+        .detail-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 12px;
+        }
+
+        .detail-stem {
+            font-size: 14px;
+            color: #667085;
+            line-height: 1.9;
+            margin-bottom: 14px;
+        }
+
+        .answer-group-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #344054;
+            margin-bottom: 10px;
+        }
+
+        .student-answer-box,
+        .correct-answer-box {
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+
+        .student-answer-box {
+            border: 1px solid #e7ecf3;
+            background: #fff;
+            margin-bottom: 12px;
+        }
+
+        .student-answer-box.correct {
+            border-color: #cdebd8;
+            background: #f2fbf5;
+            color: #2ea85b;
+        }
+
+        .student-answer-box.wrong {
+            border-color: #ffd1d1;
+            background: #fff3f3;
+            color: #ef6666;
+        }
+
+        .student-answer-box.empty {
+            border-color: #e5e7eb;
+            background: #fafbfc;
+            color: #98a2b3;
+        }
+
+        .answer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .answer-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-icon {
+            font-size: 15px;
+        }
+
+        .answer-status {
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .correct-answer-box {
+            background: #f5f7fb;
+            border: 1px solid #edf1f5;
+        }
+
+        .correct-answer-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: #667085;
+            margin-bottom: 10px;
+        }
+
+        .correct-answer-value {
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 900;
+            color: #344054;
+            margin-bottom: 12px;
+        }
+
+        .knowledge-point {
+            font-size: 13px;
+            color: #667085;
+            font-weight: 700;
+        }
+
+        .knowledge-point span {
+            color: #6f8fd8;
+        }
+
+        .table-image-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #dce2ec;
+            background: #fff;
+        }
+
+        .table-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .section-text ul {
+            margin: 10px 0 0 18px;
+            padding: 0;
+        }
+
+        .section-text li {
+            margin-bottom: 8px;
+        }
+
+        .section-text ol {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        .section-text ol li {
+            margin-bottom: 10px;
+        }
+
+        .sub-list {
+            margin-top: 8px;
+        }
+
+        @media (max-width: 1100px) {
+            .sidebar {
+                display: none;
+            }
+
+            .knowledge-chart-wrap {
+                max-width: 760px;
+            }
+
+            .knowledge-chart-stage {
+                min-height: 560px;
+            }
+
+            .knowledge-bar-chart {
+                height: 640px;
+            }
+
+            .knowledge-card-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .content-area {
+                padding: 16px;
+            }
+
+            .base-info-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .stats-row {
+                gap: 24px;
+            }
+
+            .analysis-head,
+            .detail-head {
+                justify-content: center;
+            }
+
+            .question-map {
+                grid-template-columns: repeat(5, 52px);
+            }
+
+            .knowledge-chart-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .time-efficiency-head,
+            .time-panel-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .time-efficiency-summary {
+                min-width: 0;
+                max-width: none;
+            }
+
+            .chart-view-toggle {
+                justify-content: center;
+            }
+
+            .knowledge-chart-stage {
+                min-height: 420px;
+            }
+
+            .knowledge-bar-chart {
+                height: 520px;
+            }
+
+            .knowledge-card-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .knowledge-card {
+                min-height: 178px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-mark">A</div>
+                <div class="logo-text">VISION ACADEMY<br>唯寻国际教育</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="AMC竞赛模考.html" class="menu-item"><i class="fa fa-home"></i><span>考试首页</span></a>
+                <a href="AMC竞赛模考考试记录.html" class="menu-item active"><i class="fa fa-file-text-o"></i><span>考试记录</span></a>
+                <a href="学科考试.html" class="menu-item"><i class="fa fa-th-large"></i><span>真题案例</span></a>
+                <a href="#" class="menu-item"><i class="fa fa-user-o"></i><span>个人中心</span></a>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="header">
+                <select class="exam-select">
+                    <option>AMC竞赛模考</option>
+                </select>
+                <div class="user-info" id="userInfo">Hi，王一博</div>
+                <a href="index.html" class="logout-btn" id="logoutBtn">退出登录</a>
+            </header>
+
+            <div class="content-area">
+                <div class="top-bar">
+                    <a href="javascript:history.back()" class="btn-back"><i class="fa fa-angle-left"></i> 返回</a>
+                </div>
+
+                <section class="section-card">
+                    <div class="report-title">AMC竞赛模考综合评估报告</div>
+                    <div class="base-info-grid">
+                        <div class="info-item">
+                            <div class="info-value" id="candidateName">王一博</div>
+                            <div class="info-label">考生姓名</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-value emphasis" id="measureDate">2026.05.13</div>
+                            <div class="info-label">考试日期</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-value emphasis" id="measureRound">Round 1</div>
+                            <div class="info-label">考试轮次</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-card">
+                    <div class="section-heading">本次模考说明</div>
+                    <div class="section-text">
+                        AMC 系列竞赛强调在限时环境下对数学推理、逻辑判断与问题求解能力的综合运用，是检验竞赛基础与冲刺状态的重要方式。<br><br>
+                        本次模考基于 AMC 竞赛常见题型与评分逻辑设计，旨在评估考生在代数、几何、数论、组合等核心模块上的综合表现。<br><br>
+                        报告将结合本次考试成绩、正确率及答题情况，对考生当前竞争力进行分析，并为后续备考提供针对性的提升建议与院校目标分数建议参考；需要注意的是模考的分数只是当下的快照，通过数据发现你的优势板块与知识盲区，并据此调整冲刺策略，才是本次考试最大的价值所在。<br><br>
+                        <strong>接下来，让我们一起看看你的具体表现：</strong>
+                    </div>
+                </section>
+
+                <div class="subject-tabs-bar">
+                    <div class="subject-tabs" id="subjectTabs"></div>
+                </div>
+
+                <section class="section-card analysis-card">
+                    <div class="analysis-head">
+                        <div class="paper-tabs hidden" id="paperTabsTop"></div>
+                        <div class="detail-toggle">
+                            <span>隐藏答题详情</span>
+                            <button type="button" class="detail-switch" id="detailSwitch" aria-label="隐藏答题详情"></button>
+                        </div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value" id="statAccuracy">98%</span>
+                            <span class="stat-label">正确率</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="statDuration">1h15m</span>
+                            <span class="stat-label">用时</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="statScore">36<small>/50</small></span>
+                            <span class="stat-label">试卷分数</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="statGrade">9</span>
+                            <span class="stat-label">成绩</span>
+                        </div>
+                    </div>
+                    <div class="analysis-divider"></div>
+                    <div class="legend-row">
+                        <div class="legend-item"><span class="legend-dot empty"></span> 未作答</div>
+                        <div class="legend-item"><span class="legend-dot wrong"></span> 答错题</div>
+                        <div class="legend-item"><span class="legend-dot correct"></span> 答对题</div>
+                    </div>
+                    <div class="question-map" id="questionMap"></div>
+                    <section class="section-card ai-insight-card" id="aiInsightSection" aria-live="polite"></section>
+                    <div class="knowledge-chart-card">
+                        <div class="time-efficiency-section">
+                            <div class="time-efficiency-head">
+                                <div class="time-efficiency-copy">
+                                    <div class="time-efficiency-title">时间效率分析</div>
+                                    <div class="time-efficiency-desc">结合题目用时、推荐时长和得分回报，识别哪些题做得又快又好，哪些题消耗了时间却没有形成有效得分。</div>
+                                </div>
+                                <div class="time-efficiency-summary">
+                                    <div class="time-efficiency-summary-label">已作答单题平均用时</div>
+                                    <div class="time-efficiency-summary-value" id="timeEfficiencyAverage">--</div>
+                                    <div class="time-efficiency-summary-note" id="timeEfficiencyAverageNote">当前科目暂无可用于计算平均用时的已作答题目。</div>
+                                </div>
+                            </div>
+                            <div class="time-legend-copy">
+                                <span class="time-legend-text">时间类型判定说明：</span>
+                                <span class="time-type-badge gold">时间金矿</span><span class="time-legend-text">效率高、用时少、得分高，建议保持。</span>
+                                <span class="time-type-badge trap">时间陷阱</span><span class="time-legend-text">做对了但太慢，说明节奏偏慢。</span>
+                                <span class="time-type-badge blackhole">时间黑洞</span><span class="time-legend-text">耗时过高且得分回报低，应优先调整策略。</span>
+                                <span class="time-type-badge leak">时间深渊</span><span class="time-legend-text">投入不足且得分偏低，存在提前放弃或分配失衡。</span>
+                            </div>
+                            <div class="time-efficiency-grid">
+                                <div class="time-efficiency-panel">
+                                    <div class="time-panel-head">
+                                        <div>
+                                            <div class="time-panel-title">题目级效率</div>
+                                            <div class="time-panel-desc">展示最值得复盘的异常题与代表题，回答“哪道题做得又快又好，哪道题消耗了时间却没有形成有效得分”。</div>
+                                        </div>
+                                    </div>
+                                    <div class="time-table-wrap" id="timeEfficiencyOverview"></div>
+                                </div>
+                                <div class="time-efficiency-panel">
+                                    <div class="time-panel-head">
+                                        <div>
+                                            <div class="time-panel-title">区段级效率</div>
+                                            <div class="time-panel-desc">按题号区段汇总时间投入与得分回报，识别基础段、进阶段和冲刺段的资源投放偏差。</div>
+                                        </div>
+                                    </div>
+                                    <div class="time-table-wrap" id="timeAllocationPanel"></div>
+                                </div>
+                                <div class="time-efficiency-panel">
+                                    <div class="time-panel-head">
+                                        <div>
+                                            <div class="time-panel-title">策略人格画像</div>
+                                            <div class="time-panel-desc">基于题目级与分段级时间行为，对当前答题策略给出可解释的行为画像。</div>
+                                            <div class="time-persona-notes" id="timePersonaLegend"></div>
+                                        </div>
+                                    </div>
+                                    <div id="timePersonaPanel"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="knowledge-chart-head">
+                            <div class="knowledge-chart-copy">
+                                <div class="knowledge-chart-title" id="knowledgeChartTitle">知识点掌握情况蜘蛛图</div>
+                            </div>
+                            <button type="button" class="chart-view-toggle" id="chartViewToggle" aria-label="切换知识点图表视图">
+                                <span class="chart-view-toggle-label">切换视图</span>
+                                <span class="chart-view-toggle-state" id="chartViewState">当前：蜘蛛图</span>
+                            </button>
+                        </div>
+                        <div class="knowledge-chart-stage">
+                            <div class="knowledge-chart-panel" id="radarChartPanel">
+                                <div class="knowledge-chart-wrap" id="knowledgeChartWrap">
+                                    <svg class="knowledge-chart-svg" id="knowledgeRadarChart" viewBox="0 0 520 520" role="img" aria-label="知识点掌握情况蜘蛛图"></svg>
+                                    <div class="knowledge-chart-tooltip" id="knowledgeRadarTooltip"></div>
+                                </div>
+                            </div>
+                            <div class="knowledge-chart-panel hidden" id="barChartPanel">
+                                <div class="knowledge-bar-chart" id="knowledgeBarChart"></div>
+                            </div>
+                        </div>
+                        <div class="knowledge-card-divider"></div>
+                        <div class="knowledge-card-section">
+                            <div class="knowledge-card-section-head">
+                                <div class="knowledge-card-section-title">AMC 知识点掌握情况评语</div>
+                            </div>
+                            <div class="knowledge-card-grid" id="knowledgeCardGrid"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-card detail-section-card" id="detailSection">
+                    <div class="detail-head">
+                        <div class="detail-section-title" id="detailSectionTitle">答题详情（共20题）</div>
+                        <div class="paper-tabs hidden" id="paperTabsDetail"></div>
+                    </div>
+                    <div class="detail-list" id="questionDetails"></div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+        <script src="ai-insight.js"></script>
+        <script>
+        (function() {
+            var loginKey = 'examPlatformLoggedIn';
+            if (sessionStorage.getItem(loginKey) !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            var userName = '王一博';
+            document.getElementById('candidateName').textContent = userName;
+            document.getElementById('userInfo').textContent = 'Hi，' + userName;
+
+            document.getElementById('logoutBtn').addEventListener('click', function(event) {
+                event.preventDefault();
+                sessionStorage.removeItem(loginKey);
+                sessionStorage.removeItem('examPlatformUserName');
+                window.location.href = 'index.html';
+            });
+
+            var params = new URLSearchParams(window.location.search);
+            var exam = params.get('exam') || 'AMC 8 综合模考';
+            var latest = params.get('latest') === '1';
+            var recordRaw = sessionStorage.getItem('amcExamRecord');
+            var record = recordRaw ? JSON.parse(recordRaw) : null;
+
+            var defaultConfig = {
+                'AMC 8 综合模考': {
+                    subjects: [
+                        {
+                            label: '数学',
+                            accuracy: '78%',
+                            duration: '1h15m',
+                            score: '36/50',
+                            grade: '9',
+                            knowledgeComment: '数学推理与证明基础较扎实，但在多步推导和复杂信息整合题型上仍存在波动，建议针对易失分题型进行分层强化。',
+                            map: ['correct','correct','wrong','wrong','empty','correct','empty','correct','wrong','wrong','correct','correct','wrong','wrong','correct','correct','wrong','correct','wrong','wrong'],
+                            details: [
+                                { title: '1. 单选题', stem: '若函数经过平移与伸缩后其顶点坐标为哪一项？请结合函数图像变化判断正确答案。', studentAnswer: 'B', correctAnswer: 'D', knowledge: "Vieta's formulae and root-coefficient relations", status: 'wrong' },
+                                { title: '2. 单选题', stem: '给定一组数列关系，判断其在第 n 项时的递推表达式最可能是哪一个。', studentAnswer: 'A', correctAnswer: 'A', knowledge: 'Sequences, series and recurrence', status: 'correct' },
+                                { title: '3. 单选题', stem: '在限定时间内完成代数证明，判断哪一步推理存在逻辑缺口。', studentAnswer: '未作答', correctAnswer: 'C', knowledge: 'Inequalities and algebraic bounds', status: 'empty' }
+                            ]
+                        },
+                        {
+                            label: '逻辑',
+                            accuracy: '72%',
+                            duration: '1h12m',
+                            score: '31/50',
+                            grade: '7.4',
+                            knowledgeComment: '条件拆解能力具备一定基础，但多条件联立时仍容易遗漏关键限制，建议强化结构化推理训练。',
+                            map: ['correct','wrong','correct','correct','wrong','empty','correct','wrong','wrong','correct','correct','wrong','correct','empty','correct','wrong','correct','wrong','correct','correct'],
+                            details: [
+                                { title: '1. 单选题', stem: '根据五个条件判断哪位候选人的安排与题干完全一致。', studentAnswer: 'C', correctAnswer: 'B', knowledge: 'Permutations and arrangements', status: 'wrong' },
+                                { title: '2. 单选题', stem: '在已知约束下判断实验流程的先后顺序。', studentAnswer: 'D', correctAnswer: 'D', knowledge: 'Counting principles', status: 'correct' }
+                            ]
+                        }
+                    ]
+                },
+                'AMC 10 综合模考': {
+                    subjects: [
+                        {
+                            label: '数学',
+                            accuracy: '98%',
+                            duration: '1h15m',
+                            score: '36/50',
+                            grade: 'S',
+                            knowledgeComment: '力学与函数建模板块表现稳定，但综合推导题仍有个别失分，建议继续巩固跨章节联动题型。',
+                            map: ['correct','correct','wrong','wrong','empty','correct','empty','correct','wrong','wrong','correct','correct','wrong','wrong','correct','correct','wrong','correct','wrong','wrong'],
+                            details: [
+                                { title: '1. 单选题（Part 2）', stem: 'A particle is projected horizontally from a height h. Which statement best describes the relationship between its horizontal and vertical motion?', studentAnswer: 'B', correctAnswer: 'D', knowledge: 'Coordinate and analytic geometry', status: 'wrong' },
+                                { title: '2. 单选题（Part 1）', stem: 'For the quadratic expression shown in the question, determine which option gives the correct minimum value after transformation.', studentAnswer: 'A', correctAnswer: 'A', knowledge: 'Basic calculation and algebraic manipulation', status: 'correct' },
+                                { title: '3. 单选题（Part 3）', stem: 'In a system of simultaneous equations, identify the statement that must always be true when the determinant is zero.', studentAnswer: '未作答', correctAnswer: 'C', knowledge: 'Basic calculation and algebraic manipulation', status: 'empty' }
+                            ],
+                            paperTabs: [
+                                {
+                                    label: '数学1',
+                                    accuracy: '98%',
+                                    duration: '1h15m',
+                                    score: '36/50',
+                                    grade: 'S',
+                                    knowledgeComment: '力学与函数建模板块表现稳定，但综合推导题仍有个别失分，建议继续巩固跨章节联动题型。',
+                                    map: ['correct','correct','wrong','wrong','empty','correct','empty','correct','wrong','wrong','correct','correct','wrong','wrong','correct','correct','wrong','correct','wrong','wrong'],
+                                    details: [
+                                        { title: '1. 单选题（共20题）', stem: 'A particle is projected horizontally from a height h. Which statement best describes the relationship between its horizontal and vertical motion?', studentAnswer: 'B', correctAnswer: 'D', knowledge: 'Coordinate and analytic geometry', status: 'wrong' },
+                                        { title: '2. 单选题（共20题）', stem: 'For the quadratic expression shown in the question, determine which option gives the correct minimum value after transformation.', studentAnswer: 'A', correctAnswer: 'A', knowledge: 'Basic calculation and algebraic manipulation', status: 'correct' },
+                                        { title: '3. 单选题（共20题）', stem: 'In a system of simultaneous equations, identify the statement that must always be true when the determinant is zero.', studentAnswer: '未作答', correctAnswer: 'C', knowledge: 'Inequalities and algebraic bounds', status: 'empty' }
+                                    ]
+                                },
+                                {
+                                    label: '数学2',
+                                    accuracy: '92%',
+                                    duration: '1h08m',
+                                    score: '32/50',
+                                    grade: 'A',
+                                    knowledgeComment: '代数化简与方程推导能力较稳，但在复合函数和矩阵条件判断题上仍需强化训练。',
+                                    map: ['correct','wrong','wrong','correct','wrong','correct','correct','wrong','correct','empty','correct','wrong','correct','correct','wrong','correct','correct','wrong','correct','wrong'],
+                                    details: [
+                                        { title: '1. 单选题（共20题）', stem: 'For the matrix transformation shown, which option correctly describes the image of the vector after two successive operations?', studentAnswer: 'E', correctAnswer: 'F', knowledge: 'Rational expressions and rational functions', status: 'wrong' },
+                                        { title: '2. 单选题（共20题）', stem: 'A function is defined piecewise over two intervals. Determine which statement must be true about continuity at the boundary.', studentAnswer: 'C', correctAnswer: 'C', knowledge: 'Radicals and radical functions', status: 'correct' },
+                                        { title: '3. 单选题（共20题）', stem: 'Given the graph and algebraic condition, identify the only valid range of values for k.', studentAnswer: '未作答', correctAnswer: 'A', knowledge: 'Quadratic expressions, equations and functions', status: 'empty' }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            label: '物理',
+                            accuracy: '84%',
+                            duration: '1h09m',
+                            score: '39/50',
+                            grade: 'S',
+                            knowledgeComment: '基础力学与电磁学较强，但在实验设计与误差分析题上仍存在个别判断偏差。',
+                            map: ['correct','correct','correct','wrong','correct','correct','wrong','correct','correct','wrong','correct','correct','correct','wrong','correct','correct','correct','correct','wrong','correct'],
+                            details: [
+                                { title: '1. 单选题（Part 1）', stem: 'A block slides down a rough incline. Which free-body diagram is correct?', studentAnswer: 'C', correctAnswer: 'C', knowledge: 'Geometric transformations and vector methods', status: 'correct' },
+                                { title: '2. 单选题（Part 2）', stem: 'For the circuit shown, determine the correct current through resistor R when the switch is closed.', studentAnswer: 'A', correctAnswer: 'B', knowledge: 'Quadratic expressions, equations and functions', status: 'wrong' },
+                                { title: '3. 单选题（Part 4）', stem: 'Which statement best explains the observed diffraction pattern in the experiment?', studentAnswer: 'D', correctAnswer: 'D', knowledge: 'Triangle geometry', status: 'correct' }
+                            ]
+                        },
+                        {
+                            label: '化学',
+                            accuracy: '76%',
+                            duration: '1h03m',
+                            score: '33/50',
+                            grade: 'A',
+                            knowledgeComment: '有机反应基础较稳，但在平衡常数与速率综合判断题上仍需加强。',
+                            map: ['correct','wrong','correct','empty','correct','wrong','correct','correct','wrong','correct','correct','wrong','correct','correct','wrong','correct','empty','correct','wrong','correct'],
+                            details: [
+                                { title: '1. 单选题（Part 1）', stem: 'Which reagent would best distinguish between the two compounds shown?', studentAnswer: 'D', correctAnswer: 'B', knowledge: 'Counting principles', status: 'wrong' },
+                                { title: '2. 单选题（Part 2）', stem: 'In the equilibrium system provided, identify the factor that will increase product yield.', studentAnswer: 'C', correctAnswer: 'C', knowledge: "Vieta's formulae and root-coefficient relations", status: 'correct' },
+                                { title: '3. 单选题（Part 3）', stem: 'Determine the oxidation state of the highlighted atom in the compound.', studentAnswer: '未作答', correctAnswer: '+4', knowledge: 'Modular arithmetic', status: 'empty' }
+                            ]
+                        },
+                        {
+                            label: '生物',
+                            accuracy: '82%',
+                            duration: '58m',
+                            score: '37/50',
+                            grade: 'A',
+                            knowledgeComment: '细胞与遗传模块基础较扎实，建议继续提升数据图表类题目的归纳速度。',
+                            map: ['correct','correct','wrong','correct','correct','correct','wrong','correct','empty','correct','correct','wrong','correct','correct','correct','wrong','correct','correct','wrong','correct'],
+                            details: [
+                                { title: '1. 单选题（Part 1）', stem: 'Which process directly accounts for the observed increase in ATP production in the cell diagram?', studentAnswer: 'B', correctAnswer: 'B', knowledge: 'Coordinate and analytic geometry', status: 'correct' },
+                                { title: '2. 单选题（Part 2）', stem: 'Based on the pedigree chart, which inheritance pattern is most likely?', studentAnswer: 'A', correctAnswer: 'D', knowledge: 'Combinations and selections', status: 'wrong' },
+                                { title: '3. 单选题（Part 3）', stem: 'Identify the variable that should be controlled to improve the validity of the experiment.', studentAnswer: '未作答', correctAnswer: 'Temperature', knowledge: 'Probability', status: 'empty' }
+                            ]
+                        }
+                    ]
+                },
+                'AMC 12 综合模考': {
+                    subjects: [
+                        {
+                            label: '批判思维',
+                            accuracy: '69%',
+                            duration: '1h20m',
+                            score: '28/40',
+                            grade: 'B',
+                            knowledgeComment: '批判性思维具备一定基础，但在论证拆解和细节辨析题上仍有明显提升空间，建议集中补齐阅读逻辑类薄弱点。',
+                            map: ['correct','wrong','correct','empty','wrong','correct','correct','wrong','correct','empty','correct','wrong','correct','wrong','correct','correct','wrong','correct','wrong','correct'],
+                            details: [
+                                { title: '1. 批判阅读题', stem: 'Which statement most weakens the author’s central claim in the passage?', studentAnswer: 'C', correctAnswer: 'A', knowledge: 'Probability', status: 'wrong' },
+                                { title: '2. 论证分析题', stem: 'Select the option that best identifies the hidden assumption in the argument.', studentAnswer: 'B', correctAnswer: 'B', knowledge: 'Counting principles', status: 'correct' }
+                            ]
+                        },
+                        {
+                            label: '问题求解',
+                            accuracy: '64%',
+                            duration: '1h08m',
+                            score: '24/40',
+                            grade: 'B',
+                            knowledgeComment: '多条件信息整合能力仍需加强，尤其要避免在复杂设问中遗漏隐藏约束。',
+                            map: ['wrong','wrong','correct','empty','correct','wrong','correct','correct','wrong','correct','empty','wrong','correct','wrong','correct','correct','wrong','correct','wrong','correct'],
+                            details: [
+                                { title: '1. 问题求解题', stem: 'Given the constraints in the prompt, which schedule satisfies all conditions?', studentAnswer: 'D', correctAnswer: 'C', knowledge: 'Basic counting principles', status: 'wrong' },
+                                { title: '2. 数据推断题', stem: 'Choose the conclusion that can be fully supported by the data table.', studentAnswer: 'A', correctAnswer: 'A', knowledge: 'Digits and base systems', status: 'correct' }
+                            ]
+                        }
+                    ]
+                }
+            };
+            defaultConfig['AMC 10 冲刺模考'] = JSON.parse(JSON.stringify(defaultConfig['AMC 10 综合模考']));
+            defaultConfig['AMC 12 冲刺模考'] = JSON.parse(JSON.stringify(defaultConfig['AMC 12 综合模考']));
+            defaultConfig['AIME 先导模考'] = JSON.parse(JSON.stringify(defaultConfig['AMC 12 综合模考']));
+
+            var amcKnowledgeTree = [
+                {
+                    label: 'Algebra & Functions',
+                    children: [
+                        { label: 'Basic calculation and algebraic manipulation', items: ['Ratio, proportion, rates and units', 'Basic powers, roots and indices', 'Expansion, factorisation and algebraic simplification', 'Substitution, rearranging formulae and structured expressions', 'Symmetric, cyclic and homogeneous expressions', 'Estimation, approximation and bounds', 'Arithmetic, fractions, decimals and percentages'] },
+                        { label: 'Quadratic expressions, equations and functions', items: ['Quadratic expressions, factorisation and completing the square', 'Quadratic equations, discriminant and roots', 'Quadratic graphs, vertex form and transformations', 'Quadratic inequalities and parameter problems', 'Quadratic optimisation and AM-GM inequality'] },
+                        { label: 'Cubic and higher-degree polynomials', items: ['Cubic expressions, equations and graphs', 'Sum and difference of cubes', 'Polynomial factorisation and higher-degree equations', 'Factor theorem, remainder theorem and polynomial division', 'Polynomial identities and coefficient comparison'] },
+                        { label: "Vieta's formulae and root-coefficient relations", items: ["Quadratic Vieta's formulae", 'Symmetric expressions in roots'] },
+                        { label: 'Radicals and radical functions', items: ['Basic calculation, properties and graphs of radical functions', 'Radical equations and inequalities'] },
+                        { label: 'Absolute value functions', items: ['Basic definition, graphs and transformations of absolute value functions', 'Absolute value equations and inequalities'] },
+                        { label: 'Exponential and logarithmic functions', items: ['Basic definition, graphs and properties of exponential functions', 'Index laws and exponential equations', 'Exponential models in applications'] },
+                        { label: 'Rational expressions and rational functions', items: ['Rational expression manipulation and simplification', 'Rational equations and inequalities', 'Reciprocal functions and structured rational forms'] },
+                        { label: 'Gaussian functions', items: ['Floor functions and greatest integer functions', 'Fractional part functions', 'Equations and inequalities involving Gaussian functions'] },
+                        { label: 'General function properties', items: ['Domain, range and function notation', 'Odd and even functions', 'Monotonicity, extrema and boundedness', 'Symmetry, periodicity and graph transformations', 'Intersections of graphs and number of solutions', 'Piecewise functions'] },
+                        { label: 'Sequences, series and recurrence', items: ['Arithmetic and geometric sequences', 'Recursive sequences and recurrence relations', 'Telescoping sums and finite series', 'Periodic sequences and sequence patterns'] },
+                        { label: 'Inequalities and algebraic bounds', items: ['Basic inequalities and ordering', 'AM-GM inequality and extensions', 'Bounding, estimation and equality conditions', 'Inequalities by substitution or completing the square'] }
+                    ]
+                },
+                {
+                    label: 'Number Theory',
+                    children: [
+                        { label: 'Recurring decimals and fractions', items: ['Recurring decimals and fractions'] },
+                        { label: 'Parity', items: ['Odd-even properties and parity arguments', 'Parity in equations and counting problems'] },
+                        { label: 'Prime numbers', items: ['Prime and composite numbers', 'Prime constraints in equations and expressions'] },
+                        { label: 'Prime factorisation', items: ['Prime factorisation, gcd and lcm', 'Divisors and factorial prime exponents', 'Perfect powers and special integer forms'] },
+                        { label: 'Divisibility', items: ['Divisibility rules and digit divisibility', 'Divisibility of algebraic expressions'] },
+                        { label: 'Modular arithmetic', items: ['Basic modular arithmetic and remainders', 'Cycles of powers and last digit problems', 'Modular restrictions and contradiction'] },
+                        { label: 'Digits and base systems', items: ['Digit problems', 'Base systems'] },
+                        { label: 'Diophantine equations', items: ['Linear Diophantine equations', 'Factorisation and bounding methods in Diophantine equations'] }
+                    ]
+                },
+                {
+                    label: 'Geometry',
+                    children: [
+                        { label: 'Lines and angles', items: ['Basic line and angle relations'] },
+                        { label: 'Triangle geometry', items: ['Triangle types and basic triangle relations', 'Sine rule, cosine rule and triangle area formula', 'Congruence and similarity', 'Triangle area and ratio problems'] },
+                        { label: 'Quadrilaterals and polygons', items: ['Parallelograms and special parallelograms', 'Trapezoids and parallel-side configurations', 'N-gons'] },
+                        { label: 'Circle geometry', items: ['Basic circle properties, arcs and sectors', 'Angles in circles and cyclic quadrilaterals', 'Tangents, chords and secants', 'Circle equations and coordinate circle problems'] },
+                        { label: 'Coordinate and analytic geometry', items: ['Coordinate plane, lines and basic analytic geometry', 'Parabolas and conic sections', 'Coordinate area and locus problems'] },
+                        { label: 'Geometric transformations and vector methods', items: ['Basic transformations and symmetry', 'Enlargement, homothety and advanced transformations'] },
+                        { label: 'Three-dimensional geometry', items: ['Basic solids, surface area and volume', 'Similar solids and scaling', 'Nets, cross-sections and projections', '3D distance, angles and coordinates'] }
+                    ]
+                },
+                {
+                    label: 'Combinatorics',
+                    children: [
+                        { label: 'Basic counting principles', items: ['Addition and multiplication principles', 'Casework'] },
+                        { label: 'Permutations and arrangements', items: ['Linear arrangements', 'Circular arrangements', 'Arrangements with restrictions'] },
+                        { label: 'Combinations and selections', items: ['Basic combinations and subsets', 'Combinations with restrictions', 'Binomial coefficients and combinatorial identities'] },
+                        { label: 'Counting principles', items: ['Distribution, balls and boxes, and occupancy problems', 'Stars and bars', 'Principle of inclusion and exclusion', 'Pigeonhole principle', 'Coloring, tiling and discrete structures', 'Combinatorial games and strategies'] },
+                        { label: 'Probability', items: ['Probability by counting', 'Conditional probability and independence', 'Expected value', 'Uniform distribution', 'Geometric probability and area models'] }
+                    ]
+                }
+            ];
+
+            var amcDomainScorePresets = {
+                'AMC 8 综合模考|数学': [86, 72, 74, 68],
+                'AMC 8 综合模考|逻辑': [74, 66, 61, 71],
+                'AMC 10 综合模考|数学': [90, 78, 84, 73],
+                'AMC 10 综合模考|数学|数学1': [92, 80, 85, 74],
+                'AMC 10 综合模考|数学|数学2': [84, 75, 79, 71],
+                'AMC 10 综合模考|物理': [72, 61, 83, 56],
+                'AMC 10 综合模考|化学': [69, 58, 66, 55],
+                'AMC 10 综合模考|生物': [71, 57, 73, 59],
+                'AMC 12 综合模考|批判思维': [78, 69, 72, 76],
+                'AMC 12 综合模考|问题求解': [74, 72, 70, 81]
+            };
+
+            var knowledgeDomainThemes = {
+                'Algebra & Functions': {
+                    accent: '#2f6fed',
+                    deep: '#1d4ed8',
+                    soft: '#edf4ff',
+                    border: '#cdddff',
+                    shadow: 'rgba(47, 111, 237, 0.14)',
+                    hoverShadow: 'rgba(47, 111, 237, 0.2)',
+                    radarFill: 'rgba(47, 111, 237, 0.08)'
+                },
+                'Number Theory': {
+                    accent: '#1098ad',
+                    deep: '#0f766e',
+                    soft: '#e7fbfd',
+                    border: '#b8edf3',
+                    shadow: 'rgba(16, 152, 173, 0.14)',
+                    hoverShadow: 'rgba(16, 152, 173, 0.2)',
+                    radarFill: 'rgba(16, 152, 173, 0.08)'
+                },
+                'Geometry': {
+                    accent: '#f08c00',
+                    deep: '#c2410c',
+                    soft: '#fff5e8',
+                    border: '#ffd9a8',
+                    shadow: 'rgba(240, 140, 0, 0.14)',
+                    hoverShadow: 'rgba(240, 140, 0, 0.2)',
+                    radarFill: 'rgba(240, 140, 0, 0.08)'
+                },
+                'Combinatorics': {
+                    accent: '#7c3aed',
+                    deep: '#6d28d9',
+                    soft: '#f4ecff',
+                    border: '#dcc8ff',
+                    shadow: 'rgba(124, 58, 237, 0.14)',
+                    hoverShadow: 'rgba(124, 58, 237, 0.2)',
+                    radarFill: 'rgba(124, 58, 237, 0.08)'
+                }
+            };
+
+            var timeEfficiencyDetailPresets = {
+                'AMC 8 综合模考|数学': [
+                    { questionNo: 3, module: 'Algebra & Functions', difficultyTier: '基础', timeSpentSec: 60, recommendedTimeSec: 120, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 14, module: 'Number Theory', difficultyTier: '进阶', timeSpentSec: 265, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 23, module: 'Geometry', difficultyTier: '冲刺', timeSpentSec: 70, recommendedTimeSec: 180, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 8 综合模考|逻辑': [
+                    { questionNo: 6, module: 'Combinatorics', difficultyTier: '基础', timeSpentSec: 210, recommendedTimeSec: 120, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 18, module: 'Combinatorics', difficultyTier: '进阶', timeSpentSec: 115, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|数学': [
+                    { questionNo: 4, module: 'Geometry', difficultyTier: '基础', timeSpentSec: 220, recommendedTimeSec: 120, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 12, module: 'Algebra & Functions', difficultyTier: '进阶', timeSpentSec: 130, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 24, module: 'Algebra & Functions', difficultyTier: '冲刺', timeSpentSec: 85, recommendedTimeSec: 210, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|数学|数学1': [
+                    { questionNo: 4, module: 'Geometry', difficultyTier: '基础', timeSpentSec: 220, recommendedTimeSec: 120, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 11, module: 'Algebra & Functions', difficultyTier: '进阶', timeSpentSec: 130, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 23, module: 'Algebra & Functions', difficultyTier: '冲刺', timeSpentSec: 90, recommendedTimeSec: 210, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|数学|数学2': [
+                    { questionNo: 7, module: 'Algebra & Functions', difficultyTier: '基础', timeSpentSec: 245, recommendedTimeSec: 120, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 16, module: 'Algebra & Functions', difficultyTier: '进阶', timeSpentSec: 140, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 25, module: 'Algebra & Functions', difficultyTier: '冲刺', timeSpentSec: 75, recommendedTimeSec: 210, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|物理': [
+                    { questionNo: 5, module: 'Geometry', difficultyTier: '基础', timeSpentSec: 95, recommendedTimeSec: 120, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 13, module: 'Algebra & Functions', difficultyTier: '进阶', timeSpentSec: 235, recommendedTimeSec: 150, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 22, module: 'Geometry', difficultyTier: '冲刺', timeSpentSec: 150, recommendedTimeSec: 180, earnedScore: 6, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|化学': [
+                    { questionNo: 8, module: 'Combinatorics', difficultyTier: '基础', timeSpentSec: 225, recommendedTimeSec: 120, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 15, module: 'Algebra & Functions', difficultyTier: '进阶', timeSpentSec: 145, recommendedTimeSec: 150, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 21, module: 'Number Theory', difficultyTier: '冲刺', timeSpentSec: 60, recommendedTimeSec: 180, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 10 综合模考|生物': [
+                    { questionNo: 4, module: 'Geometry', difficultyTier: '基础', timeSpentSec: 100, recommendedTimeSec: 120, earnedScore: 6, fullScore: 6 },
+                    { questionNo: 17, module: 'Combinatorics', difficultyTier: '进阶', timeSpentSec: 205, recommendedTimeSec: 150, earnedScore: 0, fullScore: 6 },
+                    { questionNo: 24, module: 'Combinatorics', difficultyTier: '冲刺', timeSpentSec: 70, recommendedTimeSec: 180, earnedScore: 0, fullScore: 6 }
+                ],
+                'AMC 12 综合模考|批判思维': [
+                    { questionNo: 9, module: 'Combinatorics', difficultyTier: '基础', timeSpentSec: 215, recommendedTimeSec: 120, earnedScore: 0, fullScore: 4 },
+                    { questionNo: 18, module: 'Combinatorics', difficultyTier: '进阶', timeSpentSec: 130, recommendedTimeSec: 150, earnedScore: 4, fullScore: 4 }
+                ],
+                'AMC 12 综合模考|问题求解': [
+                    { questionNo: 10, module: 'Combinatorics', difficultyTier: '基础', timeSpentSec: 230, recommendedTimeSec: 120, earnedScore: 0, fullScore: 4 },
+                    { questionNo: 22, module: 'Number Theory', difficultyTier: '冲刺', timeSpentSec: 110, recommendedTimeSec: 180, earnedScore: 4, fullScore: 4 }
+                ]
+            };
+
+            function cloneKnowledgeDomains(domains) {
+                return (domains || []).map(function(domain) {
+                    return {
+                        label: domain.label,
+                        score: domain.score,
+                        children: (domain.children || []).map(function(child) {
+                            return {
+                                label: child.label,
+                                score: child.score,
+                                items: (child.items || []).slice()
+                            };
+                        })
+                    };
+                });
+            }
+
+            function clampKnowledgeScore(score) {
+                return Math.max(42, Math.min(96, Math.round(score)));
+            }
+
+            function createKnowledgeDomains(scores) {
+                return amcKnowledgeTree.map(function(domain, index) {
+                    var domainScore = scores && scores[index] !== undefined ? scores[index] : 0;
+                    var offsetPattern = [-6, -2, 3, -4, 1, 5, -3, 2, -1, 4, -5, 0];
+                    return {
+                        label: domain.label,
+                        score: domainScore,
+                        children: domain.children.map(function(child, childIndex) {
+                            return {
+                                label: child.label,
+                                score: clampKnowledgeScore(domainScore + offsetPattern[childIndex % offsetPattern.length]),
+                                items: child.items.slice()
+                            };
+                        })
+                    };
+                });
+            }
+
+            function getSecondaryKnowledgeLabel(moduleLabel, seedIndex) {
+                var domain = amcKnowledgeTree.find(function(item) {
+                    return item.label === moduleLabel;
+                }) || amcKnowledgeTree[0];
+                var children = domain && domain.children ? domain.children : [];
+                if (!children.length) {
+                    return '';
+                }
+                return children[seedIndex % children.length].label;
+            }
+
+            function createFallbackDetailPreset(index, item) {
+                var questionNo = index + 1;
+                var recommendedTimeSec = questionNo <= 10 ? 120 : (questionNo <= 20 ? 150 : 180);
+                return {
+                    questionNo: questionNo,
+                    module: 'Algebra & Functions',
+                    difficultyTier: questionNo <= 10 ? '基础' : (questionNo <= 20 ? '进阶' : '冲刺'),
+                    timeSpentSec: item && item.status === 'empty' ? Math.round(recommendedTimeSec * 0.45) : recommendedTimeSec,
+                    recommendedTimeSec: recommendedTimeSec,
+                    earnedScore: item && item.status === 'correct' ? 6 : 0,
+                    fullScore: 6
+                };
+            }
+
+            function enrichDetailsWithTimeData(details, presets) {
+                return (details || []).map(function(item, index) {
+                    var preset = Object.assign({}, createFallbackDetailPreset(index, item), presets && presets[index] ? presets[index] : {});
+                    return Object.assign({}, item, preset, {
+                        knowledge: getSecondaryKnowledgeLabel(preset.module, preset.questionNo || index)
+                    });
+                });
+            }
+
+            function attachKnowledgeTopicPresets(configMap) {
+                Object.keys(configMap).forEach(function(examKey) {
+                    configMap[examKey].subjects.forEach(function(subject) {
+                        var subjectKey = examKey + '|' + subject.label;
+                        subject.knowledgeDomains = createKnowledgeDomains(amcDomainScorePresets[subjectKey] || [78, 68, 72, 64]);
+                        if (subject.paperTabs) {
+                            subject.paperTabs.forEach(function(paper) {
+                                var paperKey = subjectKey + '|' + paper.label;
+                                paper.knowledgeDomains = createKnowledgeDomains(amcDomainScorePresets[paperKey] || amcDomainScorePresets[subjectKey] || [78, 68, 72, 64]);
+                            });
+                        }
+                    });
+                });
+            }
+
+            function attachTimeEfficiencyPresets(configMap) {
+                Object.keys(configMap).forEach(function(examKey) {
+                    configMap[examKey].subjects.forEach(function(subject) {
+                        var subjectKey = examKey + '|' + subject.label;
+                        subject.details = enrichDetailsWithTimeData(subject.details, timeEfficiencyDetailPresets[subjectKey]);
+                        if (subject.paperTabs) {
+                            subject.paperTabs.forEach(function(paper) {
+                                var paperKey = subjectKey + '|' + paper.label;
+                                paper.details = enrichDetailsWithTimeData(paper.details, timeEfficiencyDetailPresets[paperKey] || timeEfficiencyDetailPresets[subjectKey]);
+                            });
+                        }
+                    });
+                });
+            }
+
+            attachKnowledgeTopicPresets(defaultConfig);
+            attachTimeEfficiencyPresets(defaultConfig);
+
+            var config = defaultConfig[exam] || defaultConfig['AMC 8 综合模考'];
+            var now = new Date();
+            var dateText = now.getFullYear() + '.' + String(now.getMonth() + 1).padStart(2, '0') + '.' + String(now.getDate()).padStart(2, '0');
+            var roundText = 'Round 1';
+            var examText = exam;
+
+            if (latest && record) {
+                examText = record.examName || examText;
+                roundText = record.round || roundText;
+                if (record.completedAt) {
+                    var completed = new Date(record.completedAt);
+                    dateText = completed.getFullYear() + '.' + String(completed.getMonth() + 1).padStart(2, '0') + '.' + String(completed.getDate()).padStart(2, '0');
+                }
+                if (record.durationText) {
+                    config.subjects[0].duration = record.durationText;
+                }
+                if (record.score && record.maxScore) {
+                    config.subjects[0].score = record.score + '/' + record.maxScore;
+                }
+                if (record.scoreItems && record.scoreItems.length) {
+                    config.subjects = record.scoreItems.map(function(item, index) {
+                        var baseSubject = config.subjects[index] || config.subjects[0];
+                        return Object.assign({}, baseSubject, {
+                            label: item.label,
+                            score: item.score + '/9.0'
+                        });
+                    });
+                }
+            }
+
+            document.getElementById('measureDate').textContent = dateText;
+            document.getElementById('measureRound').textContent = roundText;
+            var subjectTabs = document.getElementById('subjectTabs');
+            var paperTabsTop = document.getElementById('paperTabsTop');
+            var paperTabsDetail = document.getElementById('paperTabsDetail');
+            var questionMap = document.getElementById('questionMap');
+            var questionDetails = document.getElementById('questionDetails');
+            var detailSection = document.getElementById('detailSection');
+            var detailSectionTitle = document.getElementById('detailSectionTitle');
+            var detailSwitch = document.getElementById('detailSwitch');
+            var statScore = document.getElementById('statScore');
+            var statAccuracy = document.getElementById('statAccuracy');
+            var statDuration = document.getElementById('statDuration');
+            var statGrade = document.getElementById('statGrade');
+            var knowledgeChartTitle = document.getElementById('knowledgeChartTitle');
+            var timeEfficiencyAverage = document.getElementById('timeEfficiencyAverage');
+            var timeEfficiencyAverageNote = document.getElementById('timeEfficiencyAverageNote');
+            var timeEfficiencyOverview = document.getElementById('timeEfficiencyOverview');
+            var timeAllocationPanel = document.getElementById('timeAllocationPanel');
+            var timePersonaLegend = document.getElementById('timePersonaLegend');
+            var timePersonaPanel = document.getElementById('timePersonaPanel');
+            var chartViewToggle = document.getElementById('chartViewToggle');
+            var chartViewState = document.getElementById('chartViewState');
+            var knowledgeRadarChart = document.getElementById('knowledgeRadarChart');
+            var knowledgeRadarTooltip = document.getElementById('knowledgeRadarTooltip');
+            var radarChartPanel = document.getElementById('radarChartPanel');
+            var barChartPanel = document.getElementById('barChartPanel');
+            var knowledgeBarChart = document.getElementById('knowledgeBarChart');
+            var knowledgeCardGrid = document.getElementById('knowledgeCardGrid');
+            var knowledgeChartWrap = document.getElementById('knowledgeChartWrap');
+            var activeSubjectIndex = 0;
+            var activePaperTabIndex = 0;
+            var activeChartView = 'radar';
+            var knowledgeBarChartInstance = null;
+            var detailHidden = false;
+            var aiInsightSection = document.getElementById('aiInsightSection');
+            var personaDefinitions = [
+                {
+                    label: '保守型',
+                    description: '你在基础题段表现稳定，优先确保能拿到的分数不失手，整体答题节奏偏谨慎。优势是失误率低、基本盘稳，风险是中高难题投入不足，后续可在保证基础正确率的前提下，适度提升进阶题尝试量。'
+                },
+                {
+                    label: '冒进型',
+                    description: '你愿意主动挑战高难题，说明有较强的进攻意识和突破意愿。优势是敢于冲击高分区，风险是容易在难题上投入过多时间、影响整体得分效率，建议加强取舍判断，把握“值得攻”和“及时停”的边界。'
+                },
+                {
+                    label: '均衡型',
+                    description: '你的作答节奏较为平稳，各难度区段的表现差异不大，整体策略较成熟。优势是时间分配相对均匀、结构完整，风险是缺少明确强攻点，后续可结合自身优势模块，进一步拉高重点题段得分。'
+                },
+                {
+                    label: '狙击型',
+                    description: '你把主要精力集中在高价值、可命中的题目上，基础题稳定，高难题取舍明确，策略目标感很强。优势是资源分配高效、得分路径清晰，适合冲击目标分数；同时也要注意避免因过度取舍而错过本可拿下的中档题。'
+                },
+                {
+                    label: '混合型',
+                    description: '你的当前作答表现没有明显落入某一种固定策略，说明不同区段的答题行为存在波动。优势是具备一定灵活性，风险是整体策略稳定性不足，建议结合错题、空题和时间分布，进一步固化更适合自己的答题节奏。'
+                }
+            ];
+
+            function renderSubjectTabs() {
+                subjectTabs.innerHTML = config.subjects.map(function(subject, index) {
+                    return '<button class="subject-tab' + (index === activeSubjectIndex ? ' active' : '') + '" data-index="' + index + '">' + subject.label + '</button>';
+                }).join('');
+            }
+
+            function getActiveSubject() {
+                return config.subjects[activeSubjectIndex];
+            }
+
+            function hasPaperTabs(subject) {
+                return !!(subject && subject.paperTabs && subject.paperTabs.length);
+            }
+
+            function getActivePaperData() {
+                var subject = getActiveSubject();
+                if (!hasPaperTabs(subject)) {
+                    return subject;
+                }
+                return subject.paperTabs[activePaperTabIndex] || subject.paperTabs[0];
+            }
+
+            function getCurrentKnowledgeTopics(subject, currentData) {
+                return cloneKnowledgeDomains(currentData.knowledgeDomains && currentData.knowledgeDomains.length
+                    ? currentData.knowledgeDomains
+                    : subject.knowledgeDomains);
+            }
+
+            function renderPaperTabs() {
+                var subject = getActiveSubject();
+                if (!hasPaperTabs(subject)) {
+                    paperTabsTop.innerHTML = '';
+                    paperTabsDetail.innerHTML = '';
+                    paperTabsTop.classList.add('hidden');
+                    paperTabsDetail.classList.add('hidden');
+                    return;
+                }
+
+                var tabsHtml = subject.paperTabs.map(function(tab, index) {
+                    return '<button class="paper-tab' + (index === activePaperTabIndex ? ' active' : '') + '" data-index="' + index + '">' + tab.label + '</button>';
+                }).join('');
+
+                paperTabsTop.innerHTML = tabsHtml;
+                paperTabsDetail.innerHTML = tabsHtml;
+                paperTabsTop.classList.remove('hidden');
+                paperTabsDetail.classList.remove('hidden');
+            }
+
+            function getAnswerStatusText(status) {
+                if (status === 'correct') return '回答正确';
+                if (status === 'wrong') return '你的答案';
+                return '未作答';
+            }
+
+            function getAnswerIcon(status) {
+                if (status === 'correct') return 'fa-check-circle';
+                if (status === 'wrong') return 'fa-times-circle';
+                return 'fa-circle-o';
+            }
+
+            function renderQuestionMap(items) {
+                questionMap.innerHTML = items.map(function(status, index) {
+                    return '<div class="question-chip ' + status + '">' + (index + 1) + '</div>';
+                }).join('');
+            }
+
+            function renderQuestionDetails(details) {
+                questionDetails.innerHTML = details.map(function(item) {
+                    return [
+                        '<div class="detail-item">',
+                        '<div class="detail-title">' + item.title + '</div>',
+                        '<div class="detail-stem">' + item.stem + '</div>',
+                        '<div class="answer-group-title">学生作答：</div>',
+                        '<div class="student-answer-box ' + item.status + '">',
+                        '<div class="answer-row">',
+                        '<div class="answer-left"><i class="fa ' + getAnswerIcon(item.status) + ' answer-icon"></i><span>' + item.studentAnswer + '</span></div>',
+                        '<div class="answer-status">' + getAnswerStatusText(item.status) + (item.status === 'wrong' ? ' <i class="fa fa-close"></i>' : '') + '</div>',
+                        '</div>',
+                        '</div>',
+                        '<div class="correct-answer-box">',
+                        '<div class="correct-answer-label">正确答案：</div>',
+                        '<div class="correct-answer-value">' + item.correctAnswer + '</div>',
+                        '<div class="knowledge-point">知识点：<span>' + item.knowledge + '</span></div>',
+                        '</div>',
+                        '</div>'
+                    ].join('');
+                }).join('');
+            }
+
+            function parseDurationToSeconds(durationText) {
+                if (!durationText) {
+                    return 0;
+                }
+                var hoursMatch = durationText.match(/(\d+)\s*h/i);
+                var minutesMatch = durationText.match(/(\d+)\s*m/i);
+                var secondsMatch = durationText.match(/(\d+)\s*s/i);
+                var totalSeconds = 0;
+                if (hoursMatch) {
+                    totalSeconds += Number(hoursMatch[1]) * 3600;
+                }
+                if (minutesMatch) {
+                    totalSeconds += Number(minutesMatch[1]) * 60;
+                }
+                if (secondsMatch) {
+                    totalSeconds += Number(secondsMatch[1]);
+                }
+                return totalSeconds;
+            }
+
+            function calculateAverageAnsweredTime(data) {
+                var answeredCount = (data.details || []).filter(function(item) {
+                    return item.status !== 'empty';
+                }).length;
+                if (!answeredCount) {
+                    return null;
+                }
+                var totalSeconds = parseDurationToSeconds(data.duration);
+                if (!totalSeconds) {
+                    return null;
+                }
+                return {
+                    seconds: totalSeconds / answeredCount,
+                    answeredCount: answeredCount,
+                    totalSeconds: totalSeconds
+                };
+            }
+
+            function formatSecondsToMinuteText(seconds) {
+                if (!seconds && seconds !== 0) {
+                    return '--';
+                }
+                var rounded = Math.round(seconds);
+                var minutes = Math.floor(rounded / 60);
+                var secs = rounded % 60;
+                if (minutes > 0 && secs > 0) {
+                    return minutes + '分钟' + secs + '秒';
+                }
+                if (minutes > 0) {
+                    return minutes + '分钟';
+                }
+                return secs + '秒';
+            }
+
+            function calcOverrunRate(timeSpentSec, recommendedTimeSec) {
+                if (!recommendedTimeSec) {
+                    return 0;
+                }
+                return (timeSpentSec - recommendedTimeSec) / recommendedTimeSec;
+            }
+
+            function calcEfficiencyIndex(earnedScore, timeSpentSec) {
+                if (!timeSpentSec) {
+                    return 0;
+                }
+                return earnedScore / (timeSpentSec / 60);
+            }
+
+            function formatPercentValue(value) {
+                var percent = Math.round(value * 100);
+                return (percent > 0 ? '+' : '') + percent + '%';
+            }
+
+            function getTimeTypeMeta(typeKey) {
+                var metaMap = {
+                    gold: { label: '时间金矿', className: 'gold' },
+                    trap: { label: '时间陷阱', className: 'trap' },
+                    blackhole: { label: '时间黑洞', className: 'blackhole' },
+                    leak: { label: '时间深渊', className: 'leak' }
+                };
+                return metaMap[typeKey] || metaMap.leak;
+            }
+
+            function classifyTimeEfficiency(row) {
+                if (row.earnedScore >= row.fullScore && row.timeSpentSec <= row.recommendedTimeSec) {
+                    return 'gold';
+                }
+                if (row.earnedScore >= row.fullScore && row.timeSpentSec > row.recommendedTimeSec * 1.3) {
+                    return 'trap';
+                }
+                if (row.earnedScore === 0 && row.timeSpentSec > row.recommendedTimeSec * 1.3) {
+                    return 'blackhole';
+                }
+                return 'leak';
+            }
+
+            function buildTimeDiagnosis(row) {
+                var typeMeta = getTimeTypeMeta(row.typeKey);
+                if (row.typeKey === 'gold') {
+                    return '该题在推荐用时内完成且拿满分，适合作为同类型题的节奏模板。';
+                }
+                if (row.typeKey === 'trap') {
+                    return '最终得分虽完整，但耗时明显偏长，后续应压缩验算和犹豫时间。';
+                }
+                if (row.typeKey === 'blackhole') {
+                    return '投入时间较多但没有形成得分，是优先复盘的时间黑洞题。';
+                }
+                return typeMeta.label + '：用时偏短且未得分，存在过早放弃或跳步判断问题。';
+            }
+
+            function buildTimeEfficiencyRows(details) {
+                return (details || []).map(function(item) {
+                    var typeKey = classifyTimeEfficiency(item);
+                    return {
+                        questionNo: item.questionNo,
+                        module: item.module,
+                        difficultyTier: item.difficultyTier,
+                        timeSpentSec: item.timeSpentSec,
+                        recommendedTimeSec: item.recommendedTimeSec,
+                        overrunRate: calcOverrunRate(item.timeSpentSec, item.recommendedTimeSec),
+                        earnedScore: item.earnedScore,
+                        fullScore: item.fullScore,
+                        efficiencyIndex: calcEfficiencyIndex(item.earnedScore, item.timeSpentSec),
+                        typeKey: typeKey,
+                        typeMeta: getTimeTypeMeta(typeKey),
+                        diagnosis: buildTimeDiagnosis({
+                            typeKey: typeKey,
+                            earnedScore: item.earnedScore,
+                            fullScore: item.fullScore,
+                            timeSpentSec: item.timeSpentSec,
+                            recommendedTimeSec: item.recommendedTimeSec
+                        })
+                    };
+                }).sort(function(a, b) {
+                    var rankMap = { blackhole: 0, trap: 1, leak: 2, gold: 3 };
+                    var rankDiff = rankMap[a.typeKey] - rankMap[b.typeKey];
+                    if (rankDiff !== 0) {
+                        return rankDiff;
+                    }
+                    return a.questionNo - b.questionNo;
+                });
+            }
+
+            function classifyTimeAllocationGroup(group) {
+                var deviation = group.overrunRate;
+                if (Math.abs(deviation) <= 0.15 && group.scoreRate >= 0.6) {
+                    return 'gold';
+                }
+                if (deviation > 0.25 && group.scoreRate < 0.5) {
+                    return 'blackhole';
+                }
+                if (deviation > 0.15) {
+                    return 'trap';
+                }
+                return 'leak';
+            }
+
+            function buildTimeAllocationGroups(details) {
+                var segments = [
+                    { label: '基础段 (1-10)', min: 1, max: 10 },
+                    { label: '进阶段 (11-20)', min: 11, max: 20 },
+                    { label: '冲刺段 (21-25)', min: 21, max: 25 }
+                ];
+                return segments.map(function(segment) {
+                    var items = (details || []).filter(function(item) {
+                        return item.questionNo >= segment.min && item.questionNo <= segment.max;
+                    });
+                    var actualTime = items.reduce(function(sum, item) { return sum + (item.timeSpentSec || 0); }, 0);
+                    var recommendedTime = items.reduce(function(sum, item) { return sum + (item.recommendedTimeSec || 0); }, 0);
+                    var earnedScore = items.reduce(function(sum, item) { return sum + (item.earnedScore || 0); }, 0);
+                    var fullScore = items.reduce(function(sum, item) { return sum + (item.fullScore || 0); }, 0);
+                    var group = {
+                        label: segment.label,
+                        actualTime: actualTime,
+                        recommendedTime: recommendedTime,
+                        earnedScore: earnedScore,
+                        fullScore: fullScore,
+                        overrunRate: calcOverrunRate(actualTime, recommendedTime),
+                        scoreRate: fullScore ? earnedScore / fullScore : 0,
+                        itemCount: items.length
+                    };
+                    group.typeKey = classifyTimeAllocationGroup(group);
+                    group.typeMeta = getTimeTypeMeta(group.typeKey);
+                    return group;
+                });
+            }
+
+            function getPersonaDefinition(label) {
+                return personaDefinitions.find(function(item) {
+                    return item.label === label;
+                }) || personaDefinitions[personaDefinitions.length - 1];
+            }
+
+            function buildPersonaQuestionStates(details, currentData) {
+                var questionStateMap = {};
+                ((currentData && currentData.map) || []).forEach(function(status, index) {
+                    questionStateMap[index + 1] = status;
+                });
+                (details || []).forEach(function(item, index) {
+                    var questionNo = item.questionNo || (index + 1);
+                    if (!questionStateMap[questionNo]) {
+                        questionStateMap[questionNo] = item.status || 'empty';
+                    }
+                });
+                return Object.keys(questionStateMap).map(function(key) {
+                    return {
+                        questionNo: Number(key),
+                        status: questionStateMap[key]
+                    };
+                }).sort(function(a, b) {
+                    return a.questionNo - b.questionNo;
+                });
+            }
+
+            function summarizePersonaSegment(states, min, max) {
+                var items = states.filter(function(item) {
+                    return item.questionNo >= min && item.questionNo <= max;
+                });
+                var correct = items.filter(function(item) { return item.status === 'correct'; }).length;
+                var wrong = items.filter(function(item) { return item.status === 'wrong'; }).length;
+                var empty = items.filter(function(item) { return item.status === 'empty'; }).length;
+                var answered = correct + wrong;
+                return {
+                    min: min,
+                    max: max,
+                    total: items.length,
+                    correct: correct,
+                    wrong: wrong,
+                    empty: empty,
+                    answered: answered,
+                    accuracy: answered ? correct / answered : 0,
+                    answeredRate: items.length ? answered / items.length : 0
+                };
+            }
+
+            function buildStrategyPersona(details, currentData) {
+                var rows = buildTimeEfficiencyRows(details);
+                var groups = buildTimeAllocationGroups(details);
+                var counts = rows.reduce(function(map, row) {
+                    map[row.typeKey] = (map[row.typeKey] || 0) + 1;
+                    return map;
+                }, {});
+                var finalGroup = groups[2] || { overrunRate: 0, scoreRate: 0 };
+                var states = buildPersonaQuestionStates(details, currentData);
+                var emptyCount = states.filter(function(item) { return item.status === 'empty'; }).length;
+                var totalQuestions = states.length;
+                var baseSegment = summarizePersonaSegment(states, 1, 10);
+                var advancedSegment = summarizePersonaSegment(states, 11, 15);
+                var coreSegment = summarizePersonaSegment(states, 16, 22);
+                var challengeSegment = summarizePersonaSegment(states, 23, 25);
+                var basePerfect = baseSegment.total > 0 && baseSegment.correct === baseSegment.total;
+                var emptyOnlyInChallenge = emptyCount > 0 && states.every(function(item) {
+                    return item.status !== 'empty' || item.questionNo >= 23;
+                });
+                var conservativeEmptyThreshold = totalQuestions >= 25 ? 5 : Math.max(3, Math.ceil(totalQuestions * 0.25));
+                var segmentSamples = [baseSegment, advancedSegment, coreSegment, challengeSegment].filter(function(segment) {
+                    return segment.total > 0;
+                });
+                var comparableSegments = segmentSamples.filter(function(segment) {
+                    return segment.answered > 0;
+                });
+                var accuracyRates = comparableSegments.map(function(segment) {
+                    return segment.accuracy;
+                });
+                var answeredRates = segmentSamples.map(function(segment) {
+                    return segment.answeredRate;
+                });
+                var accuracyStable = accuracyRates.length >= 2
+                    && (Math.max.apply(null, accuracyRates) - Math.min.apply(null, accuracyRates) <= 0.2);
+                var answeredStable = answeredRates.length >= 2
+                    && (Math.max.apply(null, answeredRates) - Math.min.apply(null, answeredRates) <= 0.25);
+                var balancedByTime = Math.abs((groups[0] || { overrunRate: 0 }).overrunRate) <= 0.15
+                    && Math.abs((groups[1] || { overrunRate: 0 }).overrunRate) <= 0.15;
+                var persona = '混合型';
+                var ruleText = '当前未明显命中单一稳定策略，系统按混合型展示。';
+
+                if (basePerfect && emptyOnlyInChallenge) {
+                    persona = '狙击型';
+                    ruleText = '基础段保持全对，且空题集中出现在高难挑战段，说明取舍明确。';
+                } else if (basePerfect && emptyCount > conservativeEmptyThreshold) {
+                    persona = '保守型';
+                    ruleText = '基础段稳定拿分，但整体空题数量偏多，说明当前更偏向保分策略。';
+                } else if (challengeSegment.answered > 2 && challengeSegment.accuracy < 0.5) {
+                    persona = '冒进型';
+                    ruleText = '高难挑战段尝试较多，但命中率偏低，说明后段进攻意图较强。';
+                } else if (accuracyStable && answeredStable && balancedByTime) {
+                    persona = '均衡型';
+                    ruleText = '各区段答题率、正确率和时间节奏差异都相对可控，整体更均衡。';
+                }
+
+                var definition = getPersonaDefinition(persona);
+                var highlights = [
+                    ruleText,
+                    '当前共识别出 ' + (counts.gold || 0) + ' 道时间金矿、' + (counts.trap || 0) + ' 道时间陷阱、' + (counts.blackhole || 0) + ' 道时间黑洞、' + (counts.leak || 0) + ' 道时间深渊。',
+                    '人格释义：' + definition.description,
+                    '冲刺段' + (finalGroup.overrunRate < -0.15 ? '投入偏少，建议避免过早放弃。' : (finalGroup.overrunRate > 0.18 ? '投入偏高，需提升最后阶段取舍效率。' : '节奏较稳，可继续保持。'))
+                ];
+                return {
+                    persona: persona,
+                    description: definition.description,
+                    highlights: highlights
+                };
+            }
+
+            function renderTimePersonaLegend(currentPersona) {
+                timePersonaLegend.innerHTML = personaDefinitions.map(function(item) {
+                    var activeClass = item.label === currentPersona ? ' active' : '';
+                    return [
+                        '<div class="time-persona-note' + activeClass + '">',
+                        '<span class="time-persona-chip">' + escapeHtml(item.label) + '</span>',
+                        '</div>'
+                    ].join('');
+                }).join('');
+            }
+
+            function renderTimeEfficiencyOverview(details) {
+                var rows = buildTimeEfficiencyRows(details);
+                if (!rows.length) {
+                    timeEfficiencyOverview.innerHTML = '<div class="knowledge-card-empty">暂无时间效率数据</div>';
+                    return;
+                }
+                timeEfficiencyOverview.innerHTML = [
+                    '<table class="time-efficiency-table">',
+                    '<thead><tr><th>题号</th><th>模块</th><th>你的用时</th><th>推荐用时</th><th>时间偏差率</th><th>得分</th><th>类型判定</th></tr></thead>',
+                    '<tbody>',
+                    rows.map(function(row) {
+                        var rowClass = row.typeKey === 'gold' ? 'time-row-strong' : (row.typeKey === 'blackhole' ? 'time-row-weak' : '');
+                        return [
+                            '<tr class="' + rowClass + '">',
+                            '<td>' + row.questionNo + '</td>',
+                            '<td>' + escapeHtml(row.module) + '</td>',
+                            '<td>' + escapeHtml(formatSecondsToMinuteText(row.timeSpentSec)) + '</td>',
+                            '<td>' + escapeHtml(formatSecondsToMinuteText(row.recommendedTimeSec)) + '</td>',
+                            '<td>' + escapeHtml(formatPercentValue(row.overrunRate)) + '</td>',
+                            '<td>' + row.earnedScore + '/' + row.fullScore + '</td>',
+                            '<td><span class="time-type-badge ' + row.typeMeta.className + '">' + escapeHtml(row.typeMeta.label) + '</span></td>',
+                            '</tr>'
+                        ].join('');
+                    }).join(''),
+                    '</tbody></table>'
+                ].join('');
+            }
+
+            function renderTimeAllocationPanel(details) {
+                var groups = buildTimeAllocationGroups(details);
+                timeAllocationPanel.innerHTML = [
+                    '<table class="time-efficiency-table">',
+                    '<thead><tr><th>区间</th><th>你的用时</th><th>推荐用时</th><th>时间偏差率</th><th>得分</th><th>类型判定</th></tr></thead>',
+                    '<tbody>',
+                    groups.map(function(group) {
+                        return [
+                            '<tr>',
+                            '<td>' + escapeHtml(group.label) + '</td>',
+                            '<td>' + escapeHtml(formatSecondsToMinuteText(group.actualTime)) + '</td>',
+                            '<td>' + escapeHtml(formatSecondsToMinuteText(group.recommendedTime)) + '</td>',
+                            '<td>' + escapeHtml(formatPercentValue(group.overrunRate)) + '</td>',
+                            '<td>' + group.earnedScore + '/' + group.fullScore + '</td>',
+                            '<td><span class="time-type-badge ' + group.typeMeta.className + '">' + escapeHtml(group.typeMeta.label) + '</span></td>',
+                            '</tr>'
+                        ].join('');
+                    }).join(''),
+                    '</tbody></table>'
+                ].join('');
+            }
+
+            function renderTimePersonaPanel(details, currentData) {
+                var persona = buildStrategyPersona(details, currentData);
+                renderTimePersonaLegend(persona.persona);
+                timePersonaPanel.innerHTML = [
+                    '<div class="time-persona-card">',
+                    '<div class="time-persona-title">当前学生人格：' + escapeHtml(persona.persona) + '</div>',
+                    '<div class="time-persona-desc">' + escapeHtml(persona.description) + '</div>',
+                    '</div>'
+                ].join('');
+            }
+
+            function renderTimeEfficiency(details, data) {
+                var averageTimeData = calculateAverageAnsweredTime(data);
+                timeEfficiencyAverage.textContent = averageTimeData ? formatSecondsToMinuteText(averageTimeData.seconds) : '--';
+                timeEfficiencyAverageNote.textContent = averageTimeData
+                    ? '当前统计：已作答 ' + averageTimeData.answeredCount + ' 题，总用时 ' + formatSecondsToMinuteText(averageTimeData.totalSeconds) + '。'
+                    : '当前科目暂无可用于计算平均用时的已作答题目。';
+                renderTimeEfficiencyOverview(details);
+                renderTimeAllocationPanel(details);
+                renderTimePersonaPanel(details, data);
+            }
+
+            function getInsightTopicLabel(topic) {
+                return String((topic && topic.label) || '当前知识点').replace(/^#/, '');
+            }
+
+            function getInsightSegmentLabel(group) {
+                return String((group && group.label) || '当前区段').replace(/\s*\(.*/, '');
+            }
+
+            function buildAmcAiInsightModel(subject, currentData, knowledgeDomains) {
+                var rows = buildTimeEfficiencyRows(currentData.details || []);
+                var timeCounts = rows.reduce(function(counts, row) {
+                    counts[row.typeKey] = (counts[row.typeKey] || 0) + 1;
+                    return counts;
+                }, {});
+                var groups = buildTimeAllocationGroups(currentData.details || []).filter(function(group) {
+                    return group.itemCount > 0;
+                });
+                var baseGroup = groups[0];
+                var finalGroup = groups[groups.length - 1] || baseGroup;
+                var personaData = buildStrategyPersona(currentData.details || [], currentData);
+                var topics = (knowledgeDomains || []).slice().sort(function(a, b) {
+                    return a.score - b.score;
+                });
+                var weakestTopic = topics[0] || { label: '知识点', score: 0 };
+                var strongestTopic = topics[topics.length - 1] || weakestTopic;
+                var accuracy = currentData.accuracy || '--';
+                var paperLabel = subject.label + (currentData !== subject && currentData.label ? ' · ' + currentData.label : '');
+                var baseStable = baseGroup && baseGroup.scoreRate >= 0.75;
+                var finalNeedsWork = finalGroup && baseGroup && finalGroup.scoreRate + 0.12 < baseGroup.scoreRate;
+                var blackholeCount = timeCounts.blackhole || 0;
+                var adviceTime = blackholeCount
+                    ? '优先复盘 ' + blackholeCount + ' 道时间黑洞题，记录每道题的卡点，并为同类题设置止损时间。'
+                    : '围绕后段题目进行限时训练，先完成可稳定得分的题，再处理需要深度推导的题。';
+
+                return {
+                    title: 'AI综合评价',
+                    subtitle: '基于本次成绩、作答过程与能力表现生成',
+                    summary: paperLabel + '整体呈现“基础得分较稳、后段需要更精细取舍”的结构；当前应把复盘重点放在时间效率与薄弱知识点的同步修正上。',
+                    blocks: [
+                        {
+                            title: '结果表现',
+                            text: '当前正确率为 ' + accuracy + '，' + getInsightSegmentLabel(baseGroup) + (baseStable ? '拿分较稳' : '仍有可补强空间') + '，' + getInsightSegmentLabel(finalGroup) + (finalNeedsWork ? '是主要失分区' : '表现相对可控') + '。'
+                        },
+                        {
+                            title: '过程表现',
+                            text: '作答策略偏' + personaData.persona + '，本卷识别出 ' + blackholeCount + ' 道时间黑洞题；后续需要减少无效投入并稳定答题节奏。'
+                        },
+                        {
+                            title: '能力结构',
+                            text: getInsightTopicLabel(strongestTopic) + '相对稳固，' + getInsightTopicLabel(weakestTopic) + '是当前薄弱项，应结合错题回溯关键方法。'
+                        }
+                    ],
+                    advice: [
+                        adviceTime,
+                        '针对 ' + getInsightTopicLabel(weakestTopic) + ' 完成“知识点回顾 - 典型题精练 - 限时复测”三步训练，并在下一轮验证改进。'
+                    ],
+                    evidenceDetails: [
+                        getInsightSegmentLabel(baseGroup) + '得分率为 ' + Math.round(((baseGroup && baseGroup.scoreRate) || 0) * 100) + '%，' + getInsightSegmentLabel(finalGroup) + '得分率为 ' + Math.round(((finalGroup && finalGroup.scoreRate) || 0) * 100) + '%。',
+                        '时间效率分类：时间金矿 ' + (timeCounts.gold || 0) + ' 道、时间陷阱 ' + (timeCounts.trap || 0) + ' 道、时间黑洞 ' + blackholeCount + ' 道、时间深渊 ' + (timeCounts.leak || 0) + ' 道。',
+                        '知识点掌握率最低的是 ' + getInsightTopicLabel(weakestTopic) + '（' + weakestTopic.score + '%），最高的是 ' + getInsightTopicLabel(strongestTopic) + '（' + strongestTopic.score + '%）。'
+                    ]
+                };
+            }
+
+            function renderAmcAiInsight(subject, currentData, knowledgeDomains) {
+                if (!window.AiInsight) {
+                    return;
+                }
+                window.AiInsight.render(aiInsightSection, buildAmcAiInsightModel(subject, currentData, knowledgeDomains));
+            }
+
+            function getTopicColor(score) {
+                if (score >= 85) return '#2f4269';
+                if (score >= 70) return '#4f6fa8';
+                return '#9ca8aa';
+            }
+
+            function getKnowledgeDomainTheme(domainLabel) {
+                return knowledgeDomainThemes[domainLabel] || {
+                    accent: '#4f6fa8',
+                    deep: '#2f4269',
+                    soft: '#eef2f8',
+                    border: '#d7dde7',
+                    shadow: 'rgba(47, 66, 105, 0.12)',
+                    hoverShadow: 'rgba(47, 66, 105, 0.18)',
+                    radarFill: 'rgba(79, 111, 168, 0.08)'
+                };
+            }
+
+            function getKnowledgeThemeStyle(domainLabel) {
+                var theme = getKnowledgeDomainTheme(domainLabel);
+                return [
+                    '--knowledge-card-bg:' + theme.soft,
+                    '--knowledge-card-bg-soft:#ffffff',
+                    '--knowledge-card-border:' + theme.border,
+                    '--knowledge-card-hover-border:' + theme.accent,
+                    '--knowledge-card-shadow:' + theme.shadow,
+                    '--knowledge-card-hover-shadow:' + theme.hoverShadow,
+                    '--knowledge-card-accent:' + theme.accent,
+                    '--knowledge-card-title:' + theme.deep,
+                    '--knowledge-card-pill-bg:' + theme.soft,
+                    '--knowledge-card-pill-text:' + theme.deep,
+                    '--knowledge-card-pill-border:' + theme.border
+                ].join(';');
+            }
+
+            function escapeHtml(text) {
+                return String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function splitLabel(text, maxCharsPerLine, maxLines) {
+                var words = text.split(' ');
+                var lines = [];
+                var currentLine = '';
+                words.forEach(function(word) {
+                    var candidate = currentLine ? currentLine + ' ' + word : word;
+                    if (candidate.length <= maxCharsPerLine || !currentLine) {
+                        currentLine = candidate;
+                        return;
+                    }
+                    lines.push(currentLine);
+                    currentLine = word;
+                });
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+                if (lines.length > maxLines) {
+                    var trimmed = lines.slice(0, maxLines - 1);
+                    trimmed.push(lines.slice(maxLines - 1).join(' '));
+                    return trimmed;
+                }
+                return lines;
+            }
+
+            function showKnowledgeTooltip(event) {
+                var label = event.target.getAttribute('data-label');
+                var score = event.target.getAttribute('data-score');
+                if (!label) {
+                    return;
+                }
+                knowledgeRadarTooltip.innerHTML = '<strong>' + escapeHtml(label) + '</strong><span>掌握率：' + escapeHtml(score) + '%</span>';
+                knowledgeRadarTooltip.classList.add('visible');
+                var rect = knowledgeChartWrap.getBoundingClientRect();
+                knowledgeRadarTooltip.style.left = (event.clientX - rect.left) + 'px';
+                knowledgeRadarTooltip.style.top = (event.clientY - rect.top) + 'px';
+            }
+
+            function hideKnowledgeTooltip() {
+                knowledgeRadarTooltip.classList.remove('visible');
+            }
+
+            function ensureKnowledgeBarChartInstance() {
+                if (knowledgeBarChartInstance || typeof echarts === 'undefined') {
+                    return;
+                }
+                // Lazy init keeps the ECharts instance scoped to the bar view and avoids redundant creation.
+                knowledgeBarChartInstance = echarts.init(knowledgeBarChart);
+            }
+
+            function renderBarChart(topics) {
+                if (!topics.length || typeof echarts === 'undefined') {
+                    knowledgeBarChart.classList.add('hidden');
+                    if (knowledgeBarChartInstance) {
+                        knowledgeBarChartInstance.clear();
+                    }
+                    return;
+                }
+
+                knowledgeBarChart.classList.remove('hidden');
+                ensureKnowledgeBarChartInstance();
+                if (!knowledgeBarChartInstance) {
+                    return;
+                }
+
+                var categoryLabels = topics.map(function(topic) {
+                    return topic.label;
+                });
+                var scoreValues = topics.map(function(topic) {
+                    return topic.score;
+                });
+                var topicThemes = topics.map(function(topic) {
+                    return getKnowledgeDomainTheme(topic.domainLabel || topic.label);
+                });
+                var containerHeight = Math.max(520, topics.length * 34 + 180);
+                knowledgeBarChart.style.height = containerHeight + 'px';
+                knowledgeBarChartInstance.resize();
+                knowledgeBarChartInstance.setOption({
+                    animationDuration: 380,
+                    animationDurationUpdate: 260,
+                    grid: {
+                        left: 210,
+                        right: 42,
+                        top: 70,
+                        bottom: 78,
+                        containLabel: false
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow',
+                            shadowStyle: {
+                                color: 'rgba(47, 66, 105, 0.08)'
+                            }
+                        },
+                        backgroundColor: 'rgba(47, 66, 105, 0.96)',
+                        borderWidth: 0,
+                        textStyle: {
+                            color: '#ffffff',
+                            fontSize: 12
+                        },
+                        formatter: function(params) {
+                            var item = params && params[0];
+                            if (!item) {
+                                return '';
+                            }
+                            return item.name + '<br/>掌握率：' + item.value + '%';
+                        }
+                    },
+                    legend: {
+                        top: 16,
+                        left: 24,
+                        icon: 'roundRect',
+                        itemWidth: 14,
+                        itemHeight: 8,
+                        textStyle: {
+                            color: '#475467',
+                            fontSize: 12,
+                            fontWeight: 700
+                        },
+                        data: ['知识点掌握率']
+                    },
+                    dataZoom: [
+                        {
+                            type: 'inside',
+                            yAxisIndex: 0,
+                            zoomOnMouseWheel: true,
+                            moveOnMouseMove: true,
+                            moveOnMouseWheel: true
+                        },
+                        {
+                            type: 'slider',
+                            yAxisIndex: 0,
+                            right: 10,
+                            width: 14,
+                            start: 0,
+                            end: Math.min(100, Math.max(45, (10 / Math.max(topics.length, 10)) * 100)),
+                            fillerColor: 'rgba(79, 111, 168, 0.18)',
+                            borderColor: '#dce2ec',
+                            backgroundColor: '#f5f7fb',
+                            moveHandleSize: 0,
+                            showDetail: false
+                        }
+                    ],
+                    xAxis: {
+                        type: 'value',
+                        min: 0,
+                        max: 100,
+                        name: '掌握率 (%)',
+                        nameLocation: 'middle',
+                        nameGap: 40,
+                        axisLabel: {
+                            color: '#667085',
+                            fontSize: 12,
+                            fontWeight: 700,
+                            formatter: '{value}%'
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: '#e7ecf3',
+                                type: 'dashed'
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#d0d5dd'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        inverse: true,
+                        data: categoryLabels,
+                        axisLabel: {
+                            color: '#344054',
+                            fontSize: 12,
+                            fontWeight: 700,
+                            width: 170,
+                            overflow: 'break',
+                            lineHeight: 16
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        }
+                    },
+                    series: [
+                        {
+                            name: '知识点掌握率',
+                            type: 'bar',
+                            barMaxWidth: 18,
+                            data: scoreValues,
+                            label: {
+                                show: true,
+                                position: 'right',
+                                color: '#344054',
+                                fontSize: 12,
+                                fontWeight: 900,
+                                formatter: '{c}%'
+                            },
+                            itemStyle: {
+                                borderRadius: [0, 999, 999, 0],
+                                color: function(params) {
+                                    var theme = topicThemes[params.dataIndex] || getKnowledgeDomainTheme('');
+                                    return new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                                        { offset: 0, color: theme.accent },
+                                        { offset: 1, color: theme.deep }
+                                    ]);
+                                }
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 14,
+                                    shadowColor: 'rgba(47, 66, 105, 0.18)'
+                                }
+                            }
+                        }
+                    ]
+                }, true);
+            }
+
+            function renderChartViewState() {
+                var isRadar = activeChartView === 'radar';
+                radarChartPanel.classList.toggle('hidden', !isRadar);
+                barChartPanel.classList.toggle('hidden', isRadar);
+                chartViewState.textContent = isRadar ? '当前：蜘蛛图' : '当前：条形图';
+                knowledgeChartTitle.textContent = isRadar ? 'AMC 一级知识点正确率雷达图' : 'AMC 一级知识点正确率条形图';
+                if (!isRadar) {
+                    hideKnowledgeTooltip();
+                    if (knowledgeBarChartInstance) {
+                        knowledgeBarChartInstance.resize();
+                    }
+                }
+            }
+
+            function buildKnowledgeComment(domains) {
+                if (!domains.length) {
+                    return '当前暂无 AMC 知识点画像数据。';
+                }
+                var sortedDomains = domains.slice().sort(function(a, b) {
+                    return b.score - a.score;
+                });
+                var strongDomain = sortedDomains[0];
+                var weakDomain = sortedDomains[sortedDomains.length - 1];
+                var supportDomain = sortedDomains[1] || strongDomain;
+                var weakChild = weakDomain.children && weakDomain.children.length ? weakDomain.children[0].label : weakDomain.label;
+                return '当前在 ' + strongDomain.label + ' 与 ' + supportDomain.label + ' 维度表现更稳；相较之下，' + weakDomain.label + ' 仍是主要提升空间，建议优先围绕 ' + weakChild + ' 及相关子节点做专题复盘与限时训练。';
+            }
+
+            function flattenKnowledgeChildren(domains) {
+                var cards = [];
+                domains.forEach(function(domain) {
+                    (domain.children || []).forEach(function(child) {
+                        cards.push({
+                            domainLabel: domain.label,
+                            label: child.label,
+                            score: child.score,
+                            items: child.items || []
+                        });
+                    });
+                });
+                return cards;
+            }
+
+            function buildKnowledgeCardSummary(card) {
+                if (!card.items.length) {
+                    return '当前节点暂无更细分的叶子知识点说明。';
+                }
+                var previewItems = card.items.slice(0, 3).join('、');
+                var suffix = card.items.length > 3 ? ' 等 ' + card.items.length + ' 个叶子知识点。' : '。';
+                return '覆盖：' + previewItems + suffix;
+            }
+
+            function renderKnowledgeCards(topics, subject, currentData) {
+                var cards = flattenKnowledgeChildren(topics);
+                if (!cards.length) {
+                    knowledgeCardGrid.innerHTML = '<div class="knowledge-card-empty">暂无知识点卡片数据</div>';
+                    return;
+                }
+
+                knowledgeCardGrid.innerHTML = cards.map(function(card) {
+                    var themeStyle = getKnowledgeThemeStyle(card.domainLabel);
+                    return [
+                        '<div class="knowledge-card" style="' + themeStyle + '">',
+                        '<div class="knowledge-card-head">',
+                        '<div class="knowledge-card-title">' + escapeHtml(card.label) + '</div>',
+                        '<div class="knowledge-card-score">' + card.score + '%</div>',
+                        '</div>',
+                        '<div class="knowledge-card-summary">' + escapeHtml(buildKnowledgeCardSummary(card)) + '</div>',
+                        '<div class="knowledge-card-tags"><span class="knowledge-card-tag">' + escapeHtml(card.domainLabel) + '</span></div>',
+                        '</div>'
+                    ].join('');
+                }).join('');
+            }
+
+            function renderKnowledgeChart(topics, subject, currentData) {
+                if (!topics.length) {
+                    knowledgeRadarChart.innerHTML = '';
+                    knowledgeBarChart.classList.add('hidden');
+                    if (knowledgeBarChartInstance) {
+                        knowledgeBarChartInstance.clear();
+                    }
+                    return;
+                }
+
+                var count = topics.length;
+                var chartLayout = count >= 16
+                    ? { size: 520, cx: 260, cy: 260, radius: 124, labelRadius: 186, pointRadius: 4, labelFontSize: 8.2, levelFontSize: 8, lineGap: 12, maxCharsPerLine: 16, maxLines: 3, sideOffset: 10 }
+                    : { size: 420, cx: 210, cy: 210, radius: 100, labelRadius: 146, pointRadius: 4.5, labelFontSize: 9.5, levelFontSize: 8.5, lineGap: 14, maxCharsPerLine: 18, maxLines: 2, sideOffset: 8 };
+                var cx = chartLayout.cx;
+                var cy = chartLayout.cy;
+                var radius = chartLayout.radius;
+                var levels = [20, 40, 60, 80, 100];
+                var angleStep = (Math.PI * 2) / count;
+                knowledgeRadarChart.setAttribute('viewBox', '0 0 ' + chartLayout.size + ' ' + chartLayout.size);
+
+                function getPoint(value, index, multiplier) {
+                    var ratio = (multiplier !== undefined ? multiplier : value) / 100;
+                    var angle = -Math.PI / 2 + angleStep * index;
+                    return {
+                        x: cx + Math.cos(angle) * radius * ratio,
+                        y: cy + Math.sin(angle) * radius * ratio
+                    };
+                }
+
+                var gridPolygons = levels.map(function(level) {
+                    var path = topics.map(function(_, index) {
+                        var point = getPoint(level, index, level);
+                        return point.x.toFixed(2) + ',' + point.y.toFixed(2);
+                    }).join(' ');
+                    return '<polygon points="' + path + '" fill="none" stroke="#d7dde7" stroke-width="1" stroke-dasharray="4 4"></polygon>';
+                }).join('');
+
+                var axisLines = topics.map(function(_, index) {
+                    var point = getPoint(100, index);
+                    var theme = getKnowledgeDomainTheme(topics[index].domainLabel || topics[index].label);
+                    return '<line x1="' + cx + '" y1="' + cy + '" x2="' + point.x.toFixed(2) + '" y2="' + point.y.toFixed(2) + '" stroke="' + theme.border + '" stroke-width="1.2"></line>';
+                }).join('');
+
+                var dataPoints = topics.map(function(topic, index) {
+                    return getPoint(topic.score, index);
+                });
+                var polygonPoints = dataPoints.map(function(point) {
+                    return point.x.toFixed(2) + ',' + point.y.toFixed(2);
+                }).join(' ');
+                var polygonSegments = dataPoints.map(function(point, index) {
+                    var nextPoint = dataPoints[(index + 1) % dataPoints.length];
+                    var theme = getKnowledgeDomainTheme(topics[index].domainLabel || topics[index].label);
+                    return '<line x1="' + point.x.toFixed(2) + '" y1="' + point.y.toFixed(2) + '" x2="' + nextPoint.x.toFixed(2) + '" y2="' + nextPoint.y.toFixed(2) + '" stroke="' + theme.accent + '" stroke-width="2.4" stroke-linecap="round"></line>';
+                }).join('');
+
+                var labels = topics.map(function(topic, index) {
+                    var angle = -Math.PI / 2 + angleStep * index;
+                    var cosine = Math.cos(angle);
+                    var sine = Math.sin(angle);
+                    var labelPoint = {
+                        x: cx + cosine * chartLayout.labelRadius + (Math.abs(cosine) < 0.18 ? 0 : (cosine > 0 ? chartLayout.sideOffset : -chartLayout.sideOffset)),
+                        y: cy + sine * chartLayout.labelRadius + (Math.abs(sine) < 0.18 ? 0 : (sine > 0 ? 6 : -6))
+                    };
+                    var anchor = Math.abs(cosine) < 0.18 ? 'middle' : (cosine > 0 ? 'start' : 'end');
+                    var lines = splitLabel(topic.label, chartLayout.maxCharsPerLine, chartLayout.maxLines);
+                    var dyStart = lines.length > 1 ? -((lines.length - 1) * chartLayout.lineGap) / 2 : 0;
+                    var theme = getKnowledgeDomainTheme(topic.domainLabel || topic.label);
+                    var tspans = lines.map(function(line, lineIndex) {
+                        return '<tspan x="' + labelPoint.x.toFixed(2) + '" dy="' + (lineIndex === 0 ? dyStart : chartLayout.lineGap) + '">' + escapeHtml(line) + '</tspan>';
+                    }).join('');
+                    return '<text x="' + labelPoint.x.toFixed(2) + '" y="' + labelPoint.y.toFixed(2) + '" text-anchor="' + anchor + '" font-size="' + chartLayout.labelFontSize + '" font-weight="800" fill="' + theme.deep + '">' + tspans + '</text>';
+                }).join('');
+
+                var levelLabels = levels.map(function(level) {
+                    return '<text x="' + cx + '" y="' + (cy - radius * (level / 100) + 4).toFixed(2) + '" text-anchor="middle" font-size="' + chartLayout.levelFontSize + '" font-weight="700" fill="#98a2b3">' + level + '</text>';
+                }).join('');
+
+                knowledgeRadarChart.innerHTML = [
+                    '<rect x="0" y="0" width="' + chartLayout.size + '" height="' + chartLayout.size + '" fill="transparent"></rect>',
+                    gridPolygons,
+                    axisLines,
+                    '<polygon points="' + polygonPoints + '" fill="rgba(47, 66, 105, 0.05)" stroke="rgba(47, 66, 105, 0.14)" stroke-width="1.2"></polygon>',
+                    polygonSegments,
+                    topics.map(function(topic, index) {
+                        var point = dataPoints[index];
+                        var theme = getKnowledgeDomainTheme(topic.domainLabel || topic.label);
+                        return '<circle class="knowledge-point" cx="' + point.x.toFixed(2) + '" cy="' + point.y.toFixed(2) + '" r="' + chartLayout.pointRadius + '" fill="' + theme.accent + '" stroke="#ffffff" stroke-width="2.4" data-label="' + escapeHtml(topic.label) + '" data-score="' + topic.score + '"></circle>';
+                    }).join(''),
+                    labels,
+                    levelLabels
+                ].join('');
+                renderBarChart(topics);
+
+                Array.prototype.forEach.call(knowledgeRadarChart.querySelectorAll('.knowledge-point'), function(node) {
+                    node.addEventListener('mouseenter', showKnowledgeTooltip);
+                    node.addEventListener('mousemove', showKnowledgeTooltip);
+                    node.addEventListener('mouseleave', hideKnowledgeTooltip);
+                });
+            }
+
+            function renderCurrentView() {
+                var subject = getActiveSubject();
+                var currentData = getActivePaperData();
+                var knowledgeDomains = getCurrentKnowledgeTopics(subject, currentData);
+                statAccuracy.textContent = currentData.accuracy;
+                statDuration.textContent = currentData.duration;
+                statScore.innerHTML = currentData.score.replace('/', '<small>/') + '</small>';
+                statGrade.textContent = currentData.grade;
+                detailSectionTitle.textContent = currentData.details.length ? currentData.details[0].title.replace(/（Part \d+）/, '（共' + currentData.map.length + '题）') : '题目详情';
+                renderSubjectTabs();
+                renderPaperTabs();
+                renderQuestionMap(currentData.map);
+                renderTimeEfficiency(currentData.details, currentData);
+                renderAmcAiInsight(subject, currentData, knowledgeDomains);
+                renderKnowledgeChart(knowledgeDomains, subject, currentData);
+                renderKnowledgeCards(knowledgeDomains, subject, currentData);
+                renderQuestionDetails(currentData.details);
+            }
+
+            function renderSubject(index) {
+                activeSubjectIndex = index;
+                activePaperTabIndex = 0;
+                renderCurrentView();
+            }
+
+            function renderPaperTab(index) {
+                activePaperTabIndex = index;
+                renderCurrentView();
+            }
+
+            function renderDetailVisibility() {
+                detailSection.classList.toggle('hidden', detailHidden);
+                detailSwitch.classList.toggle('off', detailHidden);
+            }
+
+            subjectTabs.addEventListener('click', function(event) {
+                var target = event.target.closest('.subject-tab');
+                if (!target) {
+                    return;
+                }
+                renderSubject(Number(target.getAttribute('data-index')));
+            });
+
+            function bindPaperTabClick(container) {
+                container.addEventListener('click', function(event) {
+                    var target = event.target.closest('.paper-tab');
+                    if (!target) {
+                        return;
+                    }
+                    renderPaperTab(Number(target.getAttribute('data-index')));
+                });
+            }
+
+            bindPaperTabClick(paperTabsTop);
+            bindPaperTabClick(paperTabsDetail);
+
+            chartViewToggle.addEventListener('click', function() {
+                activeChartView = activeChartView === 'radar' ? 'bar' : 'radar';
+                renderChartViewState();
+            });
+
+            function handleWindowResize() {
+                if (knowledgeBarChartInstance) {
+                    knowledgeBarChartInstance.resize();
+                }
+            }
+
+            window.addEventListener('resize', handleWindowResize);
+            window.addEventListener('beforeunload', function() {
+                window.removeEventListener('resize', handleWindowResize);
+                if (knowledgeBarChartInstance) {
+                    knowledgeBarChartInstance.dispose();
+                    knowledgeBarChartInstance = null;
+                }
+            });
+
+            detailSwitch.addEventListener('click', function() {
+                detailHidden = !detailHidden;
+                renderDetailVisibility();
+            });
+
+            renderSubject(0);
+            renderChartViewState();
+            renderDetailVisibility();
+        })();
+    </script>
+</body>
+</html>

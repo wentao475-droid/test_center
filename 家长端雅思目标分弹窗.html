@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>雅思目标分设置</title>
+    <style>
+        :root { color: #1f2937; background: #f2f5f8; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        * { box-sizing: border-box; }
+        body { display: grid; min-height: 100vh; margin: 0; padding: 28px 20px; place-items: center; background: rgba(15, 23, 42, .42); }
+        .mobile-only { display: none; }
+        .sheet { width: min(460px, 100%); background: #fff; padding: 28px 24px; border-radius: 20px; box-shadow: 0 20px 50px rgba(15, 23, 42, .18); }
+        .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+        h1 { margin: 0; color: #172b3a; font-size: 22px; line-height: 1.35; }
+        .intro { margin: 8px 0 24px; color: #667085; font-size: 13px; line-height: 1.65; }
+        .section { margin-bottom: 25px; }
+        .section-title { display: block; margin: 0 0 10px; color: #344054; font-size: 15px; font-weight: 800; }
+        .note { margin: -3px 0 12px; color: #98a2b3; font-size: 12px; line-height: 1.55; }
+        .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .baseline { padding: 11px 5px; border: 1px solid #e5eaf0; border-radius: 12px; background: #fbfcfe; text-align: center; }
+        .baseline span, .target-label { display: block; color: #98a2b3; font-size: 12px; font-weight: 700; }
+        .baseline strong { display: block; margin-top: 4px; color: #344054; font-size: 20px; }
+        .baseline select { margin-top: 6px; color: #344054; font-weight: 800; }
+        input, select { width: 100%; border: 1px solid #d7dfea; border-radius: 10px; background: #fff; color: #344054; font: inherit; outline: none; }
+        input { padding: 12px; }
+        select { margin-top: 6px; padding: 10px 6px; }
+        input:focus, select:focus { border-color: #2ba4c7; box-shadow: 0 0 0 3px rgba(43, 164, 199, .13); }
+        .target-label { text-align: center; }
+        .goal-summary { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid #d6e3ec; border-radius: 13px; background: #fff; }
+        .summary-item { min-height: 83px; padding: 13px 10px; border-right: 1px solid #e7eef3; }
+        .summary-item:last-child { border-right: 0; }
+        .summary-label { display: block; color: #667085; font-size: 12px; font-weight: 700; }
+        .summary-value { display: block; margin-top: 8px; color: #1f4459; font-size: 18px; font-weight: 800; line-height: 1.25; }
+        .summary-item:first-child .summary-value { color: #177ea4; font-size: 27px; line-height: 1; }
+        .warning { display: none; margin-top: 12px; padding: 11px 12px; border-radius: 10px; background: #fff7e8; color: #9b6509; font-size: 13px; line-height: 1.65; }
+        .warning.show { display: block; }
+        .error { display: none; margin: -7px 0 13px; color: #d92d20; font-size: 13px; }
+        .error.show { display: block; }
+        .actions { padding-top: 4px; }
+        button.action { min-height: 46px; border: 0; border-radius: 11px; font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+        .save { width: 100%; background: #2ba4c7; color: #fff; }
+        .toast { position: fixed; left: 50%; bottom: max(28px, env(safe-area-inset-bottom)); z-index: 2; width: max-content; max-width: calc(100vw - 40px); padding: 11px 16px; border-radius: 999px; background: rgba(23, 43, 58, .92); color: #fff; font-size: 13px; line-height: 1.4; text-align: center; opacity: 0; transform: translate(-50%, 12px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+        @media (max-width: 768px) { body { display: block; padding: 0; background: #fff; } .sheet { width: 100%; min-height: 100vh; padding: 22px 20px max(22px, env(safe-area-inset-bottom)); border-radius: 0; box-shadow: none; } }
+    </style>
+</head>
+<body>
+    <main class="sheet" role="dialog" aria-modal="true" aria-labelledby="title">
+        <header class="header">
+            <h1 id="title">为孩子设定雅思目标</h1>
+        </header>
+        <p class="intro">目标用于后续模考对比与学习规划，不代表提分结果承诺。</p>
+
+        <section class="section">
+            <h2 class="section-title">本次模考成绩</h2>
+            <p class="note">已批改科目自动带入；未参加本次模考的科目请补充最近成绩，默认按已批改科目平均分低 0.5 分估算。</p>
+            <div class="score-grid" id="baselineScores"></div>
+        </section>
+
+        <section class="section">
+            <label class="section-title" for="examDate">计划考试日期（可选）</label>
+            <input id="examDate" type="date">
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">目标四科成绩</h2>
+            <div class="score-grid" id="targetScores"></div>
+        </section>
+
+        <section class="section">
+            <div class="goal-summary">
+                <div class="summary-item"><span class="summary-label">目标总分</span><strong class="summary-value" id="overall">7.0</strong></div>
+                <div class="summary-item"><span class="summary-label">较本次模考</span><strong class="summary-value" id="overallDelta">总分 0.0</strong></div>
+                <div class="summary-item"><span class="summary-label">最大单科差距</span><strong class="summary-value" id="largestGap">听力 0.0</strong></div>
+            </div>
+            <div class="warning" id="warning">目标可以先定下。根据本次模考与计划考试日期，这一目标跨度较大；后续可通过新的模考结果持续校准。</div>
+        </section>
+
+        <div class="error" id="error" role="alert"></div>
+        <div class="actions">
+            <button class="action save" id="save" type="button">保存目标并查看模考成绩</button>
+        </div>
+    </main>
+    <div class="mobile-only">请在手机端打开此页面。</div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+        (function () {
+            var reportScores = { listening: 7.5, reading: null, writing: null, speaking: null };
+            var labels = { listening: '听力', reading: '阅读', writing: '写作', speaking: '口语' };
+            var subjects = Object.keys(reportScores);
+            var storageKey = 'vision-parent-ielts-goal';
+            var $ = function (id) { return document.getElementById(id); };
+
+            function untestedDefaultScore() {
+                var completedScores = subjects.filter(function (key) { return reportScores[key] !== null; }).map(function (key) { return reportScores[key]; });
+                if (!completedScores.length) return 6.0;
+                return Math.max(0, completedScores.reduce(function (sum, score) { return sum + score; }, 0) / completedScores.length - 0.5);
+            }
+            function baselineScores() { return subjects.reduce(function (scores, key) { scores[key] = reportScores[key] === null ? Number($('baseline-' + key).value) : reportScores[key]; return scores; }, {}); }
+            function overall(scores) {
+                return Math.round(subjects.reduce(function (sum, key) { return sum + Number(scores[key]); }, 0) / 4 * 2) / 2;
+            }
+            function today() { return new Date().toISOString().slice(0, 10); }
+            function selected() { return subjects.reduce(function (scores, key) { scores[key] = Number($('target-' + key).value); return scores; }, {}); }
+            function delta(value) { return (value > 0 ? '+' : '') + value.toFixed(1); }
+            function daysUntil(value) { return value ? Math.ceil((new Date(value + 'T00:00:00') - new Date(today() + 'T00:00:00')) / 86400000) : null; }
+            function largestGap(scores, baseline) { return subjects.reduce(function (largest, key) { var gap = scores[key] - baseline[key]; return Math.abs(gap) > Math.abs(largest.value) ? { key: key, value: gap } : largest; }, { key: subjects[0], value: scores[subjects[0]] - baseline[subjects[0]] }); }
+
+            function render() {
+                var scores = selected();
+                var baseline = baselineScores();
+                var targetOverall = overall(scores);
+                var currentOverall = overall(baseline);
+                var largest = largestGap(scores, baseline);
+                $('overall').textContent = targetOverall.toFixed(1);
+                $('overallDelta').textContent = '总分 ' + delta(targetOverall - currentOverall);
+                $('largestGap').textContent = labels[largest.key] + ' ' + delta(largest.value);
+                var days = daysUntil($('examDate').value);
+                $('warning').classList.toggle('show', (days !== null && days < 56 && (largest.value >= 1 || targetOverall - currentOverall >= 1)) || largest.value >= 1.5);
+            }
+
+            $('baselineScores').innerHTML = subjects.map(function (key) {
+                if (reportScores[key] !== null) return '<div class="baseline"><span>' + labels[key] + '</span><strong>' + reportScores[key].toFixed(1) + '</strong></div>';
+                var defaultScore = untestedDefaultScore().toFixed(1);
+                var options = Array.from({ length: 19 }, function (_, index) { var score = (index * .5).toFixed(1); return '<option value="' + score + '"' + (score === defaultScore ? ' selected' : '') + '>' + score + '</option>'; }).join('');
+                return '<label class="baseline"><span>' + labels[key] + '</span><select id="baseline-' + key + '" aria-label="本次' + labels[key] + '成绩">' + options + '</select></label>';
+            }).join('');
+            $('targetScores').innerHTML = subjects.map(function (key) {
+                var defaultScore = reportScores[key] === null ? Math.max(3.0, untestedDefaultScore()) : Math.max(3.0, reportScores[key]);
+                var options = Array.from({ length: 13 }, function (_, index) { var score = (3 + index * .5).toFixed(1); return '<option value="' + score + '"' + (Number(score) === defaultScore ? ' selected' : '') + '>' + score + '</option>'; }).join('');
+                return '<label><span class="target-label">' + labels[key] + '</span><select id="target-' + key + '" aria-label="目标' + labels[key] + '成绩">' + options + '</select></label>';
+            }).join('');
+            $('examDate').min = today();
+            document.querySelectorAll('select, #examDate').forEach(function (element) { element.addEventListener('change', function () { $('error').classList.remove('show'); render(); }); });
+            function persistGoal(record) {
+                var saved = JSON.parse(localStorage.getItem(storageKey) || '{"history":[]}');
+                saved.history = saved.history || [];
+                saved.history.push(record);
+                localStorage.setItem(storageKey, JSON.stringify(Object.assign(saved, record)));
+            }
+            function showSuccess(message) {
+                $('toast').textContent = message;
+                $('toast').classList.add('show');
+            }
+            $('save').addEventListener('click', function () {
+                var date = $('examDate').value;
+                if (date && daysUntil(date) < 0) { $('error').textContent = '计划考试日期不能早于今天。'; $('error').classList.add('show'); return; }
+                var scores = selected();
+                var record = { targetExamDate: date, targetScores: scores, targetOverall: overall(scores), baselineScores: baselineScores(), enteredBy: 'parent', updatedAt: new Date().toISOString() };
+                persistGoal(record);
+                showSuccess('目标已保存，后续模考将持续与该目标对比。');
+                window.setTimeout(function () { window.history.back(); }, 1400);
+            });
+            render();
+        }());
+    </script>
+</body>
+</html>

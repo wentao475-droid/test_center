@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>上传面试草稿 - VISION ACADEMY</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        :root { --blue:#2159b7; --navy:#293b59; --bg:#f4f6fa; --line:#dce3ee; --muted:#667085; }
+        * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:#344054; font-family:"Microsoft YaHei",sans-serif; } button { font:inherit; cursor:pointer; }
+        .phone-page { display:flex; flex-direction:column; min-height:100vh; max-width:540px; margin:auto; background:#fff; box-shadow:0 0 30px rgba(16,24,40,.08); }
+        .header { height:60px; display:flex; align-items:center; justify-content:center; position:relative; border-bottom:1px solid var(--line); color:#1d2939; font-size:16px; font-weight:800; }
+        .brand { position:absolute; left:18px; color:var(--blue); font-size:13px; font-weight:900; }
+        .content { flex:1; padding:26px 20px; }
+        .kicker { color:var(--blue); font-size:12px; font-weight:800; }
+        h1 { margin:8px 0; color:#1d2939; font-size:24px; }
+        .desc { margin:0 0 20px; color:var(--muted); font-size:14px; line-height:1.75; }
+        .question-card { margin-bottom:20px; padding:16px; border:1px solid #dce7f5; border-radius:10px; background:#f7fbff; }
+        .question-label { color:#667085; font-size:12px; } .question-no { margin-top:5px; color:#344d79; font-size:20px; font-weight:900; }
+        .upload-box { display:flex; align-items:center; justify-content:center; min-height:300px; padding:20px; overflow:hidden; border:2px dashed #b9c7dc; border-radius:12px; background:#fbfcfe; text-align:center; color:#667085; cursor:pointer; }
+        .upload-box i { margin-bottom:14px; color:#8ba3c5; font-size:48px; }.upload-box strong { display:block; margin-bottom:6px; color:#344054; }.upload-box span { font-size:13px; color:#98a2b3; }.upload-box img { max-width:100%; max-height:420px; object-fit:contain; }
+        input { display:none; }.success { display:none; margin-top:16px; padding:12px 14px; border:1px solid #abefc6; border-radius:8px; background:#ecfdf3; color:#067647; font-size:13px; }.success.show { display:block; }
+        .actions { display:grid; grid-template-columns:1fr 1.35fr; gap:10px; padding:14px 20px 24px; border-top:1px solid #edf0f5; }.btn { height:48px; border-radius:8px; font-weight:800; }.secondary { border:1px solid #cfd7e6; background:#fff; color:#475467; }.primary { border:0; background:var(--navy); color:#fff; }.primary:disabled { background:#98a7be; cursor:default; }
+    </style>
+</head>
+<body>
+    <main class="phone-page">
+        <header class="header"><span class="brand">VISION ACADEMY</span>上传面试草稿</header>
+        <section class="content">
+            <div class="kicker">牛剑模拟面试</div>
+            <h1>上传纸质作答</h1>
+            <p class="desc">请确保整页内容清晰、边缘完整。确认上传后，回到电脑端点击“刷新结果”即可查看对应题目的照片。</p>
+            <div class="question-card"><div class="question-label">当前对应题目</div><div class="question-no" id="questionNo">第 1 题</div></div>
+            <label class="upload-box" for="photoInput" id="uploadBox"><div><i class="fa fa-camera"></i><strong>拍照或选择图片</strong><span>支持 JPG、PNG 格式</span></div></label>
+            <input id="photoInput" type="file" accept="image/*" capture="environment">
+            <div class="success" id="success"><i class="fa fa-check-circle"></i> 图片已上传，可返回电脑端查看。</div>
+        </section>
+        <footer class="actions"><button class="btn secondary" id="chooseBtn" type="button">重新拍摄</button><button class="btn primary" id="uploadBtn" type="button">确认上传</button></footer>
+    </main>
+    <script>
+        (function() {
+            var questionNo = Math.max(1, Number(new URLSearchParams(window.location.search).get('questionNo') || 1));
+            var dataUrl = '', input = document.getElementById('photoInput'), box = document.getElementById('uploadBox');
+            document.getElementById('questionNo').textContent = '第 ' + questionNo + ' 题';
+            document.getElementById('chooseBtn').onclick = function() { input.click(); };
+            input.onchange = function() { var file = input.files[0]; if (!file) return; var reader = new FileReader(); reader.onload = function(event) { dataUrl = event.target.result; box.innerHTML = '<img src="' + dataUrl + '" alt="作答照片预览">'; }; reader.readAsDataURL(file); };
+            document.getElementById('uploadBtn').onclick = function() { if (!dataUrl) { input.click(); return; } var uploads = {}; try { uploads = JSON.parse(localStorage.getItem('oxbridgeInterviewUploads')) || {}; } catch (e) {} uploads[questionNo - 1] = { dataUrl:dataUrl, uploadedAt:new Date().toISOString() }; localStorage.setItem('oxbridgeInterviewUploads', JSON.stringify(uploads)); document.getElementById('success').classList.add('show'); this.textContent = '上传成功'; this.disabled = true; };
+        })();
+    </script>
+</body>
+</html>

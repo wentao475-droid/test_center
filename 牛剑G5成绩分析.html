@@ -6,6 +6,7 @@
     <title>牛剑G5模考成绩分析 - VISION ACADEMY</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="ai-insight.css">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         body {
@@ -1114,6 +1115,7 @@
                         <div class="legend-item"><span class="legend-dot correct"></span> 答对题</div>
                     </div>
                     <div class="question-map" id="questionMap"></div>
+                    <section class="section-card ai-insight-card" id="aiInsightSection" aria-live="polite"></section>
                     <div class="insight-wrap">
                         <div class="sub-tip">
                             <!-- <div class="section-text" id="timeComment">
@@ -1230,7 +1232,8 @@
         </main>
     </div>
 
-    <script>
+        <script src="ai-insight.js"></script>
+        <script>
         (function() {
             var loginKey = 'examPlatformLoggedIn';
             if (sessionStorage.getItem(loginKey) !== 'true') {
@@ -1656,6 +1659,7 @@
             var activeChartView = 'radar';
             var knowledgeBarChartInstance = null;
             var detailHidden = false;
+            var aiInsightSection = document.getElementById('aiInsightSection');
 
             function renderSubjectTabs() {
                 subjectTabs.innerHTML = config.subjects.map(function(subject, index) {
@@ -1748,6 +1752,72 @@
                         '</div>'
                     ].join('');
                 }).join('');
+            }
+
+            function getG5InsightTopicLabel(topic) {
+                return String((topic && topic.label) || '当前知识点').replace(/^#/, '');
+            }
+
+            function getG5StatusRate(items) {
+                if (!items.length) {
+                    return 0;
+                }
+                return items.filter(function(status) { return status === 'correct'; }).length / items.length;
+            }
+
+            function buildG5AiInsightModel(subject, currentData, knowledgeTopics) {
+                var questionMap = currentData.map || [];
+                var splitIndex = Math.ceil(questionMap.length / 2);
+                var firstHalf = questionMap.slice(0, splitIndex);
+                var latterHalf = questionMap.slice(splitIndex);
+                var latterMisses = latterHalf.filter(function(status) { return status !== 'correct'; }).length;
+                var firstHalfRate = getG5StatusRate(firstHalf);
+                var latterHalfRate = getG5StatusRate(latterHalf);
+                var topics = (knowledgeTopics || []).slice().sort(function(a, b) {
+                    return a.score - b.score;
+                });
+                var weakestTopic = topics[0] || { label: '知识点', score: 0 };
+                var strongestTopic = topics[topics.length - 1] || weakestTopic;
+                var averageTimeData = calculateAverageAnsweredTime(currentData);
+                var paperLabel = subject.label + (currentData !== subject && currentData.label ? ' · ' + currentData.label : '');
+                var tailDrops = latterHalfRate + 0.12 < firstHalfRate;
+                var timeText = averageTimeData ? '平均每道已作答题约 ' + formatSeconds(averageTimeData.seconds) : '当前缺少可用的平均作答时长';
+
+                return {
+                    title: 'AI综合评价',
+                    subtitle: '基于本次成绩、作答过程与能力表现生成',
+                    summary: paperLabel + '的卷面表现呈现“前段基础较稳、后段需要提升稳定性”的特点；本轮提升重点应放在薄弱知识点和后段题目的处理质量上。',
+                    blocks: [
+                        {
+                            title: '结果表现',
+                            text: '当前得分为 ' + currentData.score + '，正确率 ' + currentData.accuracy + '，等级为 ' + currentData.grade + '；整体具备继续向上突破的基础。'
+                        },
+                        {
+                            title: '过程表现',
+                            text: timeText + '；后半卷有 ' + latterMisses + ' 题未形成得分，' + (tailDrops ? '后段波动较明显。' : '整体节奏相对平稳。')
+                        },
+                        {
+                            title: '能力结构',
+                            text: getG5InsightTopicLabel(strongestTopic) + '掌握相对稳定，' + getG5InsightTopicLabel(weakestTopic) + '是当前主要盲区，需要回到题型与方法层面复盘。'
+                        }
+                    ],
+                    advice: [
+                        '围绕 ' + getG5InsightTopicLabel(weakestTopic) + ' 整理错题的触发条件与标准解法，完成一轮针对性限时练习。',
+                        '将后半卷拆成短时训练单元，先保证基础题命中，再逐步提升综合题的完成度。'
+                    ],
+                    evidenceDetails: [
+                        '前半卷正确率为 ' + Math.round(firstHalfRate * 100) + '%，后半卷正确率为 ' + Math.round(latterHalfRate * 100) + '%。',
+                        averageTimeData ? '已作答 ' + averageTimeData.answeredCount + ' 题，总用时 ' + formatSeconds(averageTimeData.totalSeconds) + '。' : '当前分卷没有足够的答题用时数据。',
+                        '知识点掌握率最低的是 ' + getG5InsightTopicLabel(weakestTopic) + '（' + weakestTopic.score + '%），最高的是 ' + getG5InsightTopicLabel(strongestTopic) + '（' + strongestTopic.score + '%）。'
+                    ]
+                };
+            }
+
+            function renderG5AiInsight(subject, currentData) {
+                if (!window.AiInsight) {
+                    return;
+                }
+                window.AiInsight.render(aiInsightSection, buildG5AiInsightModel(subject, currentData, getCurrentKnowledgeTopics(subject, currentData)));
             }
 
             function parseDurationToSeconds(durationText) {
@@ -2187,6 +2257,7 @@
                 renderSubjectTabs();
                 renderPaperTabs();
                 renderQuestionMap(currentData.map);
+                renderG5AiInsight(subject, currentData);
                 renderKnowledgeChart(getCurrentKnowledgeTopics(subject, currentData), subject, currentData);
                 renderKnowledgeCards(getCurrentKnowledgeTopics(subject, currentData), subject, currentData);
                 renderQuestionDetails(currentData.details);

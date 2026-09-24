@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牛剑模拟面试 - VISION ACADEMY</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --blue:#2159b7; --navy:#293b59; --bg:#f5f7fb; --line:#dce3ee; --text:#344054; --muted:#667085; --red:#e95454; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-width:1080px; height:100vh; overflow:hidden; background:var(--bg); color:var(--text); font-family:"Microsoft YaHei",sans-serif; }
+        button { font:inherit; cursor:pointer; }
+        .header { height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; background:#fff; border-bottom:1px solid var(--line); }
+        .brand { display:flex; align-items:center; gap:11px; color:var(--blue); font-weight:800; font-size:16px; }
+        .brand-mark { width:34px; height:34px; display:grid; place-items:center; border:2px solid var(--blue); border-radius:50%; font-size:16px; }
+        .exam-pill { margin-left:12px; padding:6px 12px; border-radius:999px; background:#edf4ff; color:var(--blue); font-size:12px; font-weight:700; }
+        .header-user { display:flex; align-items:center; gap:14px; font-size:14px; color:var(--muted); }
+        .logout { padding:6px 12px; border-radius:16px; background:#f0f5ff; color:var(--blue); text-decoration:none; font-weight:700; }
+        .exam-layout { height:calc(100vh - 64px); display:grid; grid-template-columns:minmax(300px,.88fr) minmax(440px,1.25fr) 300px; }
+        .question-panel, .work-panel, .side-panel { min-width:0; overflow:auto; }
+        .question-panel { padding:28px 30px; background:#fff; border-right:1px solid var(--line); }
+        .question-kicker { color:var(--blue); font-size:13px; font-weight:800; }
+        .question-title { margin:10px 0 14px; font-size:22px; line-height:1.4; }
+        .question-copy { color:#475467; font-size:14px; line-height:1.9; }
+        .question-copy strong { color:#1d2939; }
+        .hint-toggle { display:inline-flex; align-items:center; gap:7px; height:34px; margin-top:18px; padding:0 11px; border:1px solid #cbd9ed; border-radius:7px; background:#fff; color:#416da8; font-size:13px; font-weight:800; }
+        .hint-toggle:hover { background:#f4f8ff; }
+        .hint-warning { display:inline-flex; align-items:center; margin:18px 0 0 9px; color:#a17655; font-size:12px; }
+        .prompt-points { display:none; margin:10px 0 0; padding:18px; border:1px solid #dce7f5; border-radius:12px; background:#f8fbff; }
+        .prompt-points.is-open { display:block; }
+        .prompt-points h3 { margin:0 0 10px; color:#344d79; font-size:14px; }
+        .prompt-points ul { margin:0; padding-left:18px; color:#667085; font-size:13px; line-height:1.8; }
+        .work-panel { padding:22px 24px; }
+        .work-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
+        .work-title { margin:0; font-size:18px; color:#1d2939; }
+        .work-desc { margin:6px 0 0; color:#98a2b3; font-size:12px; }
+        .recording { display:flex; align-items:center; gap:8px; padding:8px 11px; border:1px solid #ffd2d2; border-radius:999px; background:#fff7f7; color:#d84949; font-size:12px; font-weight:800; white-space:nowrap; }
+        .record-dot { width:8px; height:8px; border-radius:50%; background:var(--red); animation:pulse 1.25s infinite; }
+        @keyframes pulse { 50% { opacity:.35; transform:scale(.72); } }
+        .board-card { overflow:hidden; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 3px 13px rgba(16,24,40,.04); }
+        .board-tools { display:flex; align-items:center; gap:8px; min-height:52px; padding:8px 12px; border-bottom:1px solid #edf0f5; background:#fbfcfe; }
+        .tool-btn { height:32px; min-width:32px; padding:0 10px; border:1px solid #d8e1ee; border-radius:7px; background:#fff; color:#667085; font-size:13px; font-weight:700; }
+        .tool-btn.active { border-color:#8fb2ea; background:#edf4ff; color:var(--blue); }
+        .tool-btn:hover { background:#f4f7fb; }
+        .tool-divider { width:1px; height:24px; background:#e5eaf1; margin:0 2px; }
+        .color-btn { width:20px; height:20px; padding:0; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 1px #d5dde9; }
+        .color-btn.active { box-shadow:0 0 0 2px var(--blue); }
+        .canvas-wrap { position:relative; height:calc(100vh - 338px); min-height:300px; background-color:#fff; background-image:linear-gradient(#edf1f6 1px,transparent 1px),linear-gradient(90deg,#edf1f6 1px,transparent 1px); background-size:24px 24px; }
+        #whiteboard { width:100%; height:100%; touch-action:none; cursor:crosshair; }
+        .upload-strip { display:grid; grid-template-columns:94px minmax(0,1fr) auto; align-items:center; gap:14px; padding:12px 14px; border-top:1px solid #edf0f5; background:#fbfcfe; }
+        .upload-qr { display:flex; align-items:center; gap:9px; color:#667085; font-size:12px; line-height:1.5; }
+        .inline-qr { display:grid; flex:0 0 70px; width:70px; height:70px; place-items:center; overflow:hidden; border:1px solid #d8e3f2; border-radius:6px; background:#fff; }
+        .inline-qr img, .inline-qr canvas { max-width:62px; max-height:62px; }
+        .upload-copy { min-width:0; color:#667085; font-size:12px; line-height:1.55; }
+        .upload-copy strong { display:block; color:#344054; font-size:13px; }
+        .upload-actions { display:flex; gap:8px; flex-shrink:0; }
+        .outline-btn, .primary-btn { height:36px; padding:0 12px; border-radius:8px; font-size:13px; font-weight:800; }
+        .outline-btn { border:1px solid #cbd7e8; background:#fff; color:#4f6fa8; }
+        .primary-btn { border:0; background:var(--navy); color:#fff; }
+        .side-panel { padding:14px 12px; border-left:1px solid var(--line); background:#fff; }
+        .status-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; color:#667085; font-size:12px; }
+        .exam-timer { color:var(--blue); font-size:19px; font-weight:900; }
+        .camera-box { position:relative; height:164px; overflow:hidden; display:grid; place-items:center; border:1px solid #1d2939; border-radius:10px; background:linear-gradient(135deg,#44526b,#172033); color:#fff; }
+        .camera-box::before { content:""; position:absolute; width:90px; height:90px; border:2px solid rgba(255,255,255,.26); border-radius:50%; }
+        .camera-box i { position:relative; font-size:38px; color:rgba(255,255,255,.78); }
+        .camera-label { position:absolute; top:10px; left:10px; display:flex; align-items:center; gap:6px; padding:4px 8px; border-radius:99px; background:rgba(225,75,75,.94); font-size:11px; font-weight:700; }
+        .camera-status { position:absolute; right:10px; bottom:9px; color:#b8f5d0; font-size:11px; font-weight:700; }
+        .answer-card { margin-top:12px; overflow:hidden; border:1px solid var(--line); border-radius:10px; }
+        .answer-card-head { display:flex; justify-content:space-between; padding:13px 14px; border-bottom:1px solid #edf0f5; font-weight:800; font-size:14px; }
+        .answer-legend { display:flex; gap:10px; padding:10px 14px 2px; color:#98a2b3; font-size:11px; }
+        .legend-dot { display:inline-block; width:8px; height:8px; margin-right:4px; border-radius:50%; background:#d6dde9; }
+        .legend-dot.done { background:var(--blue); }
+        .question-nav { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:12px 14px 14px; }
+        .q-btn { height:34px; border:1px solid #dce3ec; border-radius:8px; background:#f8fafc; color:#667085; font-size:13px; font-weight:800; }
+        .q-btn.active { border-color:var(--blue); background:#edf4ff; color:var(--blue); }
+        .q-btn.done { background:#283e61; border-color:#283e61; color:#fff; }
+        .q-btn.active.done { border-color:var(--blue); background:#fff; color:var(--blue); }
+        .submit-btn { width:calc(100% - 28px); height:42px; margin:0 14px 14px; border:0; border-radius:8px; background:var(--navy); color:#fff; font-weight:800; }
+        .upload-result { display:flex; align-items:center; min-height:70px; padding:8px 11px; border:1px dashed #d8e3f2; border-radius:8px; background:#fff; color:#7e8da4; font-size:12px; }
+        .upload-result.has-image { gap:10px; border-style:solid; color:#344054; font-weight:700; }
+        .upload-result img { width:58px; height:58px; object-fit:cover; border:1px solid #d6e0ee; border-radius:6px; }
+        .modal-mask { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(16,24,40,.45); }
+        .modal-mask.show { display:flex; }
+        .modal { width:min(420px,100%); padding:24px; border-radius:14px; background:#fff; box-shadow:0 20px 54px rgba(16,24,40,.2); text-align:center; }
+        .modal h2 { margin:0; font-size:20px; }
+        .modal p { color:#667085; font-size:13px; line-height:1.7; }
+        #qrcode { display:flex; justify-content:center; min-height:164px; margin:16px auto; }
+        .qr-fallback { display:grid; place-items:center; width:164px; height:164px; background:repeating-conic-gradient(#1d355e 0 25%,#fff 0 50%) 0/20px 20px; }
+        .modal-actions { display:flex; justify-content:center; gap:10px; margin-top:16px; }
+        .modal .primary-btn, .modal .outline-btn { min-width:112px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="brand"><span class="brand-mark">A</span><span>VISION ACADEMY</span><span class="exam-pill" id="examPill">牛剑模拟面试</span></div>
+        <div class="header-user"><span>Hi，王一博</span><a class="logout" id="logoutBtn" href="index.html"><i class="fa fa-user-circle-o"></i> 退出登录</a></div>
+    </header>
+    <main class="exam-layout">
+        <section class="question-panel">
+            <div class="question-kicker" id="questionNo">Question 1 / 3</div>
+            <h1 class="question-title" id="questionTitle">消费者选择与预算约束</h1>
+            <div class="question-copy" id="questionCopy"></div>
+            <button class="hint-toggle" id="hintToggle" type="button" aria-expanded="false"><i class="fa fa-lightbulb-o"></i> 查看提示 <i class="fa fa-angle-down"></i></button><span class="hint-warning"><i class="fa fa-info-circle"></i>&nbsp;提示仅供必要时查看，展开后本题面试评级将下调。</span>
+            <div class="prompt-points" id="hintPanel"><h3>回答时可考虑</h3><ul id="questionPoints"></ul></div>
+        </section>
+        <section class="work-panel">
+            <div class="work-head"><div><h2 class="work-title">面试作答白板</h2><p class="work-desc">可用于公式推导、图示和思路整理；白板内容会随题目保留。</p></div><div class="recording"><span class="record-dot"></span> 音频录制中 <span id="audioTimer">00:00</span></div></div>
+            <div class="board-card">
+                <div class="board-tools">
+                    <button class="tool-btn active" type="button" id="penBtn" title="画笔"><i class="fa fa-pencil"></i> 画笔</button>
+                    <button class="tool-btn" type="button" id="eraserBtn" title="橡皮擦"><i class="fa fa-eraser"></i> 橡皮擦</button>
+                    <span class="tool-divider"></span>
+                    <button class="color-btn active" type="button" data-color="#1f3b63" style="background:#1f3b63" title="深蓝"></button>
+                    <button class="color-btn" type="button" data-color="#d74444" style="background:#d74444" title="红色"></button>
+                    <button class="color-btn" type="button" data-color="#277e52" style="background:#277e52" title="绿色"></button>
+                    <span class="tool-divider"></span>
+                    <button class="tool-btn" type="button" id="undoBtn"><i class="fa fa-undo"></i> 撤销</button>
+                    <button class="tool-btn" type="button" id="clearBtn"><i class="fa fa-trash-o"></i> 清空</button>
+                </div>
+                <div class="canvas-wrap"><canvas id="whiteboard"></canvas></div>
+                <div class="upload-strip"><div class="upload-qr"><div class="inline-qr" id="inlineQr" aria-label="上传答题卡二维码"></div></div><div class="upload-copy"><strong>扫码上传纸质答题卡</strong><span id="uploadGuide">请扫描二维码，上传当前第 1 题的纸质答题卡。</span><div class="upload-result" id="uploadResult">当前题目尚未上传纸质答题卡</div></div><div class="upload-actions"><button class="outline-btn" type="button" id="refreshUploadBtn"><i class="fa fa-refresh"></i> 刷新结果</button></div></div>
+            </div>
+        </section>
+        <aside class="side-panel">
+            <div class="status-row"><span><i class="fa fa-wifi"></i> 网络正常</span><span class="exam-timer"><i class="fa fa-clock-o"></i> <span id="examTimer">30:00</span></span></div>
+            <div class="camera-box"><div class="camera-label"><span class="record-dot"></span> 监控中</div><i class="fa fa-video-camera"></i><div class="camera-status"><i class="fa fa-microphone"></i> 麦克风正常</div></div>
+            <div class="answer-card"><div class="answer-card-head"><span>题目导航</span><span id="progressText">0 / 3</span></div><div class="answer-legend"><span><i class="legend-dot done"></i>已有草稿</span><span><i class="legend-dot"></i>未作答</span></div><div class="question-nav" id="questionNav"></div><button class="submit-btn" id="submitBtn" type="button">完成面试并生成报告</button></div>
+        </aside>
+    </main>
+    <div class="modal-mask" id="qrModal"><div class="modal"><h2>扫码上传纸质草稿</h2><p>请使用手机扫描二维码，上传当前第 <strong id="qrQuestionNo">1</strong> 题的草稿照片。</p><div id="qrcode"></div><div class="modal-actions"><button class="outline-btn" type="button" id="closeQrBtn">关闭</button><button class="primary-btn" type="button" id="simulateUploadBtn">模拟手机上传</button></div></div></div>
+    <div class="modal-mask" id="submitModal"><div class="modal"><h2>确认完成模拟面试？</h2><p>提交后将生成本次面试记录和模拟分析报告。</p><div class="modal-actions"><button class="outline-btn" type="button" id="cancelSubmitBtn">继续作答</button><button class="primary-btn" type="button" id="confirmSubmitBtn">确认完成</button></div></div></div>
+    <script>
+        (function() {
+            var loginKey = 'examPlatformLoggedIn';
+            if (sessionStorage.getItem(loginKey) !== 'true') { window.location.href = 'index.html'; return; }
+            var setup;
+            try { setup = JSON.parse(sessionStorage.getItem('oxbridgeInterviewSetup') || 'null'); } catch (e) { setup = null; }
+            if (!setup || sessionStorage.getItem('oxbridgeInterviewConfirmed') !== 'true') { window.location.href = '牛剑模拟面试首页.html'; return; }
+            document.getElementById('examPill').textContent = setup.examName || '牛剑模拟面试';
+            var keys = { boards:'oxbridgeInterviewBoards', uploads:'oxbridgeInterviewUploads', record:'oxbridgeInterviewRecord', session:'oxbridgeInterviewSession' };
+            var questions = [
+                { title:'消费者选择与预算约束', copy:'假设消费者的效用函数为 <strong>U(x, y) = x<sup>1/2</sup>y<sup>1/2</sup></strong>，收入为 100，商品 x 与 y 的价格分别为 4 和 2。请说明消费者会如何分配预算，并解释你推导结论的逻辑。', points:['先说明预算约束的表达式。','比较边际替代率与相对价格。','讨论价格变化后最优组合的可能变化。'] },
+                { title:'市场结构与企业决策', copy:'在完全竞争市场中，一家企业面临边际成本上升。请说明企业在短期内如何决定产量，并比较它与垄断企业在同一情境下的决策差异。', points:['区分价格接受者与价格制定者。','说明边际收益、边际成本和利润最大化的关系。','给出一个可能的现实例子。'] },
+                { title:'追问：模型假设与现实限制', copy:'如果消费者并不总是理性的，上一个问题中的模型还是否有用？请给出你的判断，并说明在什么条件下需要引入行为经济学的视角。', points:['明确模型可以解释什么、不能解释什么。','举例说明有限理性或信息不对称。','给出具有层次的结论。'] }
+            ];
+            var current = 0, mode = 'pen', color = '#1f3b63', drawing = false, history = [], startedAt = Date.now(), durationSeconds = Number(setup.durationMinutes || 30) * 60;
+            var canvas = document.getElementById('whiteboard'), ctx = canvas.getContext('2d');
+            var hintPanel = document.getElementById('hintPanel'), hintToggle = document.getElementById('hintToggle');
+            function setHintOpen(open) { hintPanel.classList.toggle('is-open', open); hintToggle.setAttribute('aria-expanded', String(open)); hintToggle.innerHTML = '<i class="fa fa-lightbulb-o"></i> ' + (open ? '收起提示' : '查看提示') + ' <i class="fa fa-angle-' + (open ? 'up' : 'down') + '"></i>'; }
+            hintToggle.onclick = function() { setHintOpen(!hintPanel.classList.contains('is-open')); };
+            function read(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; } }
+            function writeBoards() { var boards = read(keys.boards, {}); boards[current] = canvas.toDataURL('image/png'); localStorage.setItem(keys.boards, JSON.stringify(boards)); }
+            function resizeCanvas() { var saved = canvas.toDataURL(); var rect = canvas.getBoundingClientRect(); canvas.width = Math.max(1, Math.round(rect.width * window.devicePixelRatio)); canvas.height = Math.max(1, Math.round(rect.height * window.devicePixelRatio)); ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0); if (saved && saved.length > 20) restoreBoard(saved); }
+            function restoreBoard(dataUrl) { ctx.clearRect(0, 0, canvas.width, canvas.height); if (!dataUrl) return; var image = new Image(); image.onload = function() { var ratio = Math.min(canvas.clientWidth / image.width, canvas.clientHeight / image.height, 1); ctx.drawImage(image, 0, 0, image.width * ratio, image.height * ratio); }; image.src = dataUrl; }
+            function getPoint(event) { var rect = canvas.getBoundingClientRect(); var point = event.touches ? event.touches[0] : event; return { x:point.clientX - rect.left, y:point.clientY - rect.top }; }
+            function startDraw(event) { event.preventDefault(); history.push(canvas.toDataURL()); drawing = true; var point = getPoint(event); ctx.beginPath(); ctx.moveTo(point.x, point.y); }
+            function draw(event) { if (!drawing) return; event.preventDefault(); var point = getPoint(event); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = mode === 'eraser' ? '#ffffff' : color; ctx.lineWidth = mode === 'eraser' ? 20 : 3; ctx.lineTo(point.x, point.y); ctx.stroke(); }
+            function stopDraw() { if (!drawing) return; drawing = false; ctx.closePath(); writeBoards(); renderNav(); }
+            ['mousedown','touchstart'].forEach(function(name) { canvas.addEventListener(name, startDraw, { passive:false }); });
+            ['mousemove','touchmove'].forEach(function(name) { canvas.addEventListener(name, draw, { passive:false }); });
+            ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(name) { canvas.addEventListener(name, stopDraw); });
+            function chooseTool(next) { mode = next; document.getElementById('penBtn').classList.toggle('active', next === 'pen'); document.getElementById('eraserBtn').classList.toggle('active', next === 'eraser'); }
+            document.getElementById('penBtn').onclick = function() { chooseTool('pen'); };
+            document.getElementById('eraserBtn').onclick = function() { chooseTool('eraser'); };
+            document.querySelectorAll('.color-btn').forEach(function(button) { button.onclick = function() { color = button.dataset.color; chooseTool('pen'); document.querySelectorAll('.color-btn').forEach(function(item) { item.classList.toggle('active', item === button); }); }; });
+            document.getElementById('undoBtn').onclick = function() { var last = history.pop(); if (last) { restoreBoard(last); writeBoards(); renderNav(); } };
+            document.getElementById('clearBtn').onclick = function() { history.push(canvas.toDataURL()); ctx.clearRect(0, 0, canvas.width, canvas.height); writeBoards(); renderNav(); };
+            function renderQuestion() { var question = questions[current]; document.getElementById('questionNo').textContent = 'Question ' + (current + 1) + ' / ' + questions.length; document.getElementById('questionTitle').textContent = question.title; document.getElementById('questionCopy').innerHTML = question.copy; document.getElementById('questionPoints').innerHTML = question.points.map(function(item) { return '<li>' + item + '</li>'; }).join(''); setHintOpen(false); restoreBoard(read(keys.boards, {})[current]); renderNav(); renderInlineQr(); renderUpload(); }
+            function renderNav() { var boards = read(keys.boards, {}), uploads = read(keys.uploads, {}); document.getElementById('questionNav').innerHTML = questions.map(function(_, index) { var done = boards[index] || uploads[index]; return '<button type="button" class="q-btn ' + (index === current ? 'active ' : '') + (done ? 'done' : '') + '" data-index="' + index + '">' + (index + 1) + '</button>'; }).join(''); document.querySelectorAll('.q-btn').forEach(function(button) { button.onclick = function() { writeBoards(); current = Number(button.dataset.index); renderQuestion(); }; }); document.getElementById('progressText').textContent = Object.keys(boards).filter(function(key) { return boards[key]; }).length + ' / ' + questions.length; }
+            function renderInlineQr() { var url = new URL('牛剑模拟面试上传.html', window.location.href); url.searchParams.set('questionNo', current + 1); var qr = document.getElementById('inlineQr'); qr.innerHTML = ''; document.getElementById('uploadGuide').textContent = '请扫描二维码，上传当前第 ' + (current + 1) + ' 题的纸质答题卡。'; if (window.QRCode) { new QRCode(qr, { text:url.href, width:62, height:62, colorDark:'#1f3b63', colorLight:'#ffffff' }); } else { qr.innerHTML = '<div class="qr-fallback" aria-label="上传二维码"></div>'; } }
+            function renderUpload() { var item = read(keys.uploads, {})[current], result = document.getElementById('uploadResult'); if (item && item.dataUrl) { result.className = 'upload-result has-image'; result.innerHTML = '<img src="' + item.dataUrl + '" alt="第' + (current + 1) + '题纸质答题卡"><span>第 ' + (current + 1) + ' 题答题卡已上传</span>'; } else { result.className = 'upload-result'; result.textContent = '当前题目尚未上传纸质答题卡'; } }
+            function showModal(id) { document.getElementById(id).classList.add('show'); }
+            function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+            function openUpload() { var url = new URL('牛剑模拟面试上传.html', window.location.href); url.searchParams.set('questionNo', current + 1); document.getElementById('qrQuestionNo').textContent = current + 1; var qr = document.getElementById('qrcode'); qr.innerHTML = ''; if (window.QRCode) { new QRCode(qr, { text:url.href, width:164, height:164, colorDark:'#1f3b63', colorLight:'#ffffff' }); } else { qr.innerHTML = '<div class="qr-fallback" aria-label="上传二维码"></div>'; } document.getElementById('simulateUploadBtn').onclick = function() { window.open(url.href, '_blank'); }; showModal('qrModal'); }
+            document.getElementById('refreshUploadBtn').onclick = function() { renderUpload(); renderNav(); };
+            document.getElementById('closeQrBtn').onclick = function() { hideModal('qrModal'); };
+            document.getElementById('submitBtn').onclick = function() { showModal('submitModal'); };
+            document.getElementById('cancelSubmitBtn').onclick = function() { hideModal('submitModal'); };
+            document.getElementById('confirmSubmitBtn').onclick = function() { writeBoards(); var record = { examName:setup.examName || '牛剑模拟面试', date:new Date().toLocaleDateString('zh-CN'), duration:document.getElementById('audioTimer').textContent, university:setup.university || 'University of Cambridge', major:setup.major || 'Economics (L100)', status:'已完成', completedAt:new Date().toISOString() }; sessionStorage.setItem(keys.record, JSON.stringify(record)); sessionStorage.removeItem(keys.session); sessionStorage.removeItem('oxbridgeInterviewConfirmed'); window.location.href = '牛剑模拟面试考试记录.html?new=1'; };
+            document.getElementById('logoutBtn').onclick = function(event) { event.preventDefault(); sessionStorage.removeItem(loginKey); sessionStorage.removeItem('examPlatformUserName'); window.location.href = 'index.html'; };
+            function updateTimers() { var elapsed = Math.floor((Date.now() - startedAt) / 1000); var minutes = String(Math.floor(elapsed / 60)).padStart(2, '0'), seconds = String(elapsed % 60).padStart(2, '0'); document.getElementById('audioTimer').textContent = minutes + ':' + seconds; var remain = Math.max(0, durationSeconds - elapsed); document.getElementById('examTimer').textContent = String(Math.floor(remain / 60)).padStart(2, '0') + ':' + String(remain % 60).padStart(2, '0'); }
+            window.addEventListener('storage', function(event) { if (event.key === keys.uploads) { renderUpload(); renderNav(); } });
+            window.addEventListener('resize', function() { setTimeout(resizeCanvas, 50); });
+            sessionStorage.setItem(keys.session, JSON.stringify({ startedAt:new Date().toISOString(), examName:setup.examName || '牛剑模拟面试', university:setup.university, major:setup.major }));
+            renderQuestion(); setTimeout(resizeCanvas, 0); setInterval(updateTimers, 1000); updateTimers();
+        })();
+    </script>
+</body>
+</html>

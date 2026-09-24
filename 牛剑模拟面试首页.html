@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牛剑模拟面试 - VISION ACADEMY</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        :root { --blue:#2159b7; --navy:#293b59; --bg:#f4f7fb; --line:#e3e8f0; --text:#30384f; --muted:#7d8aa1; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-width:1024px; background:var(--bg); color:var(--text); font-family:"Microsoft YaHei",sans-serif; }
+        a { color:inherit; text-decoration:none; } button { font:inherit; cursor:pointer; }
+        .app-container { display:grid; min-height:100vh; grid-template-columns:224px minmax(0,1fr); }
+        .sidebar { position:sticky; top:0; height:100vh; background:#fff; border-right:1px solid var(--line); }
+        .sidebar-logo { display:flex; align-items:center; gap:10px; height:92px; padding:0 20px; border-bottom:1px solid var(--line); color:#0b5bd8; font-size:16px; font-weight:800; line-height:1.35; }
+        .logo-icon { display:grid; width:38px; height:38px; place-items:center; border:2px solid currentColor; border-radius:50%; font-size:17px; }
+        .sidebar-menu { padding:18px 10px; }.menu-item { display:flex; align-items:center; gap:14px; height:48px; margin-bottom:7px; padding:0 16px; border-radius:8px; color:#667085; font-size:15px; font-weight:700; }
+        .menu-item.active,.menu-item:hover { background:#edf4ff; color:#1262d8; }.menu-item i { width:18px; text-align:center; }
+        .main-wrapper { min-width:0; }.header { height:64px; display:flex; align-items:center; justify-content:flex-end; gap:18px; padding:0 30px; background:#fff; border-bottom:1px solid var(--line); }
+        .exam-select { height:34px; padding:0 13px; border:1px solid #d9e3ef; border-radius:18px; background:#fff; color:#43526d; font-weight:700; }.user-info { color:#596780; font-size:14px; }.logout-btn { padding:7px 12px; border-radius:16px; background:#edf4ff; color:#1763d4; font-size:13px; font-weight:700; }
+        .content-area { padding:30px 42px 54px; }.hero-card { display:flex; align-items:center; gap:18px; min-height:92px; padding:22px 26px; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:0 5px 16px rgba(41,59,89,.04); }
+        .hero-icon { display:grid; flex:0 0 54px; height:54px; place-items:center; border-radius:12px; background:#edf4ff; color:#2e72dc; font-size:25px; }.hero-title { margin:0 0 6px; color:#2f3a56; font-size:26px; font-weight:800; }.hero-desc { margin:0; color:#7c8aa1; font-size:14px; }
+        .round-tabs { display:flex; gap:26px; margin:28px 0 22px; border-bottom:1px solid var(--line); }.round-tab { padding:0 10px 15px; border:0; border-bottom:3px solid transparent; background:transparent; color:#71809a; font-size:16px; font-weight:800; }.round-tab.active { border-bottom-color:#2368d8; color:#1f5ebc; }
+        .section-head { display:flex; align-items:center; gap:24px; margin-bottom:16px; }.section-title { margin:0; color:#2f3a56; font-size:26px; font-weight:800; }.section-time { color:#475467; font-size:14px; font-weight:700; }
+        .subject-filters { display:inline-flex; gap:6px; margin-bottom:26px; padding:5px; border:1px solid var(--line); border-radius:999px; background:#fff; }.filter-btn { min-width:78px; height:36px; padding:0 12px; border:0; border-radius:999px; background:transparent; color:#667085; font-size:14px; font-weight:800; }.filter-btn.active { background:#293b59; color:#fff; }
+        .paper-grid { display:grid; grid-template-columns:repeat(2,minmax(280px,1fr)); gap:20px; max-width:1120px; }.paper-card { position:relative; overflow:hidden; min-height:210px; padding:36px 28px 24px; border:1px solid #e7ecf3; border-radius:14px; background:#fff; box-shadow:0 10px 28px rgba(15,23,42,.04); }.paper-card::before { content:""; position:absolute; top:0; right:0; left:0; height:6px; background:var(--accent,#66b7ff); }
+        .paper-title { margin:0 0 22px; color:#30384f; font-size:21px; line-height:1.35; font-weight:800; }.paper-meta { display:flex; align-items:center; gap:8px; margin-bottom:21px; color:#8a94ab; font-size:14px; font-weight:700; }.subject-tags { display:flex; flex-wrap:wrap; gap:8px; min-height:29px; margin-bottom:22px; }.subject-tag { padding:5px 10px; border-radius:999px; background:#f1f5fb; color:#667085; font-size:12px; font-weight:700; }
+        .start-btn { display:inline-flex; align-items:center; justify-content:center; gap:12px; width:100%; height:42px; border:0; border-radius:999px; background:#293b59; color:#fff; font-size:15px; font-weight:800; }.start-btn:hover { background:#1f2d45; transform:translateY(-1px); }.empty-state { display:none; max-width:1120px; padding:42px; border:1px dashed #d9e1ec; border-radius:14px; background:#fff; color:#98a2b3; text-align:center; font-weight:700; }
+        @media (max-width:992px) { .sidebar { display:none; }.content-area { padding:22px; }.paper-grid { grid-template-columns:1fr; } } @media (max-width:640px) { .header { padding:0 16px; }.round-tabs,.subject-filters { width:100%; overflow-x:auto; }.filter-btn { min-width:72px; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar"><div class="sidebar-logo"><div class="logo-icon">A</div><div>VISION ACADEMY<br>唯寻国际教育</div></div><div class="sidebar-menu"><a href="牛剑模拟面试首页.html" class="menu-item active"><i class="fa fa-home"></i><span>考试首页</span></a><a href="牛剑模拟面试考试记录.html" class="menu-item"><i class="fa fa-file-text-o"></i><span>考试记录</span></a><a href="考试入口.html" class="menu-item"><i class="fa fa-th-large"></i><span>考试类型</span></a><a href="#" class="menu-item"><i class="fa fa-user-o"></i><span>个人中心</span></a></div></aside>
+        <main class="main-wrapper">
+            <header class="header"><select class="exam-select"><option>牛剑模拟面试</option></select><div class="user-info">Hi，王一博</div><a href="index.html" class="logout-btn" id="logoutBtn"><i class="fa fa-user-circle-o"></i> 退出登录</a></header>
+            <div class="content-area">
+                <section class="hero-card"><div class="hero-icon"><i class="fa fa-comments-o"></i></div><div><h1 class="hero-title">牛剑模拟面试</h1><p class="hero-desc">按场次选择模拟面试，完成考前检测后进入正式作答。</p></div></section>
+                <nav class="round-tabs" id="roundTabs" aria-label="考试轮次"></nav>
+                <section><div class="section-head"><h2 class="section-title" id="roundTitle">Round1</h2><div class="section-time" id="roundTime">考试开放时间：2026年9月23日</div></div><div class="subject-filters" id="subjectFilters" aria-label="面试科目筛选"></div><div class="paper-grid" id="paperGrid"></div><div class="empty-state" id="emptyState">当前筛选下暂无可参加的场次</div></section>
+            </div>
+        </main>
+    </div>
+    <script>
+        (function() {
+            var loginKey='examPlatformLoggedIn';
+            if (sessionStorage.getItem(loginKey)!=='true') { window.location.href='index.html'; return; }
+
+            // This static list mirrors the shared backend card contract used by written exams.
+            var papers = [
+                { name:'剑桥经济学模拟面试', duration:'35分钟', round:'Round1', subjects:['经济学'], subPapers:['经济学','线上模拟面试'], accent:'#66b7ff', university:'University of Cambridge', major:'Economics (L100)', topic:'消费者选择、市场结构与模型假设' },
+                { name:'牛津数学模拟面试', duration:'35分钟', round:'Round1', subjects:['数学'], subPapers:['数学','线上模拟面试'], accent:'#7467ff', university:'University of Oxford', major:'Mathematics', topic:'函数、数列与证明思路的追问' },
+                { name:'剑桥自然科学模拟面试', duration:'35分钟', round:'Round1', subjects:['自然科学'], subPapers:['自然科学','线上模拟面试'], accent:'#4fd3d8', university:'University of Cambridge', major:'Natural Sciences', topic:'实验设计、数据解释与科学推理' },
+                { name:'牛津经济与管理模拟面试', duration:'35分钟', round:'Round2', subjects:['经济学'], subPapers:['经济学','线上模拟面试'], accent:'#48d19b', university:'University of Oxford', major:'Economics and Management', topic:'激励机制、公共政策与论证结构' },
+                { name:'剑桥数学进阶模拟面试', duration:'35分钟', round:'Round2', subjects:['数学'], subPapers:['数学','线上模拟面试'], accent:'#ffb34f', university:'University of Cambridge', major:'Mathematics', topic:'几何直觉、概率模型与严谨论证' },
+                { name:'牛剑自然科学进阶面试', duration:'35分钟', round:'Round3', subjects:['自然科学'], subPapers:['自然科学','线上模拟面试'], accent:'#ff7b7b', university:'University of Cambridge', major:'Natural Sciences', topic:'变量控制、假设检验与跨学科推理' }
+            ];
+            var rounds=['Round1','Round2','Round3'];
+            var filterOptions=['全部','经济学','数学','自然科学'];
+            var activeRound='Round1', activeSubject='全部';
+            var grid=document.getElementById('paperGrid'), emptyState=document.getElementById('emptyState');
+
+            function renderControls() {
+                document.getElementById('roundTabs').innerHTML=rounds.map(function(round) { return '<button class="round-tab '+(round===activeRound?'active':'')+'" type="button" data-round="'+round+'">'+round+'</button>'; }).join('');
+                document.getElementById('roundTitle').textContent=activeRound;
+                document.getElementById('subjectFilters').innerHTML=filterOptions.map(function(subject) { return '<button class="filter-btn '+(subject===activeSubject?'active':'')+'" type="button" data-subject="'+subject+'">'+subject+'</button>'; }).join('');
+                document.querySelectorAll('.round-tab').forEach(function(tab) { tab.onclick=function() { activeRound=tab.dataset.round; activeSubject='全部'; render(); }; });
+                document.querySelectorAll('.filter-btn').forEach(function(button) { button.onclick=function() { activeSubject=button.dataset.subject; render(); }; });
+            }
+
+            function render() {
+                renderControls();
+                var visible=papers.filter(function(paper) { return paper.round===activeRound && (activeSubject==='全部' || paper.subjects.indexOf(activeSubject)>-1); });
+                grid.innerHTML=visible.map(function(paper,index) { return [
+                    '<article class="paper-card" style="--accent:'+paper.accent+'">',
+                    '<h3 class="paper-title">'+paper.name+'</h3>',
+                    '<div class="paper-meta"><i class="fa fa-clock-o"></i> 考试时长：'+paper.duration+'</div>',
+                    '<div class="subject-tags">'+paper.subPapers.map(function(item) { return '<span class="subject-tag">'+item+'</span>'; }).join('')+'</div>',
+                    '<button class="start-btn" type="button" data-index="'+index+'">开始考试 <i class="fa fa-arrow-right"></i></button>',
+                    '</article>'
+                ].join(''); }).join('');
+                emptyState.style.display=visible.length?'none':'block';
+                document.querySelectorAll('.start-btn').forEach(function(button) { button.onclick=function() { startPaper(visible[Number(button.dataset.index)]); }; });
+            }
+
+            function startPaper(paper) {
+                var setup={
+                    flow:'interview', examName:paper.name, duration:paper.duration, durationMinutes:Number(paper.duration.replace(/[^0-9]/g,'')) || 35,
+                    round:paper.round, subjects:paper.subjects, subPapers:paper.subPapers, accent:paper.accent,
+                    university:paper.university, major:paper.major, topic:paper.topic, selectedAt:new Date().toISOString()
+                };
+                sessionStorage.setItem('oxbridgeInterviewSetup',JSON.stringify(setup));
+                sessionStorage.removeItem('oxbridgeInterviewDeviceChecked');
+                sessionStorage.removeItem('oxbridgeInterviewConfirmed');
+                sessionStorage.removeItem('oxbridgeInterviewSession');
+                localStorage.removeItem('oxbridgeInterviewBoards');
+                localStorage.removeItem('oxbridgeInterviewUploads');
+                window.location.href='考前确认.html?flow=interview';
+            }
+
+            document.getElementById('logoutBtn').onclick=function(event) { event.preventDefault(); sessionStorage.removeItem(loginKey); sessionStorage.removeItem('examPlatformUserName'); window.location.href='index.html'; };
+            render();
+        })();
+    </script>
+</body>
+<script>
+    document.querySelectorAll('.menu-item[href="考试入口.html"]').forEach(function(item) { item.remove(); });
+</script>
+</html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>唯寻线上考试平台 - 登录</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #1a7fc4;
@@ -157,6 +158,186 @@
             width: min(470px, 100%);
         }
 
+        .portal-switch {
+            display: inline-flex;
+            gap: 4px;
+            margin: 0 0 28px;
+            padding: 4px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: #f7f9fc;
+        }
+
+        .portal-switch-wrap {
+            text-align: right;
+        }
+
+        .portal-switch-btn {
+            height: 34px;
+            padding: 0 13px;
+            border: 0;
+            border-radius: 18px;
+            background: transparent;
+            color: #7b8496;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .portal-switch-btn.active {
+            background: #fff;
+            color: var(--primary-dark);
+            box-shadow: 0 3px 10px rgba(32, 51, 80, 0.08);
+        }
+
+        .registration-view[hidden],
+        .login-view[hidden] {
+            display: none;
+        }
+
+        .registration-heading {
+            margin: 0 0 8px;
+            text-align: center;
+            color: var(--text);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .registration-copy {
+            margin: 0 0 26px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .registration-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .registration-card {
+            min-height: 142px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-top: 4px solid var(--accent, var(--primary));
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+
+        .registration-card:hover,
+        .registration-card:focus-visible {
+            border-color: #9dc6ec;
+            box-shadow: 0 10px 22px rgba(28, 73, 123, 0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .registration-card i {
+            color: var(--accent, var(--primary));
+            font-size: 22px;
+        }
+
+        .registration-card strong {
+            display: block;
+            margin: 13px 0 7px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .registration-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .registration-modal {
+            position: fixed;
+            z-index: 10;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(23, 35, 55, 0.46);
+        }
+
+        .registration-modal[hidden] {
+            display: none;
+        }
+
+        .registration-dialog {
+            position: relative;
+            width: min(386px, 100%);
+            padding: 30px;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 24px 60px rgba(17, 29, 49, 0.24);
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border: 0;
+            border-radius: 50%;
+            background: #f3f6fa;
+            color: #61708a;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .registration-dialog h2 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 22px;
+        }
+
+        .registration-dialog p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .registration-qrcode {
+            display: grid;
+            width: 196px;
+            height: 196px;
+            place-items: center;
+            margin: 24px auto 18px;
+            border: 1px solid #e0e8f3;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .registration-qrcode img,
+        .registration-qrcode canvas {
+            max-width: 172px;
+            max-height: 172px;
+        }
+
+        .registration-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #f5f8fd;
+            color: #61708a;
+            font-size: 12px;
+        }
+
         .welcome {
             margin: 0 0 12px;
             text-align: center;
@@ -269,6 +450,10 @@
                 padding: 44px 28px;
             }
 
+            .registration-grid {
+                gap: 10px;
+            }
+
             .title {
                 font-size: 32px;
                 margin-bottom: 34px;
@@ -299,6 +484,11 @@
             .login-tab {
                 font-size: 13px;
             }
+
+            .registration-card {
+                min-height: 126px;
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -317,29 +507,49 @@
 
             <div class="login-panel">
                 <div class="login-box">
-                    <p class="welcome">欢迎参加👋</p>
-                    <h1 class="title">唯寻线上考试平台</h1>
+                    <div class="portal-switch-wrap"><div class="portal-switch" role="tablist" aria-label="页面切换"><button class="portal-switch-btn active" type="button" data-view="login" role="tab" aria-selected="true">登录</button><button class="portal-switch-btn" type="button" data-view="registration" role="tab" aria-selected="false">报名</button></div></div>
 
-                    <div class="login-tabs" role="tablist" aria-label="登录方式">
-                        <button class="login-tab active" type="button" data-mode="ticket">准考证登录</button>
-                        <button class="login-tab" type="button" data-mode="phone">手机登录</button>
-                        <button class="login-tab" type="button" data-mode="account">学习账号登录</button>
+                    <div class="login-view" id="loginView">
+                        <p class="welcome">欢迎参加👋</p>
+                        <h1 class="title">唯寻线上考试平台</h1>
+
+                        <div class="login-tabs" role="tablist" aria-label="登录方式">
+                            <button class="login-tab active" type="button" data-mode="ticket">准考证登录</button>
+                            <button class="login-tab" type="button" data-mode="phone">手机登录</button>
+                            <button class="login-tab" type="button" data-mode="account">学习账号登录</button>
+                        </div>
+
+                        <form id="loginForm" novalidate>
+                            <div class="form-field">
+                                <input id="primaryInput" class="login-input" type="text" autocomplete="off" placeholder="请输入报考人姓名">
+                            </div>
+                            <div class="form-field">
+                                <input id="secondaryInput" class="login-input" type="text" autocomplete="off" placeholder="请输入准考证号">
+                            </div>
+                            <div id="loginError" class="login-error"></div>
+                            <button class="login-submit" type="submit">登 录</button>
+                        </form>
                     </div>
 
-                    <form id="loginForm" novalidate>
-                        <div class="form-field">
-                            <input id="primaryInput" class="login-input" type="text" autocomplete="off" placeholder="请输入报考人姓名">
-                        </div>
-                        <div class="form-field">
-                            <input id="secondaryInput" class="login-input" type="text" autocomplete="off" placeholder="请输入准考证号">
-                        </div>
-                        <div id="loginError" class="login-error"></div>
-                        <button class="login-submit" type="submit">登 录</button>
-                    </form>
+                    <section class="registration-view" id="registrationView" hidden aria-label="考试报名">
+                        <h1 class="registration-heading">考试报名</h1>
+                        <p class="registration-copy">选择考试类型，扫码完成报名。</p>
+                        <div class="registration-grid" id="registrationGrid"></div>
+                    </section>
                 </div>
             </div>
         </section>
     </main>
+
+    <div class="registration-modal" id="registrationModal" hidden role="dialog" aria-modal="true" aria-labelledby="registrationModalTitle">
+        <div class="registration-dialog">
+            <button class="modal-close" id="modalCloseBtn" type="button" aria-label="关闭报名二维码"><i class="fa fa-times"></i></button>
+            <h2 id="registrationModalTitle">考试报名</h2>
+            <p>请使用微信扫描二维码，进入对应考试的报名页面。</p>
+            <div class="registration-qrcode" id="registrationQrcode" aria-label="报名二维码"></div>
+            <div class="registration-note"><i class="fa fa-mobile"></i> 报名信息以扫码页面为准</div>
+        </div>
+    </div>
 
     <script>
         (function() {
@@ -368,6 +578,20 @@
             var secondaryInput = document.getElementById('secondaryInput');
             var loginError = document.getElementById('loginError');
             var activeMode = 'ticket';
+            var activeView = 'login';
+            var loginView = document.getElementById('loginView');
+            var registrationView = document.getElementById('registrationView');
+            var portalButtons = document.querySelectorAll('.portal-switch-btn');
+            var registrationModal = document.getElementById('registrationModal');
+            var registrationQrcode = document.getElementById('registrationQrcode');
+            var registrationModalTitle = document.getElementById('registrationModalTitle');
+            var lastFocusedElement = null;
+            var registrationExams = [
+                { id:'g5-written', name:'牛剑G5笔试模考', description:'牛剑G5笔试全真模拟', icon:'fa-graduation-cap', accent:'#4b8ff0', registrationUrl:'vision-exam://registration?exam=g5-written' },
+                { id:'g5-interview', name:'牛剑模拟面试', description:'牛津剑桥申请面试全真模拟', icon:'fa-comments-o', accent:'#6c68e9', registrationUrl:'vision-exam://registration?exam=g5-interview' },
+                { id:'ielts', name:'雅思考试', description:'雅思全真模考评测', icon:'fa-language', accent:'#35b995', registrationUrl:'vision-exam://registration?exam=ielts' },
+                { id:'amc', name:'AMC竞赛模考', description:'AMC竞赛全真模拟', icon:'fa-line-chart', accent:'#ef9b47', registrationUrl:'vision-exam://registration?exam=amc' }
+            ];
 
             function setMode(mode) {
                 activeMode = mode;
@@ -389,6 +613,68 @@
                 });
             });
 
+            function renderRegistrationExams() {
+                document.getElementById('registrationGrid').innerHTML = registrationExams.map(function(exam) {
+                    return '<button class="registration-card" type="button" data-exam-id="' + exam.id + '" style="--accent:' + exam.accent + '"><i class="fa ' + exam.icon + '"></i><strong>' + exam.name + '</strong><span>' + exam.description + '</span></button>';
+                }).join('');
+                document.querySelectorAll('.registration-card').forEach(function(card) {
+                    card.addEventListener('click', function() {
+                        openRegistrationModal(registrationExams.filter(function(exam) { return exam.id === card.dataset.examId; })[0]);
+                    });
+                });
+            }
+
+            function setView(view) {
+                activeView = view;
+                var isLogin = view === 'login';
+                loginView.hidden = !isLogin;
+                registrationView.hidden = isLogin;
+                portalButtons.forEach(function(button) {
+                    var selected = button.dataset.view === view;
+                    button.classList.toggle('active', selected);
+                    button.setAttribute('aria-selected', String(selected));
+                });
+                if (isLogin) {
+                    primaryInput.focus();
+                } else {
+                    registrationView.querySelector('.registration-card').focus();
+                }
+            }
+
+            function openRegistrationModal(exam) {
+                if (!exam) return;
+                lastFocusedElement = document.activeElement;
+                registrationModalTitle.textContent = exam.name + '报名';
+                registrationQrcode.innerHTML = '';
+                if (window.QRCode) {
+                    new QRCode(registrationQrcode, { text:exam.registrationUrl, width:172, height:172, colorDark:'#233b61', colorLight:'#ffffff' });
+                } else {
+                    registrationQrcode.textContent = '报名二维码暂不可用';
+                }
+                registrationModal.hidden = false;
+                document.getElementById('modalCloseBtn').focus();
+            }
+
+            function closeRegistrationModal() {
+                registrationModal.hidden = true;
+                registrationQrcode.innerHTML = '';
+                if (lastFocusedElement) lastFocusedElement.focus();
+            }
+
+            portalButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    setView(button.dataset.view);
+                });
+            });
+
+            document.getElementById('modalCloseBtn').addEventListener('click', closeRegistrationModal);
+            registrationModal.addEventListener('click', function(event) {
+                if (event.target === registrationModal) closeRegistrationModal();
+            });
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !registrationModal.hidden) closeRegistrationModal();
+            });
+
             document.getElementById('loginForm').addEventListener('submit', function(event) {
                 event.preventDefault();
 
@@ -406,6 +692,7 @@
                 window.location.href = '考试入口.html';
             });
 
+            renderRegistrationExams();
             primaryInput.focus();
         })();
     </script>
